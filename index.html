@@ -258,14 +258,17 @@ button:disabled{background:#3b3b3b;cursor:not-allowed}
 
 
 
-  <h2>Connecte-toi pour sauvegarder ta progression</h2>
-  <input type="email" id="emailInput" placeholder="Email" style="padding:10px;margin:5px;border-radius:6px;border:none;width:220px;">
-  <input type="password" id="passwordInput" placeholder="Mot de passe" style="padding:10px;margin:5px;border-radius:6px;border:none;width:220px;">
-  <div style="margin-top:10px;">
-    <button id="loginBtn" style="margin-right:10px;">Connexion</button>
-    <button id="signupBtn">Inscription</button>
-  </div>
-  <div id="authError" style="color:#f88;margin-top:10px;"></div>
+<div id="authOverlay">
+
+<h2>Connecte-toi pour sauvegarder ta progression</h2>
+<input type="email" id="emailInput" placeholder="Email" style="padding:10px;margin:5px;border-radius:6px;border:none;width:220px;">
+<input type="password" id="passwordInput" placeholder="Mot de passe" style="padding:10px;margin:5px;border-radius:6px;border:none;width:220px;">
+<div style="margin-top:10px;">
+  <button id="loginBtn" style="margin-right:10px;">Connexion</button>
+  <button id="signupBtn">Inscription</button>
+</div>
+<div id="authError" style="color:#f88;margin-top:10px;"></div>
+
 </div>
 
 
@@ -552,35 +555,51 @@ function openPackSequence() {
         // --- Toujours 3 cartes ---
         currentPack = [pickRandomCard(), pickRandomCard(), pickRandomCard()];
 
-currentPack.forEach(c => {
+        currentPack.forEach(c => {
 
-  const exists = collection.some(card => card.name === c.name);
+          const exists = collection.some(card => card.name === c.name);
 
-  if (!exists) {
+          if (!exists) {
 
-    c.isNew = true;
-    collection.push(c);
+            c.isNew = true;
+            collection.push(c);
 
-  } else {
+          } else {
 
-    c.isNew = false;
+            c.isNew = false;
 
-    const dustValues = {
-      "Commun":1,
-      "Rare":3,
-      "Epic":8,
-      "Legendary":20,
-      "Mythic":50,
-      "Brainrot God":200,
-      "Secret":500,
-      "OG":1000
+            const dustValues = {
+              "Commun":1,
+              "Rare":3,
+              "Epic":8,
+              "Legendary":20,
+              "Mythic":50,
+              "Brainrot God":200,
+              "Secret":500,
+              "OG":1000
+            };
+
+            dust += dustValues[c.rarity] || 1;
+
+          }
+
+        });
+
+        // mise à jour limite quotidienne
+        daily.opened++;
+        save("daily", daily);
+
+        save("collection", collection);
+        save("dust", dust);
+        refreshDust();
+
+        currentCardIndex = 0;
+        showBigCard();
+
+      }, 450);
     };
-
-    dust += dustValues[c.rarity] || 1;
-
-  }
-
-});
+  });
+}
 
         save("collection", collection);
 save("dust", dust);
