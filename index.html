@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Brainrot TCG</title>
+<style>
+/* Styles généraux */
+body{margin:0;font-family:Arial;background:#0e1525;color:#e8eef7;padding:20px;text-align:center}
+h1{text-align:center;margin:0 0 20px}
+button{padding:10px 14px;border-radius:8px;border:0;background:#7c3aed;color:#fff;cursor:pointer}
+button:disabled{background:#3b3b3b;cursor:not-allowed}
+.section{max-width:700px;margin:auto}
+.cards{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;justify-content:center}
+.card{background:#162037;padding:10px;border-radius:10px;width:140px;text-align:center}
+.card strong{display:block}
+.note{color:#8da0b8;font-size:0.9rem;margin-top:6px}
+#bigCardOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:10000;display:none;flex-direction:column;cursor:pointer}
+#bigCardOverlay img{max-width:60%;border-radius:12px;margin-bottom:15px}
+#bigCardName{color:#fff;font-size:1.5rem;margin-bottom:10px}
+
+/* Animation booster flash */
+@keyframes boosterFlash {
+  0% { opacity: 0; }
+  40% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.flash-effect {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  animation: boosterFlash 0.45s ease-out forwards;
+}
+.booster.booster-opening {
+  animation: boosterFlash 0.45s ease-out forwards;
+}
+
+.card {
+  position: relative;
+}
+
+.new-label {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff69b4;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 6px;
+  z-index: 10;
+}
+.card-wrapper {
+  position: relative; /* nécessaire pour positionner le label au-dessus de la carte */
+}
+
+
+/* --- Taille standard type carte Pokémon --- */
+.card {
+    width: 180px;
+    height: 260px;
+    background: #162037;
+    border-radius: 12px;
+    padding: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid #fff; /* à adapter selon rareté */
+}
+
+.card img {
+    width: calc(100% - 10px);  /* laisse 5px de chaque côté */
+    height: 50%;                /* exactement la moitié de la carte */
+    object-fit: contain;        /* garde les proportions sans étirer */
+    display: block;
+    margin: 5px auto 10px auto; /* petit espace en haut et entre image/nom */
+    border-radius: 8px;
+}
+
+
+
+/* Contours par rareté */
+.r-Commun      { border-color: #b0b0b0; }   /* gris */
+.r-Rare   { border-color: #3cb043; }   /* vert */
+.r-Epic       { border-color: #a335ee; }   /* bleu */
+.r-Legendary { border-color: #FFD700; }
+.r-Mythic  { border-color: #FF8C00; }   /* orange */
+.r-Brainrot-God  { border-color: #FF4500; }
+.r-Secret  { border-color: #DA70D6; }
+.r-OG  { border-color: #00FFFF; }
+
+
+
+/* Carte grand format pendant l'ouverture du booster */
+.big-card {
+    width: 260px;
+    height: 380px;
+    background: #162037;
+    border-radius: 16px;
+    padding: 12px;
+    text-align: center;
+    border: 6px solid;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.big-card img {
+    display: block;
+    margin: 0 auto 12px auto;  /* centre l’image */
+    max-width: 100%;           /* évite seulement de dépasser la carte */
+    height: auto;              /* conserve la vraie proportion */
+    border-radius: 10px;
+}
+
+
+
+/* Couleur du nom des cartes selon la rareté */
+
+/* --- Couleur du texte pour les petites cartes --- */
+.r-Commun strong { color: #b0b0b0; }
+.r-Rare strong { color: #3cb043; }
+.r-Epic strong { color: #a335ee; }
+.r-Legendary strong { color: #FFD700; }
+.r-Mythic strong { color: #FF8C00; }
+.r-Brainrot-God strong { color: #FF4500; }
+.r-Secret strong { color: #DA70D6; }
+.r-OG strong { color: #00FFFF; }
+
+/* --- Bordure pour grandes cartes --- */
+.big-Commun { border-color: #b0b0b0; }
+.big-Rare { border-color: #3cb043; }
+.big-Epic { border-color: #a335ee; }
+.big-Legendary { border-color: #FFD700; }
+.big-Mythic { border-color: #FF8C00; }
+.big-Brainrot-God { border-color: #FF4500; }
+.big-Secret { border-color: #DA70D6; }
+.big-OG { border-color: #00FFFF; }
+
+/* --- Texte pour grandes cartes --- */
+.big-Commun strong { color: #b0b0b0; }
+.big-Rare strong { color: #3cb043; }
+.big-Epic strong { color: #a335ee; }
+.big-Legendary strong { color: #FFD700; }
+.big-Mythic strong { color: #FF8C00; }
+.big-Brainrot-God strong { color: #FF4500; }
+.big-Secret strong { color: #DA70D6; }
+.big-OG strong { color: #00FFFF; }
+
+/* --- Badge pourcentage selon rareté --- */
+.rarity-indicator {
+    position: absolute;
+    bottom: 5px;  /* en bas */
+    right: 5px;   /* à droite */
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    pointer-events: none;
+    color: #fff;
+    background: #555; /* fallback */
+}
+
+.rarity-indicator.r-OG {
+    background: rgba(0,0,0,0.6); /* fond semi-transparent pour OG */
+    color: #fff;
+}
+
+/* Couleur selon rareté */
+.rarity-indicator.r-Commun { background: #b0b0b0; }
+.rarity-indicator.r-Rare { background: #3cb043; }
+.rarity-indicator.r-Epic { background: #a335ee; }
+.rarity-indicator.r-Legendary { background: #FFD700; color: #000; }
+.rarity-indicator.r-Mythic { background: #FF8C00; }
+.rarity-indicator.r-Brainrot-God { background: #FF4500; }
+.rarity-indicator.r-Secret { background: #DA70D6; }
+.rarity-indicator.r-OG { background: #00FFFF; color: #000; }
+
+
+#dustDisplay {
+  display: none;
+}
+
+
+</style>
+</head>
+<body>
+
+<h1>Brainrot TCG</h1>
+
+
+
+
+<div id="authSection" style="display:block;margin-top:30px;">
+  <h2>Connexion / Inscription</h2>
+  <input type="email" id="emailInput" placeholder="Email" style="padding:10px; border-radius:6px; margin-bottom:10px; width:220px"><br>
+  <input type="password" id="passwordInput" placeholder="Mot de passe" style="padding:10px; border-radius:6px; margin-bottom:10px; width:220px"><br>
+  <button id="signupBtn" style="margin-right:10px;">S'inscrire</button>
+  <button id="loginBtn">Se connecter</button>
+  <div id="authMsg" style="margin-top:10px;color:#f00"></div>
+</div>
+
+
+
+<div style="text-align:center;margin-bottom:20px">
+  <button id="openPack" style="padding:14px 22px;font-size:1.1rem;border-radius:12px;border:0;background:#ffcb05;color:#3b4cca;font-weight:700;cursor:pointer">
+    Ouvrir un booster
+  </button>
+  <button id="resetCollection" style="margin-left:10px;padding:10px 12px;border-radius:8px;border:0;background:#a00;color:#fff;display:none;">
+    Réinitialiser collection
+  </button>
+</div>
+
+<div id="dustDisplay" class="note">💎 Fragments : 0</div>
+
+  <div id="homeSection">
+    <div id="choosePackArea" style="display:none; margin-top:20px;"></div>
+  </div>
+
+  <div id="collectionSection" style="display:none;margin-bottom:80px">
+    <h2>Ta collection</h2>
+    <div id="collection" class="cards"></div>
+  </div>
+
+
+
+  <div id="allCardsSection" style="display:none;margin-bottom:80px">
+    <h2>Chances d'obtention</h2>
+
+  <input 
+    type="text"
+    id="searchCard"
+    placeholder="Rechercher une carte..."
+    style="padding:10px;border-radius:8px;border:none;margin-bottom:20px;width:220px"
+  >
+
+    <div id="allCardsList" style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;"></div>
+  </div>
+</div>
+
+<nav style="position:fixed;bottom:0;left:0;width:100%;background:#111a2e;padding:10px 0;display:flex;justify-content:space-around;border-top:2px solid #0d1220;z-index:9999">
+  <button id="tabHome">Accueil</button>
+  <button id="tabCollection">Collection</button>
+  <button id="tabShop">Boutique</button>
+  <button id="tabAllCards">Chances d'obtention</button>
+</nav>
+
+<div id="bigCardOverlay">
+  <img id="bigCardImg" src="" alt="Carte">
+  <div id="bigCardName"></div>
+</div>
+
+
+<div id="shopSection" style="display:none;margin-bottom:80px">
+  <h2>Boutique</h2>
+  <div id="shopCards" class="cards"></div>
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+
+
+<script>
+// --- Données et probabilités ---
+const ALL_CARDS = [
+  {name:"Noobini Pizzanini", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/noobini-santanini-200x300.webp"},
+  {name:"Lirilì Larilà", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Liliri_Lalira.webp"},
+  {name:"Tim Cheese", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Tim_Cheese-161x300.webp"},
+  {name:"Fluriflura", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Fluriflura-215x300.webp"},
+  {name:"Talpa Di Fero", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Talpa_Di_Fero-240x300.webp"},
+  {name:"Noobini Santanini", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/NoobiniSantanini-204x300.webp"},
+  {name:"Svinina Bombardino", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/svinina-bombardino.webp"},
+  {name:"Raccooni Jandelini", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Raccooni-197x300.webp"},
+  {name:"Pipi Kiwi", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Pipi_Kiwi.webp"},
+  {name:"Tartaragno", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/10/Tartaragnoo.webp"},
+  {name:"Pipi Corni", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/pipi-corni.webp"},
+  {name:"Holy Arepa", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Holy-Arepa-300x169.webp"},
+
+  {name:"Trippi Troppi", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Trippi_Troppi.webp"},
+  {name:"Gangster Footera", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/gangster-footera-185x300.webp"},
+  {name:"Bandito Bobritto", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/bandito-bobritto-160x300.webp"},
+  {name:"Boneca Ambalabu", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Boneca_Ambalabu-226x300.webp"},
+  {name:"Cacto Hipopotamo", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cacto_Hipopotamo1.webp"},
+  {name:"Ta Ta Ta Ta Sahur", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/ta-ta-ta-sahur-264x300.webp"},
+  {name:"Tric Trac Baraboom", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Tric-Trac-Baraboom-5.webp"},
+  {name:"Frogo Elfo", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Frogo_Elfo-181x300.webp"},
+  {name:"Pipi Avocado", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/pipi-avocado.webp"},
+  {name:"Pengolino Nuvoletto", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Pengolino-Nuvoletto-246x300.webp"},
+  {name:"Pinealotto Fruttarino", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Pintealotto.webp"},
+
+  {name:"Cappuccino Assassino", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cappuccino_Assassino-264x300.webp"},
+  {name:"Bandito Axolito", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Bandito_Axolito1.webp"},
+  {name:"Brr Brr Patapim", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/brr-brr-patapim-217x300.webp"},
+  {name:"Avocadini Antilopini", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Avocadini_Antilopini-224x300.webp"},
+  {name:"Trulimero Trulicina", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/trulimero-trulicina.webp"},
+  {name:"Bambini Crostini", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/bambini-crostini.webp"},
+  {name:"Malame Amarele", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/MalameAmarele-200x300.webp"},
+  {name:"Bananita Dolphinita", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Dolphin_But_Banana-226x300.webp"},
+  {name:"Perochello Lemonchello", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/perochello-lemonchello.webp"},
+  {name:"Brri Brri Bicus Dicus Bombicus", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Berry_berry_bicus_dickus.webp"},
+  {name:"Avocadini Guffo", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/AvocadiniGuffo.webp"},
+  {name:"Ti Ti Ti Sahur", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/tititi-sahur.webp"},
+  {name:"Mangolini Parrocini", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/mangolini-parrochini-264x300.webp"},
+  {name:"Frogato Pirato", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/frogato-pirato.webp"},
+  {name:"Gato Celesto", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Gato-Celestowebp-286x300.webp"},
+  {name:"Salamino Penguino", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Salamino-Penguino.webp"},
+  {name:"Doi Doi Do", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/DoiDoi.webp"},
+  {name:"Penguin Tree", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/PenguinTree-157x300.webp"},
+  {name:"Wombo Rollo", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Wombo-200x300.webp"},
+  {name:"Penguino Cocosino", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Penguino_Cocosino.webp"},
+  {name:"Mummio Rappitto", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Mummio_Rappitto-215x300.webp"},
+
+  {name:"Chimpanzini Bananini", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/ChimpanziniBananini-262x300.webp"},
+  {name:"Tirilikalika Tirilikalako", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/TirilikalikaTirilikalakoTransparent.webp"},
+  {name:"Ballerina Cappuccina", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Ballerina_cappucinaaaa212121-261x300.webp"},
+  {name:"Burbaloni Loliloli", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/burbaloni-loliloli.webp"},
+  {name:"Chef Crabracadabra", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Chef-Crabracadabra.webp"},
+  {name:"Lionel Cactuseli", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Lionel-Cactuseli.webp"},
+  {name:"Glorbo Fruttodrillo", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/GlorboFruttodrillo.webp"},
+  {name:"Quivoli Ameleoni", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Quivioli_Ameleonni.webp"},
+  {name:"Blueberrinni Octopusini", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/NewBlueberrinni-1.webp"},
+  {name:"Caramello Filtrello", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Caramello_Filtrello2.webp"},
+  {name:"Pipi Potato", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/pipi-potato-236x300.webp"},
+  {name:"Strawberrelli Flamingelli", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Strawberrelli_Flamingelli.webp"},
+  {name:"Cocosini Mama", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cocosini_Mama-157x300.webp"},
+  {name:"Pandaccini Bananini", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Pandaccini_Bananini.webp"},
+  {name:"Quackula", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Quackula.webp"},
+  {name:"Pi Pi Watermelon", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Pi_Pi_Watermelon.webp"},
+  {name:"Signore Carapace", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Teenage_turtle.webp"},
+  {name:"Buho del Cielo", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Buho-del-Cielo-140x300.webp"},
+  {name:"Sigma Boy", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Sig_ma_Boy-240x300.webp"},
+  {name:"Chocco Bunny", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Chocco_Bunny-194x300.webp"},
+  {name:"Puffaball", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Puffaball.webp"},
+  {name:"Sigma Girl", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/SigmaGirl-216x300.webp"},
+  {name:"Sealo Regalo", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/01/Sealo-Regalo-228x300.webp"},
+  {name:"Buho de Fuego", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Buhodefuego-244x300.webp"},
+  {name:"Seraphino Gruyero", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Seraphino-Gruyero-300x251.webp"},
+
+
+  {name:"Frigo Camelo", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/frigo-camelo.webp"},
+  {name:"Orangutini Ananassini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Banana-242x300.webp"},
+  {name:"Rhino Toasterino", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/rhino-toasterino-249x300.webp"},
+  {name:"Bombardiro Crocodilo", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/A_flying_alligator-1.webp"},
+  {name:"Spioniro Golubiro", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/spioniro-golubiro-216x300.webp"},
+  {name:"Bombombini Gusini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/bombombini-gusini.webp"},
+  {name:"Zibra Zubra Zibralini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Zibra_Zubra_Zibralini-151x300.webp"},
+  {name:"Tigrilini Watermelini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Tigrilini_Watermelini1-216x300.webp"},
+  {name:"Avocadorilla", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Avocadorilla.webp"},
+  {name:"Mythic Lucky Block", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Mythic_Lucky_Block.webp"},
+  {name:"Cavallo Virtuoso", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cavallo_Virtuoso-221x300.webp"},
+  {name:"Gorillo Subwoofero", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/gorillo-subwoofero-248x300.webp"},
+  {name:"Gorillo Watermelondrillo", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Gorillo-Watermelondrillo.webp"},
+  {name:"Stoppo Luminino", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Stoppo_Luminino-266x300.webp"},
+  {name:"Ganganzelli Trulala", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Ganganzelli_Trulala-247x300.webp"},
+  {name:"Tob Tobi Tobi", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Tob_Tobi_Tobi.webp"},
+  {name:"Lerulerulerule", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Lerulerulerule-256x300.webp"},
+  {name:"Te Te Te Sahur", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Te_Te_Te_Sahur.webp"},
+  {name:"Rhino Helicopterino", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/rhino-helicopterino.webp"},
+  {name:"Magi Ribbitini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/MagiRibbit.webp"},
+  {name:"Tracoducotulu Delapeladustuz", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Tracoducotulu-254x300.webp"},
+  {name:"Jingle Jingle Sahur", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/JingleJingleSahur.webp"},
+  {name:"Los Noobinis", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Noobinis.webp"},
+  {name:"Spongini Quackini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/01/Spongini-Quackini-179x300.webp"},
+  {name:"Cachorrito Melonito", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Watermelon_Doggy-210x300.webp"},
+  {name:"Carloo", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Mateo_fish-233x300.webp"},
+  {name:"Harpuccino", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Harpuccino-178x300.webp"},
+  {name:"Elefanto Frigo", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Elefanto_Frigo_Transparent.webp"},
+  {name:"Carrotini Brainini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/carrotini-brainini.webp"},
+  {name:"Centrucci Nuclucci", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Centrucci_Nuclucci-191x300.webp"},
+  {name:"Toiletto Focaccino", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Toiletto-236x300.webp"},
+  {name:"Jacko Spaventosa", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/jacko-spaventosa-213x300.webp"},
+  {name:"Bananito Bandito", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/bananito-bandito-212x300.webp"},
+  {name:"Tree Tree Tree Sahur", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/TreeTreeTreeSahur-210x300.webp"},
+  {name:"Fizzy Soda", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/01/Fizzy-Soda-195x300.webp"},
+  {name:"Berenjello Angello", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Berenjello-Angello-212x300.webp"},
+
+
+  {name:"Cocofanto Elefanto", rarity:"Brainrot God", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cocofanto.webp"},
+
+
+  {name:"TEST", rarity:"Secret", image:"images.png"},
+
+
+  { name:"Skibidi Toilet", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-3be000d4-c396-4f70-9827-7b9f3208525e.png" },
+  { name:"Headless Horseman", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-afc3dd97-67c3-4c8b-94be-e3909d345d21.png" },
+  { name:"John Pork", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-e72fbeb0-d333-45cc-afd2-f501c066d2f8.png" },
+  { name:"Meowl", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-6acb0782-4a61-4b79-b994-e0c5717f6672.png" },
+  { name:"Smurf Cat", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-22b121bc-4380-4104-aff6-a2adf5f7bca5.png" },
+  { name:"Strawberry Elephant", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-86e303da-a89b-41d3-9902-35c2e8fea136.png" },
+
+
+];
+
+
+const RARITY_PROBS = { 'Commun': 50, 'Rare': 25, 'Epic': 13, 'Legendary': 6, 'Mythic': 3, 'Brainrot God': 1, 'Secret': 0.07, 'OG': 0.03 };
+const BOOSTER_IMAGES = [
+  "https://cdn.phototourl.com/uploads/2026-03-14-b2ac7551-da4d-4169-9c1e-10d929ea7c30.png",
+  "https://cdn.phototourl.com/uploads/2026-03-14-b2ac7551-da4d-4169-9c1e-10d929ea7c30.png",
+  "https://cdn.phototourl.com/uploads/2026-03-14-b2ac7551-da4d-4169-9c1e-10d929ea7c30.png"
+];
+
+
+
+
+
+
+
+
+
+
+
+
+
+const SHOP_CARDS = [
+  {name:"Cappuccino Assassino", rarity:"Epic", price:80, image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cappuccino_Assassino-264x300.webp"},
+  {name:"Chimpanzini Bananini", rarity:"Legendary", price:200, image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/ChimpanziniBananini-262x300.webp"},
+  {name:"Frigo Camelo", rarity:"Mythic", price:500, image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/frigo-camelo.webp"}
+];
+
+
+const shopSection = document.getElementById("shopSection");
+const tabShop = document.getElementById("tabShop");
+
+tabShop.addEventListener("click", showShop);
+
+
+
+function showShop() {
+  homeSection.style.display = "none";
+  collectionSection.style.display = "none";
+  allCardsSection.style.display = "none";
+  shopSection.style.display = "block";
+  updateButtons();
+
+  const shopDiv = document.getElementById("shopCards");
+  shopDiv.innerHTML = SHOP_CARDS.map(c => {
+
+    // Si déjà dans la collection → bouton désactivé
+    const owned = collection.some(card => card.name === c.name);
+    const btnText = owned ? "Déjà possédé" : `Acheter (${c.price}💎)`;
+
+    return `
+      <div class="card r-${c.rarity.replace(/ /g,"-")}" style="position:relative;">
+        <div style="font-size:0.8rem;color:#ccc;margin-bottom:6px;font-weight:bold;">${c.rarity}</div>
+        <img src="${c.image}" style="width:100%;height:50%;object-fit:contain;margin:0 auto 10px auto;border-radius:8px;display:block">
+        <strong>${c.name}</strong>
+        <button class="buyBtn" data-name="${c.name}" data-price="${c.price}" style="margin-top:6px;padding:4px 6px;border-radius:6px;border:0;background:#7c3aed;color:#fff;cursor:pointer;" ${owned?"disabled":""}>${btnText}</button>
+      </div>
+    `;
+  }).join("");
+
+  // Listener achat
+  document.querySelectorAll(".buyBtn").forEach(btn => {
+    btn.onclick = () => {
+      const name = btn.getAttribute("data-name");
+      const price = parseInt(btn.getAttribute("data-price"));
+      if (dust >= price) {
+        const card = SHOP_CARDS.find(c => c.name === name);
+        if(card){
+          collection.push({...card});
+          dust -= price;
+          save("collection",collection);
+          save("dust",dust);
+          refreshDust();
+          refreshCollection();
+          showShop(); // refresh boutique
+          alert(`Tu as acheté ${name} !`);
+        }
+      } else {
+        alert("Pas assez de fragments !");
+      }
+    }
+  });
+}
+
+
+
+// --- Stockage ---
+function load(key,def){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(def));}catch(e){return def;}}
+function save(key,val){localStorage.setItem(key,JSON.stringify(val));}
+let collection = load("collection",[]);
+let daily = load("daily",{date:null,opened:0});
+let dust = load("dust", 0);
+
+function refreshDust(){
+  document.getElementById("dustDisplay").textContent = "💎 Fragments : " + dust;
+}
+
+
+// --- Helper ---
+function pickRandomCard(){
+  const total = Object.values(RARITY_PROBS).reduce((a,b)=>a+b,0);
+  let r = Math.random()*total;
+  let chosenRarity;
+  for(const [rarity,prob] of Object.entries(RARITY_PROBS)){
+    r -= prob;
+    if(r <= 0){ chosenRarity = rarity; break; }
+  }
+  const cards = ALL_CARDS.filter(c=>c.rarity===chosenRarity);
+  if(cards.length===0) return ALL_CARDS[Math.floor(Math.random()*ALL_CARDS.length)];
+  return cards[Math.floor(Math.random()*cards.length)];
+}
+
+function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function cardHTML(c){return `<div class="card"><img src="${c.image}" style="width:100%;height:100px;object-fit:cover;border-radius:8px;margin-bottom:8px"><strong>${escapeHtml(c.name)}</strong><span style="color:#9bb0c8">${escapeHtml(c.rarity)}</span></div>`;}
+function refreshLimit(){
+  const today = new Date().toISOString().slice(0,10);
+  if(daily.date !== today){ daily={date:today,opened:0}; save('daily',daily);}
+  const rest = 2-(daily.opened||0);
+  document.getElementById("remaining").textContent=`Boosters restants aujourd'hui : ${rest}`;
+  document.getElementById("openPack").disabled = rest<=0;
+}
+
+// --- Affichage carte grand format ---
+let currentPack=[],currentCardIndex=0;
+const overlay=document.getElementById('bigCardOverlay');
+const bigImg=document.getElementById('bigCardImg');
+const bigName=document.getElementById('bigCardName');
+
+
+
+function showBigCard() {
+    if (currentCardIndex >= currentPack.length) {
+        overlay.style.display = 'none';
+        refreshCollection();
+        refreshLimit();
+        return;
+    }
+
+    const c = currentPack[currentCardIndex];
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "card-wrapper";
+
+    if (c.isNew) {
+        const label = document.createElement("div");
+        label.className = "new-label";
+        label.textContent = "NOUVEAU";
+        wrapper.appendChild(label);
+    }
+
+    const cardDiv = document.createElement("div");
+
+    if (c.rarity === "OG") {
+        // OG : image plus grande comme dans l'ouverture de booster
+        cardDiv.className = "card big-card big-OG";
+        cardDiv.style.border = "none";
+        cardDiv.style.padding = "0";
+        cardDiv.style.background = "none";
+cardDiv.innerHTML = `<img src="${c.image}" 
+                      style="max-width:90vw; max-height:90vh; object-fit:contain; display:block; margin:auto; border-radius:12px;">`;
+    } else {
+        // Les autres cartes : inchangées
+        cardDiv.className = "card big-card big-" + c.rarity.replace(/ /g, "-");
+        cardDiv.innerHTML = `
+          <div style="font-size:1rem;color:#ccc;margin-bottom:6px;">${escapeHtml(c.rarity)}</div>
+          <img src="${c.image}" alt="${c.name}">
+          <strong>${escapeHtml(c.name)}</strong>
+        `;
+    }
+
+    wrapper.appendChild(cardDiv);
+    overlay.innerHTML = "";
+    overlay.appendChild(wrapper);
+    overlay.style.display = "flex";
+}
+
+
+
+overlay.addEventListener('click',()=>{currentCardIndex++; showBigCard();});
+
+// --- Ouvrir booster ---
+function openPackSequence() {
+  const chooseArea = document.getElementById("choosePackArea");
+  chooseArea.style.display = "flex";
+  chooseArea.style.justifyContent = "center";
+  chooseArea.style.gap = "30px";
+  chooseArea.style.marginTop = "40px";
+
+  chooseArea.innerHTML = BOOSTER_IMAGES.map((img, i) =>
+    `<div class="booster" data-id="${i}" style="width:150px;height:220px;border-radius:14px;cursor:pointer;overflow:hidden;box-shadow:0 0 15px rgba(0,0,0,0.4);transition:transform .15s">
+        <img src="${img}" style="width:100%;height:100%;object-fit:cover;">
+     </div>`).join("");
+
+  document.querySelectorAll(".booster").forEach(b => {
+    b.onmouseenter = () => b.style.transform = "scale(1.08)";
+    b.onmouseleave = () => b.style.transform = "scale(1)";
+    b.onclick = () => {
+      if (b.classList.contains("booster-opening")) return;
+      b.classList.add("booster-opening");
+
+      const flash = document.createElement("div");
+      flash.classList.add("flash-effect");
+      document.body.appendChild(flash);
+      setTimeout(() => flash.remove(), 450);
+
+      setTimeout(() => {
+        chooseArea.style.display = "none";
+
+        // --- Toujours 3 cartes ---
+        currentPack = [pickRandomCard(), pickRandomCard(), pickRandomCard()];
+
+currentPack.forEach(c => {
+
+  const exists = collection.some(card => card.name === c.name);
+
+  if (!exists) {
+
+    c.isNew = true;
+    collection.push(c);
+
+  } else {
+
+    c.isNew = false;
+
+    const dustValues = {
+      "Commun":1,
+      "Rare":3,
+      "Epic":8,
+      "Legendary":20,
+      "Mythic":50,
+      "Brainrot God":200,
+      "Secret":500,
+      "OG":1000
+    };
+
+    dust += dustValues[c.rarity] || 1;
+
+  }
+
+});
+
+        save("collection", collection);
+save("dust", dust);
+refreshDust();
+        currentCardIndex = 0;
+        showBigCard();
+      }, 450);
+    };
+  });
+}
+
+
+// --- Onglets ---
+const homeSection=document.getElementById("homeSection");
+const collectionSection=document.getElementById("collectionSection");
+const allCardsSection=document.getElementById("allCardsSection");
+const tabHome=document.getElementById("tabHome");
+const tabCollection=document.getElementById("tabCollection");
+const tabAllCards=document.getElementById("tabAllCards");
+const openPackBtn=document.getElementById("openPack");
+const resetLimitBtn=document.getElementById("resetLimit");
+const resetCollectionBtn=document.getElementById("resetCollection");
+const remainingDiv=document.getElementById("remaining");
+
+function showHome(){ 
+homeSection.style.display="block"; 
+collectionSection.style.display="none"; 
+allCardsSection.style.display="none";     
+shopSection.style.display = "none"; 
+updateButtons();}
+
+function showCollection(){ 
+homeSection.style.display="none"; 
+collectionSection.style.display="block"; 
+allCardsSection.style.display="none"; 
+shopSection.style.display = "none"; 
+updateButtons();}
+
+function showAllCards() {
+  // Affiche uniquement la section "Chances d'obtention"
+  homeSection.style.display = "none"; 
+  collectionSection.style.display = "none"; 
+  allCardsSection.style.display = "block"; 
+shopSection.style.display = "none";
+  updateButtons();
+
+  const search = document.getElementById("searchCard");
+
+  // Affiche toutes les cartes au départ
+  displayCards(ALL_CARDS);
+
+  // Moteur de recherche
+  if (search) {
+    search.oninput = function() {
+      const value = this.value.toLowerCase();
+      const filtered = ALL_CARDS.filter(card =>
+        card.name.toLowerCase().includes(value)
+      );
+      displayCards(filtered);
+    };
+  }
+}
+
+
+function isVisible(el){ return el.style.display !== "none"; }
+
+
+function updateButtons() {
+  if (isVisible(homeSection)) {
+    openPackBtn.style.display = "inline-block";
+    resetCollectionBtn.style.display = "none";
+    dustDisplay.style.display = "none"; // <-- cacher les fragments
+  } 
+  else if (isVisible(collectionSection)) {
+    openPackBtn.style.display = "none";
+    resetCollectionBtn.style.display = "inline-block";
+    dustDisplay.style.display = "none"; // <-- cacher les fragments
+  } 
+  else if (isVisible(allCardsSection)) {
+    openPackBtn.style.display = "none";
+    resetCollectionBtn.style.display = "none";
+    dustDisplay.style.display = "none"; // <-- cacher les fragments
+  } 
+  else if (isVisible(shopSection)) {
+    openPackBtn.style.display = "none";
+    resetCollectionBtn.style.display = "none";
+    dustDisplay.style.display = "block"; // <-- montrer les fragments uniquement ici
+  }
+}
+
+
+function refreshCollection() {
+    const collectionDiv = document.getElementById("collection");
+    collectionDiv.innerHTML = "";
+
+    collection.forEach(card => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "card-wrapper";
+
+        const cardDiv = document.createElement("div");
+
+        if (card.rarity === "OG") {
+            cardDiv.className = "card"; 
+            cardDiv.style.border = "none"; 
+            cardDiv.style.padding = "0";   
+            cardDiv.style.background = "none"; 
+
+            cardDiv.innerHTML = `<img src="${card.image}" 
+                                      style="width:100%;height:100%;object-fit:contain;display:block;border-radius:0;">`;
+        } else {
+            cardDiv.className = "card r-" + card.rarity.replace(" ", "-");
+            cardDiv.innerHTML = `
+                <div style="font-size:0.8rem;color:#ccc;margin-bottom:4px;">${escapeHtml(card.rarity)}</div>
+                <img src="${card.image}" alt="${card.name}" style="width:100%;border-radius:8px;margin-bottom:8px">
+                <strong>${escapeHtml(card.name)}</strong>
+            `;
+        }
+
+        wrapper.appendChild(cardDiv);
+        collectionDiv.appendChild(wrapper);
+    });
+}
+
+function displayCards(cards) {
+    const sortedCards = [...cards].sort(
+        (a, b) => (RARITY_PROBS[b.rarity] || 0) - (RARITY_PROBS[a.rarity] || 0)
+    );
+
+    document.getElementById("allCardsList").innerHTML = sortedCards.map(c => {
+        if (c.rarity === "OG") {
+            return `
+            <div class="card" style="position:relative; border:none; padding:0; background:none; overflow:hidden;">
+                <img src="${c.image}" 
+                     style="width:100%;height:100%;object-fit:contain;display:block;border-radius:0;">
+                <span class="rarity-indicator r-OG" 
+                      style="position:absolute; bottom:5px; right:5px;">
+                    ${RARITY_PROBS[c.rarity] || 0}%
+                </span>
+            </div>`;
+        } else {
+            return `
+            <div class="card r-${c.rarity.replace(/ /g, "-")}" style="position:relative;">
+                <div style="font-size:0.8rem;color:#ccc;margin-bottom:6px;font-weight:bold;">
+                    ${escapeHtml(c.rarity)}
+                </div>
+                <img src="${c.image}" alt="${c.name}" 
+                     style="width:100%;height:50%;object-fit:contain;margin:0 auto 10px auto;border-radius:8px;display:block">
+                <strong>${escapeHtml(c.name)}</strong>
+                <span class="rarity-indicator r-${c.rarity.replace(/ /g, "-")}" 
+                      style="position:absolute; bottom:5px; right:5px;">
+                    ${RARITY_PROBS[c.rarity] || 0}%
+                </span>
+            </div>`;
+        }
+    }).join('');
+}
+
+
+
+// --- Affiche toutes les cartes au départ ---
+displayCards(ALL_CARDS);
+
+
+
+
+// --- Listeners ---
+tabHome.addEventListener("click",showHome);
+tabCollection.addEventListener("click",showCollection);
+tabAllCards.addEventListener("click",showAllCards);
+openPackBtn.addEventListener("click",openPackSequence);
+resetCollectionBtn.addEventListener("click",()=>{if(confirm("Réinitialiser la collection ?")){collection=[];save("collection",collection);refreshCollection(); alert("Collection réinitialisée");}});
+
+
+
+function loadUserData(uid){
+  const userDoc = db.collection("users").doc(uid);
+
+  userDoc.get().then(doc => {
+    if(doc.exists){
+      const data = doc.data();
+      collection = data.collection || [];
+      dust = data.dust || 0;
+    } else {
+      // Création doc vide
+      collection = [];
+      dust = 0;
+      userDoc.set({collection:[], dust:0});
+    }
+    refreshCollection();
+    refreshDust();
+  });
+}
+
+function saveUserData(uid){
+  db.collection("users").doc(uid).set({
+    collection,
+    dust
+  });
+}
+
+// À chaque modification (achat / booster), appeler :
+auth.onAuthStateChanged(user => {
+  if(user) saveUserData(user.uid);
+});
+
+
+// --- Init ---
+refreshCollection();
+refreshLimit();
+showHome();
+refreshDust();
+
+
+  const firebaseConfig = {
+
+
+
+    apiKey: "AIzaSyD4H_pdAZSLrixwH-1NDRpEd537X-Gnvik",
+
+    authDomain: "brainrot-tcg-6d0ae.firebaseapp.com",
+
+    projectId: "brainrot-tcg-6d0ae",
+
+    storageBucket: "brainrot-tcg-6d0ae.firebasestorage.app",
+
+    messagingSenderId: "622979343428",
+
+    appId: "1:622979343428:web:b8499811ce8379b0f84811",
+
+    measurementId: "G-6GE923T5CK"
+
+
+  };
+
+  const app = firebase.initializeApp(firebaseConfig);
+  const analytics = firebase.analytics();
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+
+
+const emailInput = document.getElementById("emailInput");
+const passwordInput = document.getElementById("passwordInput");
+const signupBtn = document.getElementById("signupBtn");
+const loginBtn = document.getElementById("loginBtn");
+const authMsg = document.getElementById("authMsg");
+
+// S'inscrire
+signupBtn.addEventListener("click", () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      authMsg.style.color = "green";
+      authMsg.textContent = "Compte créé avec succès !";
+      loadUserData(user.uid);
+    })
+    .catch((error) => {
+      authMsg.style.color = "red";
+      authMsg.textContent = error.message;
+    });
+});
+
+// Se connecter
+loginBtn.addEventListener("click", () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      authMsg.style.color = "green";
+      authMsg.textContent = "Connecté avec succès !";
+      loadUserData(user.uid);
+    })
+    .catch((error) => {
+      authMsg.style.color = "red";
+      authMsg.textContent = error.message;
+    });
+});
+
+// Masquer / afficher selon état
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById("authSection").style.display = "none";
+    showHome(); // afficher l'accueil
+  } else {
+    document.getElementById("authSection").style.display = "block";
+  }
+});
+
+
+</script>
+
+</script>
+</body>
+</html>
