@@ -406,6 +406,7 @@ function showShop() {
           refreshCollection();
           showShop(); // refresh boutique
           alert(`Tu as acheté ${name} !`);
+autoSave();
         }
       } else {
         alert("Pas assez de fragments !");
@@ -827,7 +828,10 @@ function loadUserData(uid){
 function autoSave(){
   const user = auth.currentUser;
   if(user){
-    saveUserData(user.uid);
+    db.collection("users").doc(user.uid).set({
+      collection: collection,
+      dust: dust
+    });
   }
 }
 
