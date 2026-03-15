@@ -441,13 +441,27 @@ function pickRandomCard(){
 
 function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function cardHTML(c){return `<div class="card"><img src="${c.image}" style="width:100%;height:100px;object-fit:cover;border-radius:8px;margin-bottom:8px"><strong>${escapeHtml(c.name)}</strong><span style="color:#9bb0c8">${escapeHtml(c.rarity)}</span></div>`;}
+
 function refreshLimit(){
   const today = new Date().toISOString().slice(0,10);
-  if(daily.date !== today){ daily={date:today,opened:0}; save('daily',daily);}
+  if(daily.date !== today){
+    daily = {date:today,opened:0};
+    save('daily',daily);
+  }
+
   const rest = 2-(daily.opened||0);
-  document.getElementById("remaining").textContent=`Boosters restants aujourd'hui : ${rest}`;
-  document.getElementById("openPack").disabled = rest<=0;
+
+  const remaining = document.getElementById("remaining");
+  if(remaining){
+    remaining.textContent = `Boosters restants aujourd'hui : ${rest}`;
+  }
+
+  const btn = document.getElementById("openPack");
+  if(btn){
+    btn.disabled = rest <= 0;
+  }
 }
+
 
 // --- Affichage carte grand format ---
 let currentPack=[],currentCardIndex=0;
