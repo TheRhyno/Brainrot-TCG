@@ -191,6 +191,19 @@ button:disabled{background:#3b3b3b;cursor:not-allowed}
   display: none;
 }
 
+#logoutBtn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background: #a00; /* rouge foncé */
+    color: #fff;
+    cursor: pointer;
+    display: none; /* caché par défaut */
+}
+
 
 </style>
 </head>
@@ -266,10 +279,14 @@ button:disabled{background:#3b3b3b;cursor:not-allowed}
 <div style="margin-top:10px;">
   <button id="loginBtn" style="margin-right:10px;">Connexion</button>
   <button id="signupBtn">Inscription</button>
+
+
 </div>
 <div id="authError" style="color:#f88;margin-top:10px;"></div>
 
 </div>
+
+<button id="logoutBtn">Déconnexion</button>
 
 
 
@@ -311,19 +328,115 @@ const db = firebase.firestore();
 // --- Données et probabilités ---
 const ALL_CARDS = [
   {name:"Noobini Pizzanini", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/noobini-santanini-200x300.webp"},
-
+  {name:"Lirilì Larilà", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Liliri_Lalira.webp"},
+  {name:"Tim Cheese", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Tim_Cheese-161x300.webp"},
+  {name:"Fluriflura", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Fluriflura-215x300.webp"},
+  {name:"Talpa Di Fero", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Talpa_Di_Fero-240x300.webp"},
+  {name:"Noobini Santanini", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/NoobiniSantanini-204x300.webp"},
+  {name:"Svinina Bombardino", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/svinina-bombardino.webp"},
+  {name:"Raccooni Jandelini", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Raccooni-197x300.webp"},
+  {name:"Pipi Kiwi", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Pipi_Kiwi.webp"},
+  {name:"Tartaragno", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/10/Tartaragnoo.webp"},
+  {name:"Pipi Corni", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/pipi-corni.webp"},
+  {name:"Holy Arepa", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Holy-Arepa-300x169.webp"},
 
   {name:"Trippi Troppi", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Trippi_Troppi.webp"},
-
+  {name:"Gangster Footera", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/gangster-footera-185x300.webp"},
+  {name:"Bandito Bobritto", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/bandito-bobritto-160x300.webp"},
+  {name:"Boneca Ambalabu", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Boneca_Ambalabu-226x300.webp"},
+  {name:"Cacto Hipopotamo", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cacto_Hipopotamo1.webp"},
+  {name:"Ta Ta Ta Ta Sahur", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/ta-ta-ta-sahur-264x300.webp"},
+  {name:"Tric Trac Baraboom", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Tric-Trac-Baraboom-5.webp"},
+  {name:"Frogo Elfo", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Frogo_Elfo-181x300.webp"},
+  {name:"Pipi Avocado", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/pipi-avocado.webp"},
+  {name:"Pengolino Nuvoletto", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Pengolino-Nuvoletto-246x300.webp"},
+  {name:"Pinealotto Fruttarino", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Pintealotto.webp"},
 
   {name:"Cappuccino Assassino", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cappuccino_Assassino-264x300.webp"},
-
+  {name:"Bandito Axolito", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Bandito_Axolito1.webp"},
+  {name:"Brr Brr Patapim", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/brr-brr-patapim-217x300.webp"},
+  {name:"Avocadini Antilopini", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Avocadini_Antilopini-224x300.webp"},
+  {name:"Trulimero Trulicina", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/trulimero-trulicina.webp"},
+  {name:"Bambini Crostini", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/bambini-crostini.webp"},
+  {name:"Malame Amarele", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/MalameAmarele-200x300.webp"},
+  {name:"Bananita Dolphinita", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Dolphin_But_Banana-226x300.webp"},
+  {name:"Perochello Lemonchello", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/perochello-lemonchello.webp"},
+  {name:"Brri Brri Bicus Dicus Bombicus", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Berry_berry_bicus_dickus.webp"},
+  {name:"Avocadini Guffo", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/AvocadiniGuffo.webp"},
+  {name:"Ti Ti Ti Sahur", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/tititi-sahur.webp"},
+  {name:"Mangolini Parrocini", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/mangolini-parrochini-264x300.webp"},
+  {name:"Frogato Pirato", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/frogato-pirato.webp"},
+  {name:"Gato Celesto", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Gato-Celestowebp-286x300.webp"},
+  {name:"Salamino Penguino", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Salamino-Penguino.webp"},
+  {name:"Doi Doi Do", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/DoiDoi.webp"},
+  {name:"Penguin Tree", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/PenguinTree-157x300.webp"},
+  {name:"Wombo Rollo", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Wombo-200x300.webp"},
+  {name:"Penguino Cocosino", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Penguino_Cocosino.webp"},
+  {name:"Mummio Rappitto", rarity:"Epic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Mummio_Rappitto-215x300.webp"},
 
   {name:"Chimpanzini Bananini", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/ChimpanziniBananini-262x300.webp"},
-
+  {name:"Tirilikalika Tirilikalako", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/TirilikalikaTirilikalakoTransparent.webp"},
+  {name:"Ballerina Cappuccina", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Ballerina_cappucinaaaa212121-261x300.webp"},
+  {name:"Burbaloni Loliloli", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/burbaloni-loliloli.webp"},
+  {name:"Chef Crabracadabra", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Chef-Crabracadabra.webp"},
+  {name:"Lionel Cactuseli", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Lionel-Cactuseli.webp"},
+  {name:"Glorbo Fruttodrillo", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/GlorboFruttodrillo.webp"},
+  {name:"Quivoli Ameleoni", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Quivioli_Ameleonni.webp"},
+  {name:"Blueberrinni Octopusini", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/NewBlueberrinni-1.webp"},
+  {name:"Caramello Filtrello", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Caramello_Filtrello2.webp"},
+  {name:"Pipi Potato", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/pipi-potato-236x300.webp"},
+  {name:"Strawberrelli Flamingelli", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Strawberrelli_Flamingelli.webp"},
+  {name:"Cocosini Mama", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cocosini_Mama-157x300.webp"},
+  {name:"Pandaccini Bananini", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Pandaccini_Bananini.webp"},
+  {name:"Quackula", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Quackula.webp"},
+  {name:"Pi Pi Watermelon", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Pi_Pi_Watermelon.webp"},
+  {name:"Signore Carapace", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Teenage_turtle.webp"},
+  {name:"Buho del Cielo", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Buho-del-Cielo-140x300.webp"},
+  {name:"Sigma Boy", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Sig_ma_Boy-240x300.webp"},
+  {name:"Chocco Bunny", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Chocco_Bunny-194x300.webp"},
+  {name:"Puffaball", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Puffaball.webp"},
+  {name:"Sigma Girl", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/SigmaGirl-216x300.webp"},
+  {name:"Sealo Regalo", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/01/Sealo-Regalo-228x300.webp"},
+  {name:"Buho de Fuego", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Buhodefuego-244x300.webp"},
+  {name:"Seraphino Gruyero", rarity:"Legendary", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Seraphino-Gruyero-300x251.webp"},
 
 
   {name:"Frigo Camelo", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/frigo-camelo.webp"},
+  {name:"Orangutini Ananassini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Banana-242x300.webp"},
+  {name:"Rhino Toasterino", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/rhino-toasterino-249x300.webp"},
+  {name:"Bombardiro Crocodilo", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/A_flying_alligator-1.webp"},
+  {name:"Spioniro Golubiro", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/spioniro-golubiro-216x300.webp"},
+  {name:"Bombombini Gusini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/bombombini-gusini.webp"},
+  {name:"Zibra Zubra Zibralini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Zibra_Zubra_Zibralini-151x300.webp"},
+  {name:"Tigrilini Watermelini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Tigrilini_Watermelini1-216x300.webp"},
+  {name:"Avocadorilla", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Avocadorilla.webp"},
+  {name:"Mythic Lucky Block", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Mythic_Lucky_Block.webp"},
+  {name:"Cavallo Virtuoso", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cavallo_Virtuoso-221x300.webp"},
+  {name:"Gorillo Subwoofero", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/gorillo-subwoofero-248x300.webp"},
+  {name:"Gorillo Watermelondrillo", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Gorillo-Watermelondrillo.webp"},
+  {name:"Stoppo Luminino", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Stoppo_Luminino-266x300.webp"},
+  {name:"Ganganzelli Trulala", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Ganganzelli_Trulala-247x300.webp"},
+  {name:"Tob Tobi Tobi", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Tob_Tobi_Tobi.webp"},
+  {name:"Lerulerulerule", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Lerulerulerule-256x300.webp"},
+  {name:"Te Te Te Sahur", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Te_Te_Te_Sahur.webp"},
+  {name:"Rhino Helicopterino", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/rhino-helicopterino.webp"},
+  {name:"Magi Ribbitini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/MagiRibbit.webp"},
+  {name:"Tracoducotulu Delapeladustuz", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Tracoducotulu-254x300.webp"},
+  {name:"Jingle Jingle Sahur", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/JingleJingleSahur.webp"},
+  {name:"Los Noobinis", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Noobinis.webp"},
+  {name:"Spongini Quackini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/01/Spongini-Quackini-179x300.webp"},
+  {name:"Cachorrito Melonito", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Watermelon_Doggy-210x300.webp"},
+  {name:"Carloo", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Mateo_fish-233x300.webp"},
+  {name:"Harpuccino", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Harpuccino-178x300.webp"},
+  {name:"Elefanto Frigo", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Elefanto_Frigo_Transparent.webp"},
+  {name:"Carrotini Brainini", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/carrotini-brainini.webp"},
+  {name:"Centrucci Nuclucci", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Centrucci_Nuclucci-191x300.webp"},
+  {name:"Toiletto Focaccino", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Toiletto-236x300.webp"},
+  {name:"Jacko Spaventosa", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/jacko-spaventosa-213x300.webp"},
+  {name:"Bananito Bandito", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/bananito-bandito-212x300.webp"},
+  {name:"Tree Tree Tree Sahur", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/TreeTreeTreeSahur-210x300.webp"},
+  {name:"Fizzy Soda", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/01/Fizzy-Soda-195x300.webp"},
+  {name:"Berenjello Angello", rarity:"Mythic", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Berenjello-Angello-212x300.webp"},
 
 
   {name:"Cocofanto Elefanto", rarity:"Brainrot God", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cocofanto.webp"},
@@ -333,7 +446,11 @@ const ALL_CARDS = [
 
 
   { name:"Skibidi Toilet", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-3be000d4-c396-4f70-9827-7b9f3208525e.png" },
-
+  { name:"Headless Horseman", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-afc3dd97-67c3-4c8b-94be-e3909d345d21.png" },
+  { name:"John Pork", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-e72fbeb0-d333-45cc-afd2-f501c066d2f8.png" },
+  { name:"Meowl", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-6acb0782-4a61-4b79-b994-e0c5717f6672.png" },
+  { name:"Smurf Cat", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-22b121bc-4380-4104-aff6-a2adf5f7bca5.png" },
+  { name:"Strawberry Elephant", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-86e303da-a89b-41d3-9902-35c2e8fea136.png" },
 
 
 ];
@@ -770,15 +887,42 @@ const loginBtn = document.getElementById("loginBtn");
 const signupBtn = document.getElementById("signupBtn");
 const authError = document.getElementById("authError");
 
-// Montrer le formulaire si pas connecté
+
+
+// Gestion de l'état de connexion
 auth.onAuthStateChanged(user => {
   if(user){
-    authOverlay.style.display = "none";
-    loadUserData(user.uid);
+    // Utilisateur connecté
+    authOverlay.style.display = "none";       // masque le formulaire
+    logoutBtn.style.display = "block";       // affiche le bouton déconnexion
+    loadUserData(user.uid);                  // charge les données
   } else {
-    authOverlay.style.display = "flex";
+    // Utilisateur déconnecté
+    authOverlay.style.display = "flex";      // montre le formulaire
+    logoutBtn.style.display = "none";        // cache le bouton déconnexion
   }
 });
+
+// Déconnexion
+logoutBtn.onclick = () => {
+  auth.signOut().then(() => {
+    alert("Déconnecté !");
+    collection = [];  // optionnel : vider la collection locale si tu veux
+    dust = 0;         // idem pour les fragments
+    save("collection", collection);
+    save("dust", dust);
+    refreshCollection();
+    refreshDust();
+    refreshLimit();
+  }).catch(err => {
+    console.error("Erreur lors de la déconnexion :", err);
+  });
+};
+
+
+
+
+
 
 // Inscription
 signupBtn.onclick = () => {
