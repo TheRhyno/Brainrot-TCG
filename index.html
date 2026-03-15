@@ -855,10 +855,8 @@ refreshLimit();
 showHome();
 refreshDust();
 
-
-  const firebaseConfig = {
-
-
+// --- Configuration Firebase ---
+const firebaseConfig = {
 
     apiKey: "AIzaSyD4H_pdAZSLrixwH-1NDRpEd537X-Gnvik",
 
@@ -875,22 +873,60 @@ refreshDust();
     measurementId: "G-6GE923T5CK"
 
 
-  };
+};
 
-  const app = firebase.initializeApp(firebaseConfig);
-  const analytics = firebase.analytics();
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+// Initialisation Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const analytics = firebase.analytics();
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-
-
+// --- Sélection des éléments DOM ---
 const emailInput = document.getElementById("emailInput");
 const passwordInput = document.getElementById("passwordInput");
 const signupBtn = document.getElementById("signupBtn");
 const loginBtn = document.getElementById("loginBtn");
 const authMsg = document.getElementById("authMsg");
 
-// S'inscrire
+// --- Fonctions pour charger et sauvegarder les données utilisateur ---
+function loadUserData(uid) {
+  const userDoc = db.collection("users").doc(uid);
+
+  userDoc.get().then(doc => {
+    if (doc.exists) {
+      const data = doc.data();
+      collection = data.collection || [];
+      dust = data.dust || 0;
+    } else {
+      // Création d'un doc vide si l'utilisateur est nouveau
+      collection = [];
+      dust = 0;
+      userDoc.set({ collection: [], dust: 0 });
+    }
+    refreshCollection();
+    refreshDust();
+  });
+}
+
+function saveUserData(uid) {
+  db.collection("users").doc(uid).set({
+    collection,
+    dust
+  });
+}
+
+// --- Listener sur l'état d'authentification ---
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById("authSection").style.display = "none";
+    showHome();       // Affiche l'accueil
+    loadUserData(user.uid); // Charge les données de l'utilisateur
+  } else {
+    document.getElementById("authSection").style.display = "block";
+  }
+});
+
+// --- Inscription ---
 signupBtn.addEventListener("click", () => {
   const email = emailInput.value;
   const password = passwordInput.value;
@@ -908,7 +944,7 @@ signupBtn.addEventListener("click", () => {
     });
 });
 
-// Se connecter
+// --- Connexion ---
 loginBtn.addEventListener("click", () => {
   const email = emailInput.value;
   const password = passwordInput.value;
@@ -924,16 +960,6 @@ loginBtn.addEventListener("click", () => {
       authMsg.style.color = "red";
       authMsg.textContent = error.message;
     });
-});
-
-// Masquer / afficher selon état
-auth.onAuthStateChanged(user => {
-  if (user) {
-    document.getElementById("authSection").style.display = "none";
-    showHome(); // afficher l'accueil
-  } else {
-    document.getElementById("authSection").style.display = "block";
-  }
 });
 
 
