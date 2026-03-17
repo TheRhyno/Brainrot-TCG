@@ -25,6 +25,168 @@ button:disabled{background:#3b3b3b;cursor:not-allowed}
   40% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+
+
+
+
+html, body {
+  overflow: hidden;  /* bloque tout scroll */
+  height: 100%;      /* s’assure que body prenne toute la hauteur */
+}
+
+
+@media (max-width: 600px) {
+    body { padding: 10px; }
+    .cards { gap: 6px; justify-content: center; }
+    .card { width: 90%; max-width: none; } /* prend presque toute la largeur en mobile */
+    button { padding: 8px 12px; font-size: 0.9rem; }
+    #searchCard { width: 90%; max-width: 300px; }
+}
+
+@media (max-width: 400px) {
+    #authOverlay input { font-size: 0.9rem; padding: 10px; }
+    #authOverlay button { font-size: 0.9rem; padding: 8px 0; width: 90%; }
+    #authOverlay h2 { font-size: 1.2rem; }
+}
+
+
+#authOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(14,21,37,0.95); /* un léger fondu */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; /* scroll si écran trop petit */
+    text-align: center;
+    z-index: 9999;
+}
+
+#authOverlay h2 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+#authOverlay input {
+    width: 90%; /* prend presque toute la largeur écran */
+    max-width: 320px; /* limite pour grands écrans */
+    margin: 8px 0;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+}
+
+#authOverlay button {
+    width: 45%; /* deux boutons côte à côte */
+    max-width: 140px;
+    padding: 10px 0;
+    margin: 5px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* bouton déconnexion responsive */
+#logoutBtn {
+    position: fixed;
+    top: 15px;           /* ou bottom: 15px si tu préfères */
+    right: 15px;
+    padding: 6px 12px;   /* compact */
+    font-size: 0.9rem;
+    width: auto;         /* largeur automatique */
+    height: auto;        /* hauteur automatique */
+    line-height: normal; /* éviter qu’il s’étire */
+    border-radius: 6px;
+    background: #a00;
+    color: #fff;
+    cursor: pointer;
+    z-index: 10000;
+}
+
+@media (max-width: 480px) {
+    #logoutBtn {
+        top: 5px;             /* encore plus haut */
+        right: 5px;           /* petit décalage à droite */
+        padding: 2px 6px;     /* très petit padding */
+        font-size: 0.65rem;   /* police très petite */
+        border-radius: 3px;   /* coins très petits */
+        width: auto;          
+        height: auto;         
+        min-width: 50px;      /* reste cliquable */
+        min-height: 20px;     /* reste cliquable */
+        z-index: 10000;       /* toujours au-dessus */
+    }
+}
+
+@media (max-width: 480px) {
+#choosePackArea {
+  display: flex;
+  justify-content: space-between; /* espace entre boosters */
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: nowrap; /* on reste sur une seule ligne */
+}
+
+.booster {
+  flex: 1 1 0;           /* prend tout l’espace disponible également */
+  max-width: calc((100% - 20px) / 3); /* 3 boosters avec gap */
+  height: auto;
+  aspect-ratio: 150 / 220;  /* garde les proportions du booster */
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.booster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;     /* remplissage complet de la boîte */
+  display: block;
+}
+
+
+@media (max-width: 768px) { /* mobile/tablette */
+  body, * {
+    user-select: none;       /* Empêche la sélection du texte */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+}
+
+
+
+/* Overlay qui bloque tout le site */
+#disableOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.95);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1.5rem;
+    z-index: 99999;
+    padding: 20px;
+    box-sizing: border-box;
+    pointer-events: all; /* empêche tout clic dessous */
+}
+
+
+
 .flash-effect {
   position: fixed;
   top: 0; left: 0;
@@ -204,6 +366,38 @@ button:disabled{background:#3b3b3b;cursor:not-allowed}
     display: none; /* caché par défaut */
 }
 
+/* Animation OG avec overlay qui bloque tout */
+#ogAnimation {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20000;
+  pointer-events: all; /* on capture le clic ici */
+  user-select: none;
+}
+
+#ogText {
+  font-size: 80px;
+  font-weight: bold;
+  color: #00ffff;
+  text-shadow:
+    0 0 20px #00ffff,
+    0 0 40px #00ffff,
+    0 0 80px #00ffff;
+  animation: ogText 1.5s ease-out;
+}
+
+@keyframes ogText {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.5); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
 
 </style>
 </head>
@@ -226,11 +420,26 @@ button:disabled{background:#3b3b3b;cursor:not-allowed}
 <div id="dustDisplay" class="note">💎 Fragments : 0</div>
 
   <div id="homeSection">
+  <div id="boosterCounter" style="color:#fff;font-weight:bold;font-size:1rem;margin-bottom:10px;">
+    Boosters ouverts : 0
+  </div>
     <div id="choosePackArea" style="display:none; margin-top:20px;"></div>
   </div>
 
   <div id="collectionSection" style="display:none;margin-bottom:80px">
     <h2>Ta collection</h2>
+
+  <div style="margin-bottom: 10px;">
+    <input type="text" id="searchCollection" placeholder="Rechercher dans ta collection..." style="padding:6px 10px;border-radius:6px;border:none;width:220px">
+  </div>
+
+
+  <div style="margin-bottom: 10px;">
+    <button id="showMissingBtn" style="padding:6px 10px;border-radius:6px;border:none;background:#7c3aed;color:#fff;cursor:pointer">
+      Voir les cartes manquantes
+    </button>
+  </div>
+
     <div id="collection" class="cards"></div>
   </div>
 
@@ -238,6 +447,11 @@ button:disabled{background:#3b3b3b;cursor:not-allowed}
 
   <div id="allCardsSection" style="display:none;margin-bottom:80px">
     <h2>Chances d'obtention</h2>
+
+
+
+
+
 
   <input 
     type="text"
@@ -252,6 +466,8 @@ button:disabled{background:#3b3b3b;cursor:not-allowed}
 
 <nav style="position:fixed;bottom:0;left:0;width:100%;background:#111a2e;padding:10px 0;display:flex;justify-content:space-around;border-top:2px solid #0d1220;z-index:9999">
   <button id="tabHome">Accueil</button>
+
+
   <button id="tabCollection">Collection</button>
   <button id="tabShop">Boutique</button>
   <button id="tabAllCards">Chances d'obtention</button>
@@ -268,6 +484,11 @@ button:disabled{background:#3b3b3b;cursor:not-allowed}
   <div id="shopCards" class="cards"></div>
 </div>
 
+
+<div id="disableOverlay" style="display:none;">
+    🚫 Le site est actuellement en maintenance.<br>
+    Veuillez revenir plus tard.
+</div>
 
 
 
@@ -300,6 +521,7 @@ button:disabled{background:#3b3b3b;cursor:not-allowed}
 
 
 <script>
+
 
 const firebaseConfig = {
 
@@ -465,10 +687,6 @@ const BOOSTER_IMAGES = [
 
 
 
-
-
-
-
 const SHOP_CARDS = [
   {name:"Cappuccino Assassino", rarity:"Epic", price:80, image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cappuccino_Assassino-264x300.webp"},
   {name:"Chimpanzini Bananini", rarity:"Legendary", price:200, image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/ChimpanziniBananini-262x300.webp"},
@@ -476,10 +694,191 @@ const SHOP_CARDS = [
 ];
 
 
+
+
+
 const shopSection = document.getElementById("shopSection");
 const tabShop = document.getElementById("tabShop");
 
 tabShop.addEventListener("click", showShop);
+
+
+
+const searchCollectionInput = document.getElementById("searchCollection");
+
+searchCollectionInput.addEventListener("input", () => {
+    const query = searchCollectionInput.value.toLowerCase();
+
+    const filtered = collection.filter(card => card.name.toLowerCase().includes(query));
+
+    refreshCollection(filtered);
+});
+
+
+
+// --- Overlay site désactivé ---
+function disableSite(active) {
+    // On récupère l'overlay (assure-toi qu'il n'y a qu'un seul #disableOverlay dans le HTML)
+    const overlay = document.getElementById('disableOverlay');
+
+    // Les sections principales à cacher
+    const sections = [
+        document.getElementById('homeSection'),
+        document.getElementById('collectionSection'),
+        document.getElementById('allCardsSection'),
+        document.getElementById('shopSection')
+    ];
+
+    function blockInput(e){
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
+    if(active) {
+        // Affiche l'overlay
+        overlay.style.display = 'flex';
+        overlay.style.pointerEvents = 'all';
+        overlay.style.zIndex = '100000';
+
+        // Cache les sections principales
+        sections.forEach(sec => { if(sec) sec.style.display = 'none'; });
+
+        // Empêche scroll et interactions
+        document.body.style.overflow = 'hidden';
+
+        // Bloque clavier et clics
+        document.addEventListener('keydown', blockInput, true);
+        document.addEventListener('click', blockInput, true);
+        document.addEventListener('touchstart', blockInput, true); // pour mobile
+    } else {
+        // Masque l'overlay
+        overlay.style.display = 'none';
+
+        // Restaure les sections
+        sections.forEach(sec => { if(sec) sec.style.display = 'block'; });
+
+        // Restaure scroll
+        document.body.style.overflow = 'auto';
+
+        // Supprime le blocage clavier et clics
+        document.removeEventListener('keydown', blockInput, true);
+        document.removeEventListener('click', blockInput, true);
+        document.removeEventListener('touchstart', blockInput, true);
+    }
+}
+
+// Bloque le site dès le chargement
+disableSite(false);
+
+
+
+
+
+
+function showOGAnimation(card, callback) {
+    const anim = document.createElement("div");
+    anim.id = "ogAnimation";
+    anim.style.cssText = `
+        position:fixed;top:0;left:0;width:100vw;height:100vh;
+        background:rgba(0,255,255,0.2);
+        display:flex;align-items:center;justify-content:center;
+        z-index:20000;pointer-events:all;user-select:none;
+    `;
+
+    const text = document.createElement("div");
+    text.innerText = "OG !!!";
+    text.style.cssText = `
+        font-size:80px;font-weight:bold;color:#00ffff;
+        text-shadow:0 0 20px #00ffff,0 0 40px #00ffff,0 0 80px #00ffff;
+        animation: ogText 1.5s ease-out;
+    `;
+
+    anim.appendChild(text);
+    document.body.appendChild(anim);
+
+    // autoriser le clic après animation
+    setTimeout(() => {
+        anim.style.cursor = "pointer";
+        anim.addEventListener("click", () => {
+            anim.remove();
+            if(callback) callback();
+        }, { once: true });
+    }, 1500);
+}
+
+
+
+
+
+
+const boosterCounterDiv = document.getElementById("boosterCounter");
+
+// --- Récupérer le compteur depuis Firestore après connexion ---
+function loadBoosterCounter(uid) {
+    db.collection("users").doc(uid).get()
+      .then(doc => {
+        if (doc.exists) {
+            const count = doc.data().boostersOpened || 0;
+            boosterCounterDiv.innerText = `Boosters ouverts : ${count}`;
+            boosterCounterDiv.style.display = 'block'; // affiché uniquement si connecté
+        } else {
+            boosterCounterDiv.innerText = `Boosters ouverts : 0`;
+            boosterCounterDiv.style.display = 'block';
+        }
+      })
+      .catch(err => console.error("Erreur lors du chargement du compteur :", err));
+}
+
+// --- Incrémenter le compteur dans Firestore et à l’écran ---
+function incrementBoosterCounter(uid) {
+  const userRef = db.collection("users").doc(uid);
+
+  db.runTransaction(async (transaction) => {
+    const doc = await transaction.get(userRef);
+
+    let current = 0;
+
+    if (doc.exists) {
+      current = doc.data().boostersOpened || 0;
+    }
+
+    transaction.set(userRef, {
+      boostersOpened: current + 1
+    }, { merge: true });
+
+    return current + 1;
+  })
+  .then(newCount => {
+    boosterCounterDiv.innerText = `Boosters ouverts : ${newCount}`;
+  })
+  .catch(err => console.error("Erreur compteur :", err));
+}
+
+
+
+
+
+
+
+
+const showMissingBtn = document.getElementById("showMissingBtn");
+let showingMissing = false; // pour basculer
+
+showMissingBtn.addEventListener("click", () => {
+    showingMissing = !showingMissing; // inverse l'état
+
+    if(showingMissing){
+        showMissingBtn.textContent = "Voir ma collection"; // bouton pour revenir
+        searchCollectionInput.style.display = "none"; // cache la recherche
+        const missingCards = ALL_CARDS.filter(c => !collection.some(col => col.name === c.name));
+        refreshCollection(missingCards);
+    } else {
+        showMissingBtn.textContent = "Voir les cartes manquantes";
+        searchCollectionInput.style.display = "block"; // réaffiche la recherche
+        refreshCollection(collection); // affiche toute la collection
+    }
+});
+
 
 
 
@@ -491,18 +890,17 @@ function showShop() {
   updateButtons();
 
   const shopDiv = document.getElementById("shopCards");
-  shopDiv.innerHTML = SHOP_CARDS.map(c => {
+  shopDiv.innerHTML = shopCards.map(c => {
 
-    // Si déjà dans la collection → bouton désactivé
     const owned = collection.some(card => card.name === c.name);
-    const btnText = owned ? "Déjà possédé" : `Acheter (${c.price}💎)`;
+    const btnText = owned ? "Déjà possédé" : `Acheter (${c.price ?? 0}💎)`; // price si défini
 
     return `
       <div class="card r-${c.rarity.replace(/ /g,"-")}" style="position:relative;">
         <div style="font-size:0.8rem;color:#ccc;margin-bottom:6px;font-weight:bold;">${c.rarity}</div>
         <img src="${c.image}" style="width:100%;height:50%;object-fit:contain;margin:0 auto 10px auto;border-radius:8px;display:block">
         <strong>${c.name}</strong>
-        <button class="buyBtn" data-name="${c.name}" data-price="${c.price}" style="margin-top:6px;padding:4px 6px;border-radius:6px;border:0;background:#7c3aed;color:#fff;cursor:pointer;" ${owned?"disabled":""}>${btnText}</button>
+        <button class="buyBtn" data-name="${c.name}" data-price="${c.price ?? 0}" style="margin-top:6px;padding:4px 6px;border-radius:6px;border:0;background:#7c3aed;color:#fff;cursor:pointer;" ${owned?"disabled":""}>${btnText}</button>
       </div>
     `;
   }).join("");
@@ -513,7 +911,7 @@ function showShop() {
       const name = btn.getAttribute("data-name");
       const price = parseInt(btn.getAttribute("data-price"));
       if (dust >= price) {
-        const card = SHOP_CARDS.find(c => c.name === name);
+        const card = shopCards.find(c => c.name === name);
         if(card){
           collection.push({...card});
           dust -= price;
@@ -523,7 +921,7 @@ function showShop() {
           refreshCollection();
           showShop(); // refresh boutique
           alert(`Tu as acheté ${name} !`);
-autoSave();
+          autoSave();
         }
       } else {
         alert("Pas assez de fragments !");
@@ -540,6 +938,7 @@ function save(key,val){localStorage.setItem(key,JSON.stringify(val));}
 let collection = load("collection",[]);
 let daily = load("daily",{date:null,opened:0});
 let dust = load("dust", 0);
+let shopCards = [];
 
 function refreshDust(){
   document.getElementById("dustDisplay").textContent = "💎 Fragments : " + dust;
@@ -585,6 +984,9 @@ const bigName=document.getElementById('bigCardName');
 
 
 
+
+
+
 function showBigCard() {
     if (currentCardIndex >= currentPack.length) {
         overlay.style.display = 'none';
@@ -594,7 +996,6 @@ function showBigCard() {
     }
 
     const c = currentPack[currentCardIndex];
-
     const wrapper = document.createElement("div");
     wrapper.className = "card-wrapper";
 
@@ -608,15 +1009,77 @@ function showBigCard() {
     const cardDiv = document.createElement("div");
 
     if (c.rarity === "OG") {
-        // OG : image plus grande comme dans l'ouverture de booster
         cardDiv.className = "card big-card big-OG";
         cardDiv.style.border = "none";
         cardDiv.style.padding = "0";
         cardDiv.style.background = "none";
-cardDiv.innerHTML = `<img src="${c.image}" 
-                      style="max-width:90vw; max-height:90vh; object-fit:contain; display:block; margin:auto; border-radius:12px;">`;
+
+        const cardImg = document.createElement("img");
+        cardImg.src = c.image;
+        cardImg.style.cssText = "max-width:90vw; max-height:90vh; object-fit:contain; display:block; margin:auto; border-radius:12px;";
+        cardDiv.appendChild(cardImg);
+
+        // Canvas feu d’artifice
+        const canvas = document.createElement("canvas");
+        canvas.style.position = "fixed";
+        canvas.style.top = "0";
+        canvas.style.left = "0";
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        canvas.style.pointerEvents = "none";
+        canvas.style.zIndex = "20000";
+        document.body.appendChild(canvas);
+
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        for (let i = 0; i < 150; i++) {
+            particles.push({
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                vx: (Math.random() - 0.5) * 10,
+                vy: (Math.random() - 1.5) * 10,
+                alpha: 1,
+                radius: Math.random() * 3 + 2,
+                color: `hsl(${Math.random() * 360},100%,50%)`
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= 0.02;
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            // Supprimer les particules mortes
+            for (let i = particles.length - 1; i >= 0; i--) {
+                if (particles[i].alpha <= 0) particles.splice(i, 1);
+            }
+
+            if (particles.length > 0) {
+                requestAnimationFrame(animate);
+            } else {
+                // Une fois fini, enlever le canvas
+                canvas.remove();
+            }
+        }
+        animate();
+
+        // Bloquer le skip pendant 1,5s
+        overlay.removeEventListener('click', overlayClickHandler);
+        setTimeout(() => {
+            overlay.addEventListener('click', overlayClickHandler);
+        }, 1500);
+
     } else {
-        // Les autres cartes : inchangées
         cardDiv.className = "card big-card big-" + c.rarity.replace(/ /g, "-");
         cardDiv.innerHTML = `
           <div style="font-size:1rem;color:#ccc;margin-bottom:6px;">${escapeHtml(c.rarity)}</div>
@@ -631,9 +1094,18 @@ cardDiv.innerHTML = `<img src="${c.image}"
     overlay.style.display = "flex";
 }
 
+// Skip normal
+function overlayClickHandler() {
+    currentCardIndex++;
+    showBigCard();
+}
+
+// Toujours lié pour toutes les cartes
+overlay.addEventListener('click', overlayClickHandler);
 
 
-overlay.addEventListener('click',()=>{currentCardIndex++; showBigCard();});
+
+
 
 // --- Ouvrir booster ---
 function openPackSequence() {
@@ -652,6 +1124,12 @@ function openPackSequence() {
     b.onmouseenter = () => b.style.transform = "scale(1.08)";
     b.onmouseleave = () => b.style.transform = "scale(1)";
     b.onclick = () => {
+
+const user = auth.currentUser;
+if(user){
+  incrementBoosterCounter(user.uid);
+}
+
       if (b.classList.contains("booster-opening")) return;
       b.classList.add("booster-opening");
 
@@ -791,38 +1269,103 @@ function updateButtons() {
   }
 }
 
-
-function refreshCollection() {
+function refreshCollection(cardsToShow) {
     const collectionDiv = document.getElementById("collection");
     collectionDiv.innerHTML = "";
 
-    collection.forEach(card => {
+    const cards = cardsToShow || collection;
+
+    // --- COMPTEUR cartes obtenues / total ---
+    const collectionSection = document.getElementById("collectionSection");
+    let compteurDiv = collectionSection.querySelector(".compteur-cards");
+
+    if (!compteurDiv) {
+        compteurDiv = document.createElement("div");
+        compteurDiv.className = "compteur-cards";
+        compteurDiv.style.fontSize = "1rem";
+        compteurDiv.style.color = "#fff";
+        compteurDiv.style.marginBottom = "15px";
+        compteurDiv.style.textAlign = "center";
+        compteurDiv.style.fontWeight = "bold";
+
+        const existingTitle = collectionSection.querySelector("h2");
+        if (existingTitle) {
+            existingTitle.insertAdjacentElement("afterend", compteurDiv);
+        }
+    }
+
+    compteurDiv.innerText = `Cartes obtenues : ${collection.length} / ${ALL_CARDS.length}`;
+
+    // --- Affichage des cartes ---
+    cards.forEach(c => {
         const wrapper = document.createElement("div");
         wrapper.className = "card-wrapper";
 
+        if(c.isNew){
+            const label = document.createElement("div");
+            label.className = "new-label";
+            label.textContent = "NOUVEAU";
+            wrapper.appendChild(label);
+        }
+
         const cardDiv = document.createElement("div");
 
-        if (card.rarity === "OG") {
-            cardDiv.className = "card"; 
-            cardDiv.style.border = "none"; 
-            cardDiv.style.padding = "0";   
-            cardDiv.style.background = "none"; 
+        if (c.rarity === "OG") {
+            // OG : même style que dans "Chances d'obtention"
+            cardDiv.className = "card";
+            cardDiv.style.position = "relative";
+            cardDiv.style.border = "none";
+            cardDiv.style.padding = "0";
+            cardDiv.style.background = "none";
+            cardDiv.style.overflow = "hidden";
 
-            cardDiv.innerHTML = `<img src="${card.image}" 
-                                      style="width:100%;height:100%;object-fit:contain;display:block;border-radius:0;">`;
-        } else {
-            cardDiv.className = "card r-" + card.rarity.replace(" ", "-");
             cardDiv.innerHTML = `
-                <div style="font-size:0.8rem;color:#ccc;margin-bottom:4px;">${escapeHtml(card.rarity)}</div>
-                <img src="${card.image}" alt="${card.name}" style="width:100%;border-radius:8px;margin-bottom:8px">
-                <strong>${escapeHtml(card.name)}</strong>
+                <img src="${c.image}" 
+                     style="width:100%;height:100%;object-fit:contain;display:block;border-radius:0;">
+            `;
+        } else {
+            // autres cartes : inchangé
+            cardDiv.className = "card r-" + c.rarity.replace(/ /g, "-");
+            cardDiv.innerHTML = `
+                <div style="font-size:0.8rem;color:#ccc;margin-bottom:4px;">${c.rarity}</div>
+                <img src="${c.image}" alt="${c.name}" style="width:100%;border-radius:8px;margin-bottom:8px">
+                <strong>${c.name}</strong>
             `;
         }
 
         wrapper.appendChild(cardDiv);
         collectionDiv.appendChild(wrapper);
     });
+
+    // --- Centrage moteur de recherche ---
+    const searchWrapper = document.getElementById("searchCollection")?.parentElement;
+    if (searchWrapper) {
+        searchWrapper.style.display = "flex";
+        searchWrapper.style.justifyContent = "center";
+        searchWrapper.style.marginBottom = "10px";
+    }
 }
+
+
+function refreshAllCards() {
+    const allDiv = document.getElementById("allCardsList");
+    allDiv.innerHTML = "";
+
+    ALL_CARDS.forEach(c => {
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "card r-" + c.rarity.replace(/ /g, "-");
+        cardDiv.innerHTML = `
+            <img src="${c.image}" alt="${c.name}">
+            <strong>${c.name}</strong>
+            <div class="rarity-indicator r-${c.rarity.replace(/ /g, "-")}">${c.rarity}</div>
+        `;
+        allDiv.appendChild(cardDiv);
+    });
+}
+
+
+
+
 
 function displayCards(cards) {
     const sortedCards = [...cards].sort(
@@ -886,58 +1429,90 @@ const passwordInput = document.getElementById("passwordInput");
 const loginBtn = document.getElementById("loginBtn");
 const signupBtn = document.getElementById("signupBtn");
 const authError = document.getElementById("authError");
+const logoutBtn = document.getElementById("logoutBtn");
 
-
-
-// Gestion de l'état de connexion
+// --- Gestion de l'état de connexion ---
 auth.onAuthStateChanged(user => {
-  if(user){
-    // Utilisateur connecté
-    authOverlay.style.display = "none";       // masque le formulaire
-    logoutBtn.style.display = "block";       // affiche le bouton déconnexion
-    loadUserData(user.uid);                  // charge les données
-  } else {
-    // Utilisateur déconnecté
-    authOverlay.style.display = "flex";      // montre le formulaire
-    logoutBtn.style.display = "none";        // cache le bouton déconnexion
-  }
+    if(user){
+        // Utilisateur connecté
+        authOverlay.style.display = "none";       // masque le formulaire
+        logoutBtn.style.display = "block";       // affiche le bouton déconnexion
+        loadUserData(user.uid);                  // charge collection, dust, etc.
+        loadBoosterCounter(user.uid);            // affiche le compteur de boosters
+        checkDailyShop();                        // si tu as une boutique quotidienne
+    } else {
+        // Utilisateur déconnecté
+        authOverlay.style.display = "flex";      // montre le formulaire
+        logoutBtn.style.display = "none";        // cache le bouton déconnexion
+    }
 });
 
-// Déconnexion
-logoutBtn.onclick = () => {
-  auth.signOut().then(() => {
-    alert("Déconnecté !");
-    collection = [];  // optionnel : vider la collection locale si tu veux
-    dust = 0;         // idem pour les fragments
-    save("collection", collection);
-    save("dust", dust);
-    refreshCollection();
-    refreshDust();
-    refreshLimit();
-  }).catch(err => {
-    console.error("Erreur lors de la déconnexion :", err);
-  });
-};
-
-
-
-
-
-
-// Inscription
-signupBtn.onclick = () => {
-  auth.createUserWithEmailAndPassword(emailInput.value, passwordInput.value)
-      .then(cred => {
-        saveUserData(cred.user.uid); // Création des données initiales
-      })
-      .catch(err => authError.textContent = err.message);
-};
-
-// Connexion
+// --- Connexion ---
 loginBtn.onclick = () => {
-  auth.signInWithEmailAndPassword(emailInput.value, passwordInput.value)
-      .catch(err => authError.textContent = err.message);
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+            const uid = userCredential.user.uid;
+            loadUserData(uid);
+            loadBoosterCounter(uid);
+            authOverlay.style.display = "none";
+            logoutBtn.style.display = "block";
+            authError.textContent = "";
+        })
+        .catch(err => authError.textContent = err.message);
 };
+
+// --- Inscription ---
+signupBtn.onclick = () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+            const uid = userCredential.user.uid;
+
+            // Crée le document Firestore pour le nouvel utilisateur
+            db.collection("users").doc(uid).set({
+                boostersOpened: 0,
+                collection: [],
+                dust: 0
+            }).then(() => {
+                console.log("Document utilisateur créé !");
+                loadUserData(uid);
+                loadBoosterCounter(uid);
+                authOverlay.style.display = "none";
+                logoutBtn.style.display = "block";
+                authError.textContent = "";
+            }).catch(err => {
+                console.error("Erreur création doc :", err);
+                authError.textContent = "Erreur création profil : " + err.message;
+            });
+        })
+        .catch(err => authError.textContent = err.message);
+};
+
+// --- Déconnexion ---
+logoutBtn.onclick = () => {
+    auth.signOut()
+        .then(() => {
+            alert("Déconnecté !");
+            collection = [];  // vide collection locale
+            dust = 0;         // vide fragments locaux
+            save("collection", collection);
+            save("dust", dust);
+            refreshCollection();
+            refreshDust();
+            refreshLimit();
+        })
+        .catch(err => console.error("Erreur lors de la déconnexion :", err));
+};
+
+
+
+
+
+
+
 
 // Sauvegarder les données sur Firebase
 function saveUserData(uid){
@@ -975,9 +1550,99 @@ function autoSave(){
     db.collection("users").doc(user.uid).set({
       collection: collection,
       dust: dust
-    });
+    }, { merge: true });
   }
 }
+
+
+async function checkDailyShop() {
+    const now = new Date();
+    const updateHour = 0;
+    const updateMinute = 0;
+    const updateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), updateHour, updateMinute);
+
+    const userId = auth.currentUser?.uid;
+    if (!userId) return; // pas connecté
+
+    const docRef = db.collection("dailyShop").doc(userId);
+    const docSnap = await docRef.get();
+
+    let shouldUpdate = false;
+    let shopCardsFromDb = [];
+
+    if (!docSnap.exists) {
+        shouldUpdate = true;
+    } else {
+        const data = docSnap.data();
+        const lastUpdate = data?.lastUpdate ? new Date(data.lastUpdate) : null;
+        shopCardsFromDb = data?.cards || [];
+
+        if (!lastUpdate || (now >= updateTime && lastUpdate < updateTime)) {
+            shouldUpdate = true;
+        }
+    }
+
+    if (shouldUpdate) {
+        const RARITY_PRICES = {
+            "Commun": 1000,
+            "Rare": 2000,
+            "Epic": 6000,
+            "Legendary": 8000,
+            "Mythic": 10000,
+            "Brainrot God": 20000,
+            "Secret": 50000,
+            "OG": 100000
+        };
+
+        // Définir la probabilité de chaque rareté (en %)
+        const RARITY_PROBABILITIES = {
+            "Commun": 35,
+            "Rare": 30,
+            "Epic": 25,
+            "Legendary": 20,
+            "Mythic": 15,
+            "Brainrot God": 10,
+            "Secret": 5,
+            "OG": 1
+        };
+
+        function pickRandomRarity() {
+            const roll = Math.random() * 100;
+            let cumulative = 0;
+            for (const [rarity, chance] of Object.entries(RARITY_PROBABILITIES)) {
+                cumulative += chance;
+                if (roll <= cumulative) return rarity;
+            }
+            return "Commun"; // fallback
+        }
+
+        function pickRandomCardWithProbability() {
+            const rarity = pickRandomRarity();
+            const card = pickRandomCard(); // ton pickRandomCard existant
+            return {
+                ...card,
+                rarity, // override rareté selon probabilité
+                price: RARITY_PRICES[rarity] || 10
+            };
+        }
+
+        // Créer 4 cartes aléatoires avec prix selon probabilité
+        const newShop = [1,2,3,4].map(() => pickRandomCardWithProbability());
+
+        shopCards = newShop;
+
+        // Enregistrer dans Firestore
+        await docRef.set({
+            lastUpdate: now.toISOString(),
+            cards: newShop
+        });
+    } else {
+        shopCards = shopCardsFromDb;
+    }
+
+}
+
+
 
 </script>
 </body>
