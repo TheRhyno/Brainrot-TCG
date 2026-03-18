@@ -94,37 +94,8 @@ html, body {
     cursor: pointer;
 }
 
-/* bouton déconnexion responsive */
-#logoutBtn {
-    position: fixed;
-    top: 15px;           /* ou bottom: 15px si tu préfères */
-    right: 15px;
-    padding: 6px 12px;   /* compact */
-    font-size: 0.9rem;
-    width: auto;         /* largeur automatique */
-    height: auto;        /* hauteur automatique */
-    line-height: normal; /* éviter qu’il s’étire */
-    border-radius: 6px;
-    background: #a00;
-    color: #fff;
-    cursor: pointer;
-    z-index: 10000;
-}
 
-@media (max-width: 480px) {
-    #logoutBtn {
-        top: 5px;             /* encore plus haut */
-        right: 5px;           /* petit décalage à droite */
-        padding: 2px 6px;     /* très petit padding */
-        font-size: 0.65rem;   /* police très petite */
-        border-radius: 3px;   /* coins très petits */
-        width: auto;          
-        height: auto;         
-        min-width: 50px;      /* reste cliquable */
-        min-height: 20px;     /* reste cliquable */
-        z-index: 10000;       /* toujours au-dessus */
-    }
-}
+
 
 @media (max-width: 480px) {
 #choosePackArea {
@@ -353,18 +324,8 @@ html, body {
   display: none;
 }
 
-#logoutBtn {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    background: #a00; /* rouge foncé */
-    color: #fff;
-    cursor: pointer;
-    display: none; /* caché par défaut */
-}
+
+
 
 /* Animation OG avec overlay qui bloque tout */
 #ogAnimation {
@@ -486,7 +447,7 @@ html, body {
 
 
 <div id="disableOverlay" style="display:none;">
-    🚫 Le site est actuellement en maintenance et rouvrira le 18/03 à 14h.<br>
+    🚫 Le site est actuellement en maintenance.<br>
     Veuillez revenir plus tard ou contacter le développeur.
 </div>
 
@@ -507,7 +468,7 @@ html, body {
 
 </div>
 
-<button id="logoutBtn">Déconnexion</button>
+
 
 
 
@@ -517,6 +478,46 @@ html, body {
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 
+
+<audio id="bgMusic" loop>
+  <source src="https://raw.githubusercontent.com/TheRhyno/Musiques/main/SpotiDownloader.com%20-%20C'est%20nous%20dans%20le%20top%20(Brainrot)%20-%20Unchained(1).mp3" type="audio/mpeg">
+</audio>
+
+<button id="musicBtn" style="position: fixed; top: 10px; left: 10px; z-index: 1000; width: 34px; height: 34px; padding: 0; background: rgba(30, 41, 59, 0.8); color: white; border-radius: 8px; border: 1px solid #475569; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; backdrop-filter: blur(4px);">
+    🔈
+</button>
+
+
+
+
+<button id="accountBtn" style="display:none; position: fixed; top: 10px; right: 10px; z-index: 1000; width: 34px; height: 34px; padding: 0; background: rgba(30, 41, 59, 0.8); color: white; border-radius: 8px; border: 1px solid #475569; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; backdrop-filter: blur(4px);">
+    👤
+</button>
+
+<div id="accountSection" style="display:none; flex-direction:column; align-items:center; padding:20px; box-sizing:border-box; background:#111; color:white; min-height:100vh;">
+    
+    <h2 style="margin-top:20px; margin-bottom:30px;">Mon Profil</h2>
+    
+    <div style="background: #222; padding: 20px; border-radius: 12px; width: 95%; max-width: 400px; border: 1px solid #444; margin-bottom: 30px;">
+        <p style="margin: 0; color: #aaa; font-size: 0.8rem;">Email :</p>
+        <p id="userEmail" style="font-weight: bold; margin: 5px 0 20px 0; word-break: break-all;">...</p>
+        
+        <p style="margin: 0; color: #aaa; font-size: 0.8rem;">ID Utilisateur :</p>
+        <p id="userIdDisplay" style="font-size: 0.7rem; color: #666; word-break: break-all; margin: 5px 0 0 0;">...</p>
+    </div>
+
+    <div style="display: flex; gap: 12px; width: 95%; max-width: 400px;">
+        
+        <button id="backFromAccount" style="flex: 1; background:#444; color:white; padding:15px; border-radius:10px; border:0; cursor:pointer; font-weight:bold;">
+            ← Retour
+        </button>
+
+        <button id="logoutBtn" style="flex: 1; background:#ef4444; color:white; padding:15px; border-radius:10px; border:0; cursor:pointer; font-weight:bold;">
+            Déconnexion
+        </button>
+
+    </div>
+</div>
 
 
 
@@ -664,7 +665,9 @@ const ALL_CARDS = [
   {name:"Cocofanto Elefanto", rarity:"Brainrot God", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cocofanto.webp"},
 
 
-  {name:"TEST", rarity:"Secret", image:"images.png"},
+  {name:"La Vacca Saturno Saturnita", rarity:"Secret", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/La_Vaccca_Saturno_Saturnita.webp"},
+
+
 
 
   { name:"Skibidi Toilet", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-3be000d4-c396-4f70-9827-7b9f3208525e.png" },
@@ -675,22 +678,24 @@ const ALL_CARDS = [
   { name:"Strawberry Elephant", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-86e303da-a89b-41d3-9902-35c2e8fea136.png" },
 
 
+
 ];
 
 
 const RARITY_PROBS = { 'Commun': 50, 'Rare': 25, 'Epic': 13, 'Legendary': 6, 'Mythic': 3, 'Brainrot God': 1, 'Secret': 0.07, 'OG': 0.03 };
+
 const BOOSTER_IMAGES = [
-  "https://cdn.phototourl.com/uploads/2026-03-14-b2ac7551-da4d-4169-9c1e-10d929ea7c30.png",
-  "https://cdn.phototourl.com/uploads/2026-03-14-b2ac7551-da4d-4169-9c1e-10d929ea7c30.png",
-  "https://cdn.phototourl.com/uploads/2026-03-14-b2ac7551-da4d-4169-9c1e-10d929ea7c30.png"
+  "https://cdn.phototourl.com/uploads/2026-03-17-f809674f-b5b6-4b59-9785-8c5bdb113b28.png",
+  "https://cdn.phototourl.com/uploads/2026-03-17-f809674f-b5b6-4b59-9785-8c5bdb113b28.png",
+  "https://cdn.phototourl.com/uploads/2026-03-17-f809674f-b5b6-4b59-9785-8c5bdb113b28.png"
 ];
 
 
 
 const SHOP_CARDS = [
-  {name:"Cappuccino Assassino", rarity:"Epic", price:80, image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cappuccino_Assassino-264x300.webp"},
-  {name:"Chimpanzini Bananini", rarity:"Legendary", price:200, image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/ChimpanziniBananini-262x300.webp"},
-  {name:"Frigo Camelo", rarity:"Mythic", price:500, image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/frigo-camelo.webp"}
+  { name: "Booster OR", isPack: true, packType: "gold", price: 10000, rarity: "1 Brainrot God minimum", image: "https://cdn.phototourl.com/uploads/2026-03-18-932a1812-124d-4b83-bb18-b8f14429f207.png" },
+  { name: "Booster PLATINE", isPack: true, packType: "platinum", price: 50000, rarity: "1 Secret minimum", image: "https://cdn.phototourl.com/uploads/2026-03-18-a1925a7f-b526-4171-8ab5-c88a216d2867.png" },
+  { name: "Booster DIAMANT", isPack: true, packType: "diamond", price: 100000, rarity: "1 OG minimum", image: "https://cdn.phototourl.com/uploads/2026-03-18-3bbfcd6b-5128-4913-bcdd-10ae790b137b.png" }
 ];
 
 
@@ -768,7 +773,113 @@ function disableSite(active) {
 }
 
 // Bloque le site dès le chargement
-disableSite(true);
+disableSite(false);
+
+
+
+
+
+const bgMusic = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
+let isPlaying = false;
+
+// Fonction pour alterner Play/Pause
+musicBtn.onclick = () => {
+    if (isPlaying) {
+        bgMusic.pause();
+        musicBtn.innerText = "🔈"; // Icône muet
+    } else {
+        bgMusic.play();
+        musicBtn.innerText = "🔊"; // Icône son
+    }
+    isPlaying = !isPlaying;
+};
+
+// Lancer la musique au premier clic sur la page (contrainte navigateur)
+document.addEventListener('click', () => {
+    if (!isPlaying && bgMusic.paused) {
+        // Optionnel : décommente la ligne dessous si tu veux que ça démarre tout seul au 1er clic
+        // bgMusic.play(); isPlaying = true; musicBtn.innerText = "🔊";
+    }
+}, { once: true });
+
+
+
+
+// --- 1. Tirage avec tes pourcentages précis ---
+function pickBoostedCard(tier) {
+    let probs;
+    if (tier === "gold") {
+        probs = { 'Rare': 40, 'Epic': 30, 'Legendary': 20, 'Mythic': 8, 'Brainrot God': 2 };
+    } else if (tier === "platinum") {
+        probs = { 'Epic': 50, 'Legendary': 30, 'Mythic': 15, 'Brainrot God': 4, 'Secret': 1 };
+    } else if (tier === "diamond") {
+        probs = { 'Legendary': 40, 'Mythic': 35, 'Brainrot God': 15, 'Secret': 8, 'OG': 2 };
+    } else {
+        return pickRandomCard();
+    }
+
+    const total = Object.values(probs).reduce((a, b) => a + b, 0);
+    let r = Math.random() * total;
+    
+    for (const [rarity, prob] of Object.entries(probs)) {
+        r -= prob;
+        if (r <= 0) {
+            const filtered = ALL_CARDS.filter(c => c.rarity === rarity);
+            return filtered[Math.floor(Math.random() * filtered.length)] || ALL_CARDS[0];
+        }
+    }
+    return ALL_CARDS[0];
+}
+
+// --- 2. Fonction d'ouverture (Ton bloc propre) ---
+function openSpecialPack(type) {
+    let pack = [];
+
+    if (type === "gold") {
+        pack.push(pickBoostedCard("gold"));
+        pack.push(pickBoostedCard("gold"));
+        pack.push(pickSpecificRarity("Brainrot God"));
+    } else if (type === "platinum") {
+        pack.push(pickBoostedCard("platinum"));
+        pack.push(pickBoostedCard("platinum"));
+        pack.push(pickSpecificRarity("Secret"));
+    } else if (type === "diamond") {
+        pack.push(pickBoostedCard("diamond"));
+        pack.push(pickBoostedCard("diamond"));
+        pack.push(pickSpecificRarity("OG"));
+    }
+
+    pack.forEach(c => {
+        const exists = collection.some(card => card.name === c.name);
+        if (!exists) {
+            c.isNew = true;
+            collection.push({ ...c });
+        } else {
+            c.isNew = false;
+            const dustValues = { "Commun": 1, "Rare": 3, "Epic": 8, "Legendary": 20, "Mythic": 50, "Brainrot God": 200, "Secret": 500, "OG": 1000 };
+            dust += (dustValues[c.rarity] || 1);
+        }
+    });
+
+    save("collection", collection);
+    save("dust", dust);
+    refreshDust();
+
+    const user = firebase.auth().currentUser;
+    if (user) {
+        db.collection("users").doc(user.uid).set({ collection, dust }, { merge: true });
+    }
+
+    currentPack = pack;
+    currentCardIndex = 0;
+    showBigCard();
+}
+
+function pickSpecificRarity(rarityName) {
+    const possible = ALL_CARDS.filter(c => c.rarity === rarityName);
+    return possible[Math.floor(Math.random() * possible.length)] || ALL_CARDS[0];
+}
 
 
 
@@ -829,30 +940,6 @@ function loadBoosterCounter(uid) {
       .catch(err => console.error("Erreur lors du chargement du compteur :", err));
 }
 
-// --- Incrémenter le compteur dans Firestore et à l’écran ---
-function incrementBoosterCounter(uid) {
-  const userRef = db.collection("users").doc(uid);
-
-  db.runTransaction(async (transaction) => {
-    const doc = await transaction.get(userRef);
-
-    let current = 0;
-
-    if (doc.exists) {
-      current = doc.data().boostersOpened || 0;
-    }
-
-    transaction.set(userRef, {
-      boostersOpened: current + 1
-    }, { merge: true });
-
-    return current + 1;
-  })
-  .then(newCount => {
-    boosterCounterDiv.innerText = `Boosters ouverts : ${newCount}`;
-  })
-  .catch(err => console.error("Erreur compteur :", err));
-}
 
 
 
@@ -882,53 +969,88 @@ showMissingBtn.addEventListener("click", () => {
 
 
 
+
 function showShop() {
-  homeSection.style.display = "none";
-  collectionSection.style.display = "none";
-  allCardsSection.style.display = "none";
-  shopSection.style.display = "block";
-  updateButtons();
+    // 1. Navigation
+    homeSection.style.display = "none";
+    collectionSection.style.display = "none";
+    allCardsSection.style.display = "none";
+    shopSection.style.display = "block";
+    updateButtons();
 
-  const shopDiv = document.getElementById("shopCards");
-  shopDiv.innerHTML = shopCards.map(c => {
+    const shopDiv = document.getElementById("shopCards");
+    if (!shopDiv) return;
 
-    const owned = collection.some(card => card.name === c.name);
-    const btnText = owned ? "Déjà possédé" : `Acheter (${c.price ?? 0}💎)`; // price si défini
+    // --- FUSION : CARTES ALÉATOIRES D'ABORD, BOOSTERS EN BAS ---
+    // [...shopCards] ce sont les cartes qui changent
+    // [...SHOP_CARDS] ce sont tes 3 boosters fixes
+    const fullShopList = [...shopCards, ...SHOP_CARDS];
 
-    return `
-      <div class="card r-${c.rarity.replace(/ /g,"-")}" style="position:relative;">
-        <div style="font-size:0.8rem;color:#ccc;margin-bottom:6px;font-weight:bold;">${c.rarity}</div>
-        <img src="${c.image}" style="width:100%;height:50%;object-fit:contain;margin:0 auto 10px auto;border-radius:8px;display:block">
-        <strong>${c.name}</strong>
-        <button class="buyBtn" data-name="${c.name}" data-price="${c.price ?? 0}" style="margin-top:6px;padding:4px 6px;border-radius:6px;border:0;background:#7c3aed;color:#fff;cursor:pointer;" ${owned?"disabled":""}>${btnText}</button>
-      </div>
-    `;
-  }).join("");
+    // 2. Génération du HTML
+    shopDiv.innerHTML = fullShopList.map(c => {
+        const owned = !c.isPack && collection.some(card => card.name === c.name);
+        const btnText = owned ? "Possédé" : `Acheter (${c.price}💎)`;
+        
+        // Style différent pour les boosters (bordure dorée et fond sombre)
+        const specialStyle = c.isPack 
+            ? 'border: 4px double #ffd700; background: #1a1a1a; box-shadow: 0 0 10px rgba(255,215,0,0.2);' 
+            : 'border: 1px solid #444; background: #222;';
 
-  // Listener achat
-  document.querySelectorAll(".buyBtn").forEach(btn => {
-    btn.onclick = () => {
-      const name = btn.getAttribute("data-name");
-      const price = parseInt(btn.getAttribute("data-price"));
-      if (dust >= price) {
-        const card = shopCards.find(c => c.name === name);
-        if(card){
-          collection.push({...card});
-          dust -= price;
-          save("collection",collection);
-          save("dust",dust);
-          refreshDust();
-          refreshCollection();
-          showShop(); // refresh boutique
-          alert(`Tu as acheté ${name} !`);
-          autoSave();
-        }
-      } else {
-        alert("Pas assez de fragments !");
-      }
-    }
-  });
+        return `
+            <div class="card r-${(c.rarity || "Commun").replace(/ /g, "-")}" 
+                 style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250px; padding: 12px; border-radius: 12px; ${specialStyle}">
+                
+                <div style="text-align: center;">
+                    <div style="font-size:0.7rem; color: #aaa; font-weight: bold; margin-bottom: 5px; text-transform: uppercase;">${c.rarity}</div>
+                    <img src="${c.image}" style="width:100%; height:110px; object-fit:contain; border-radius:8px; margin-bottom: 8px;">
+                    <strong style="display:block; font-size:0.9rem; color: #fff; line-height: 1.2;">${c.name}</strong>
+                </div>
+
+                <button class="buyBtn" 
+                        data-name="${c.name}" 
+                        data-price="${c.price}" 
+                        style="margin-top:12px; width:100%; padding:10px; border-radius:8px; border:0; background:#7c3aed; color:white; cursor:pointer; font-weight:bold; transition: 0.2s;"
+                        ${owned ? "disabled" : ""}>
+                    ${btnText}
+                </button>
+            </div>
+        `;
+    }).join("");
+
+    // 3. Gestion des clics (identique mais vérifiée)
+    document.querySelectorAll(".buyBtn").forEach(btn => {
+        btn.onclick = () => {
+            const name = btn.getAttribute("data-name");
+            const price = parseInt(btn.getAttribute("data-price"));
+            const item = fullShopList.find(i => i.name === name);
+
+            if (item && dust >= price) {
+                dust -= price;
+                save("dust", dust);
+                refreshDust();
+
+                if (item.isPack) {
+                    openSpecialPack(item.packType);
+                } else {
+                    collection.push({...item});
+                    save("collection", collection);
+                    refreshCollection();
+                    alert(`✅ Achat réussi : ${name} !`);
+                }
+                
+                // Sync Firebase
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    db.collection("users").doc(user.uid).set({ collection, dust }, { merge: true });
+                }
+                showShop(); 
+            } else {
+                alert("💎 Pas assez de fragments !");
+            }
+        };
+    });
 }
+
 
 
 
@@ -1105,9 +1227,11 @@ overlay.addEventListener('click', overlayClickHandler);
 
 
 
+let boostersOpened = 0;          // Compteur total de boosters ouverts
+let boostersSinceLastSave = 0;   // Compteur local depuis la dernière sauvegarde
 
 
-// --- Ouvrir booster ---
+
 function openPackSequence() {
   const chooseArea = document.getElementById("choosePackArea");
   chooseArea.style.display = "flex";
@@ -1116,79 +1240,98 @@ function openPackSequence() {
   chooseArea.style.marginTop = "40px";
 
   chooseArea.innerHTML = BOOSTER_IMAGES.map((img, i) =>
-    `<div class="booster" data-id="${i}" style="width:150px;height:220px;border-radius:14px;cursor:pointer;overflow:hidden;box-shadow:0 0 15px rgba(0,0,0,0.4);transition:transform .15s">
+    `<div class="booster" data-id="${i}" style="width:150px;height:220px;border-radius:14px;cursor:pointer;overflow:hidden;box-shadow:0 0 15px rgba(0,0,0,0.4);transition: transform 0.15s;">
         <img src="${img}" style="width:100%;height:100%;object-fit:cover;">
-     </div>`).join("");
+     </div>`
+  ).join("");
 
   document.querySelectorAll(".booster").forEach(b => {
     b.onmouseenter = () => b.style.transform = "scale(1.08)";
     b.onmouseleave = () => b.style.transform = "scale(1)";
-    b.onclick = () => {
 
-const user = auth.currentUser;
-if(user){
-  incrementBoosterCounter(user.uid);
-}
-
+    b.onclick = async () => {
       if (b.classList.contains("booster-opening")) return;
       b.classList.add("booster-opening");
 
       const flash = document.createElement("div");
-      flash.classList.add("flash-effect");
+      flash.className = "flash-effect";
       document.body.appendChild(flash);
       setTimeout(() => flash.remove(), 450);
 
       setTimeout(() => {
         chooseArea.style.display = "none";
 
-        // --- Toujours 3 cartes ---
         currentPack = [pickRandomCard(), pickRandomCard(), pickRandomCard()];
 
         currentPack.forEach(c => {
-
           const exists = collection.some(card => card.name === c.name);
-
           if (!exists) {
-
             c.isNew = true;
-            collection.push(c);
-
+            collection.push({...c});
           } else {
-
             c.isNew = false;
-
+            // Correction ici : "Brainrot God" avec espace pour matcher ton ALL_CARDS
             const dustValues = {
-              "Commun":1,
-              "Rare":3,
-              "Epic":8,
-              "Legendary":20,
-              "Mythic":50,
-              "Brainrot God":200,
-              "Secret":500,
-              "OG":1000
+              "Commun":1, "Rare":3, "Epic":8, "Legendary":20,
+              "Mythic":50, "Brainrot God":200, "Secret":500, "OG":10000
             };
-
             dust += dustValues[c.rarity] || 1;
-
           }
-
         });
 
-
+        // --- SAUVEGARDE LOCALE ---
         save("collection", collection);
         save("dust", dust);
         refreshDust();
 
-autoSave();
+        // --- SAUVEGARDE FIREBASE (TOUT-EN-UN) ---
+        const user = firebase.auth().currentUser;
+        if (user) {
+          db.collection("users").doc(user.uid).set({
+            collection: collection,
+            dust: dust,
+            // On ajoute le +1 ici, c'est ce qui remplace la fonction supprimée !
+            boostersOpened: firebase.firestore.FieldValue.increment(1) 
+          }, { merge: true })
+          .then(() => {
+             console.log("✅ Cloud synchronisé !");
+             // Mise à jour visuelle du compteur sur ton interface
+             const counterEl = document.getElementById("boosterCounter");
+             if(counterEl) {
+                const current = parseInt(counterEl.innerText.replace(/\D/g, "")) || 0;
+                counterEl.innerText = `Boosters ouverts : ${current + 1}`;
+             }
+          })
+          .catch(err => console.error("❌ Erreur Quota/Firebase :", err));
+        }
 
-
+        console.log("AFTER PACK - collection:", collection.length, "dust:", dust);
         currentCardIndex = 0;
         showBigCard();
-
-      }, 450);
+        b.classList.remove("booster-opening");
+      }, 500);
     };
   });
 }
+
+document.getElementById("openPack").onclick = openPackSequence;
+
+
+
+// Fonction dédiée pour envoyer les données à Firestore
+function saveToFirebase(uid) {
+  db.collection("users").doc(uid).set({
+    collection: collection,
+    dust: dust,
+    lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
+  }, { merge: true })
+  .then(() => console.log("✅ Sauvegarde Firebase réussie !"))
+  .catch(err => console.error("❌ Erreur Firebase :", err));
+}
+
+// Liaison du bouton d'ouverture
+document.getElementById("openPack").addEventListener("click", openPackSequence);
+
 
 
 // --- Onglets ---
@@ -1433,17 +1576,31 @@ const logoutBtn = document.getElementById("logoutBtn");
 
 // --- Gestion de l'état de connexion ---
 auth.onAuthStateChanged(user => {
+    const accountBtn = document.getElementById("accountBtn");
+    const userEmailText = document.getElementById("userEmail");
+    const userIdText = document.getElementById("userIdDisplay");
+
     if(user){
-        // Utilisateur connecté
-        authOverlay.style.display = "none";       // masque le formulaire
-        logoutBtn.style.display = "block";       // affiche le bouton déconnexion
-        loadUserData(user.uid);                  // charge collection, dust, etc.
-        loadBoosterCounter(user.uid);            // affiche le compteur de boosters
-        checkDailyShop();                        // si tu as une boutique quotidienne
+        // --- Utilisateur connecté ---
+        authOverlay.style.display = "none";      // Masque le formulaire de login
+        accountBtn.style.display = "block";      // Affiche le bouton "Mon Compte" en haut à droite
+        
+        // Remplissage des infos dans la section profil
+        if(userEmailText) userEmailText.textContent = user.email;
+        if(userIdText) userIdText.textContent = user.uid;
+
+        // Chargement des données de jeu
+        loadUserData(user.uid);                  
+        loadBoosterCounter(user.uid);            
+        checkDailyShop();                        
+        
     } else {
-        // Utilisateur déconnecté
-        authOverlay.style.display = "flex";      // montre le formulaire
-        logoutBtn.style.display = "none";        // cache le bouton déconnexion
+        // --- Utilisateur déconnecté ---
+        authOverlay.style.display = "flex";      // Montre le formulaire de login
+        accountBtn.style.display = "none";       // Cache le bouton "Mon Compte"
+        
+        // On s'assure que la page profil est fermée si on se déconnecte
+        document.getElementById("accountSection").style.display = "none";
     }
 });
 
@@ -1520,8 +1677,11 @@ function saveUserData(uid){
     collection: collection,
     dust: dust,
     daily: daily
-  });
+  }, { merge: true }) // merge = ne remplace pas tout
+  .then(() => console.log("✅ Sauvegarde Firebase réussie"))
+  .catch(err => console.error("❌ Erreur sauvegarde Firebase :", err));
 }
+
 
 // Charger les données depuis Firebase
 function loadUserData(uid){
@@ -1543,16 +1703,67 @@ function loadUserData(uid){
   });
 }
 
+
+
+
+
+
+
+
+
 // Sauvegarder automatiquement après chaque action
-function autoSave(){
-  const user = auth.currentUser;
-  if(user){
-    db.collection("users").doc(user.uid).set({
-      collection: collection,
-      dust: dust
-    }, { merge: true });
-  }
+let saveTimeout = null;
+let pendingSave = false;
+const SAVE_DELAY = 3000; // 3 secondes entre actions pour regrouper
+
+function queueSave() {
+    pendingSave = true;
+
+    if(saveTimeout) clearTimeout(saveTimeout);
+
+    saveTimeout = setTimeout(() => {
+        console.log("⏳ Sauvegarde en cours...");
+
+        db.collection("users").doc(auth.currentUser.uid).set({
+            collection: collection || [],
+            dust: dust || 0,
+            boostersOpened: boostersOpened || 0
+        }, { merge: true })
+        .then(() => {
+            console.log("✅ Sauvegarde Firebase réussie !");
+            pendingSave = false;
+        })
+        .catch(err => {
+            console.error("❌ Erreur Firestore:", err);
+            pendingSave = false;
+        });
+
+    }, SAVE_DELAY);
 }
+
+function flushSave() {
+    if(!pendingSave) return;
+
+    console.log("⏳ flushSave: tentative de sauvegarde avant fermeture...");
+
+    db.collection("users").doc(auth.currentUser.uid).set({
+        collection: collection || [],
+        dust: dust || 0,
+        boostersOpened: boostersOpened || 0
+    }, { merge: true })
+    .then(() => {
+        console.log("✅ flushSave réussie !");
+        pendingSave = false;
+    })
+    .catch(err => {
+        console.error("❌ flushSave erreur Firestore:", err);
+        pendingSave = false;
+    });
+}
+
+window.addEventListener("beforeunload", flushSave);
+
+
 
 
 async function checkDailyShop() {
@@ -1640,6 +1851,64 @@ async function checkDailyShop() {
         shopCards = shopCardsFromDb;
     }
 
+}
+
+
+// --- GESTION DU COMPTE ---
+
+// --- GESTION DU COMPTE ---
+
+// On récupère les éléments (Assure-toi que ces IDs existent dans ton HTML)
+const accountBtn = document.getElementById("accountBtn");
+const accountSection = document.getElementById("accountSection");
+const backFromAccount = document.getElementById("backFromAccount");
+const userEmailText = document.getElementById("userEmail");
+const userIdText = document.getElementById("userIdDisplay");
+
+// Ouvrir la page compte
+if (accountBtn) {
+    accountBtn.onclick = () => {
+        // On cache les sections du jeu
+        homeSection.style.display = "none";
+        collectionSection.style.display = "none";
+        allCardsSection.style.display = "none";
+        shopSection.style.display = "none";
+        accountBtn.style.display = "none"; // Cache le petit bouton
+        
+        // On affiche la page profil
+        if (accountSection) {
+            accountSection.style.display = "flex";
+            accountSection.style.flexDirection = "column";
+            accountSection.style.alignItems = "center";
+        }
+    };
+}
+
+// Retourner au jeu
+if (backFromAccount) {
+    backFromAccount.onclick = () => {
+        if (accountSection) accountSection.style.display = "none";
+        if (accountBtn) accountBtn.style.display = "block";
+        showHome(); // Relance l'affichage de l'accueil
+    };
+}
+
+// Logique de déconnexion (Correction de l'erreur de déclaration)
+const logoutBtnEl = document.getElementById("logoutBtn");
+if (logoutBtnEl) {
+    logoutBtnEl.onclick = () => {
+        if(confirm("Voulez-vous vraiment vous déconnecter ?")) {
+            auth.signOut().then(() => {
+                // Reset local des données
+                collection = [];
+                dust = 0;
+                save("collection", []);
+                save("dust", 0);
+                localStorage.clear(); 
+                window.location.reload(); // Recharge pour tout nettoyer
+            });
+        }
+    };
 }
 
 
