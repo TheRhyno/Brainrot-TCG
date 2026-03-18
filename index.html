@@ -360,6 +360,57 @@ html, body {
 }
 
 
+
+
+
+#maintenanceOverlay {
+    display: none; /* Caché par défaut */
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.98);
+    z-index: 1000000;
+    color: white;
+    
+    /* Centrage total sur l'écran PC */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+#maintenanceOverlay h1 {
+    color: #ff4444;
+    /* font-size adaptatif : 1.8rem minimum, 3rem maximum */
+    font-size: clamp(1.8rem, 5vw, 3rem); 
+    margin: 0 0 20px 0;
+}
+
+#maintenanceOverlay p {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+}
+
+.error-box {
+    display: inline-block;
+    padding: 12px 20px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    background: #1a1a1a;
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+
 </style>
 </head>
 <body>
@@ -479,6 +530,63 @@ html, body {
 
 
 
+<div id="newsOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:100000; justify-content:center; align-items:center; padding:20px; box-sizing:border-box;">
+    <div style="background:#162037; padding:30px; border-radius:15px; border:2px solid #7c3aed; max-width:420px; width:100%; text-align:center; box-shadow: 0 0 30px rgba(124, 58, 237, 0.4);">
+        
+        <h2 style="color:#7c3aed; margin-top:0; margin-bottom: 25px; font-size: 1.5rem;">✨ Mise à jour 1.32</h2>
+        
+        <div style="text-align:left; color:#e8eef7;">
+            
+            <div style="margin-bottom: 20px;">
+                <p style="margin: 0; line-height: 1.5;">
+                    💎 <b>Boutique :</b> Dépense tes fragments pour des boosters exclusifs et complète ta collection !
+                </p>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <p style="margin: 0; line-height: 1.5;">
+                    👤 <b>Profil :</b> Suis tes stats (Boosters, Fragments & Collection) en temps réel sur ton Profil !
+                </p>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <p style="margin: 0; line-height: 1.5;">
+                    🎵 <b>Musique :</b> Nouveau bouton en haut à gauche pour activer ou couper l'ambiance sonore !
+                </p>
+            </div>
+
+            <div style="margin-bottom: 30px; opacity: 0.8; font-size: 0.9rem;">
+                <p style="margin: 0;">
+                    ⚙️ Corrections de bugs et optimisations.
+                </p>
+            </div>
+
+        </div>
+
+        <button onclick="closeNews()" style="background:#7c3aed; color:white; border:none; padding:15px 25px; border-radius:8px; cursor:pointer; font-weight:bold; width:100%; font-size: 1rem; transition: 0.3s;">
+            C'est parti !
+        </button>
+    </div>
+</div>
+
+
+
+
+<div id="maintenanceOverlay" style="display:none;">
+    <h1>⚠️ LIMITE ATTEINTE</h1>
+    <p>
+        Le serveur de sauvegarde est temporairement saturé.<br><br>
+        Pour éviter la perte de tes données, <b>le site est mis en pause</b>.<br>
+        Reviens plus tard ou contacte le développeur.
+    </p>
+    <div class="error-box">
+        Code erreur : 429 QuotaExceeded
+    </div>
+</div>
+
+
+
+
 <audio id="bgMusic" loop>
   <source src="https://raw.githubusercontent.com/TheRhyno/Musiques/main/SpotiDownloader.com%20-%20C'est%20nous%20dans%20le%20top%20(Brainrot)%20-%20Unchained(1).mp3" type="audio/mpeg">
 </audio>
@@ -498,13 +606,33 @@ html, body {
     
     <h2 style="margin-top:20px; margin-bottom:30px;">Mon Profil</h2>
     
-    <div style="background: #222; padding: 20px; border-radius: 12px; width: 95%; max-width: 400px; border: 1px solid #444; margin-bottom: 30px;">
-        <p style="margin: 0; color: #aaa; font-size: 0.8rem;">Email :</p>
-        <p id="userEmail" style="font-weight: bold; margin: 5px 0 20px 0; word-break: break-all;">...</p>
-        
-        <p style="margin: 0; color: #aaa; font-size: 0.8rem;">ID Utilisateur :</p>
-        <p id="userIdDisplay" style="font-size: 0.7rem; color: #666; word-break: break-all; margin: 5px 0 0 0;">...</p>
-    </div>
+<div style="background: #222; padding: 20px; border-radius: 12px; width: 95%; max-width: 400px; border: 1px solid #444; margin-bottom: 20px;">
+    <p style="margin: 0; color: #aaa; font-size: 0.8rem;">Email :</p>
+    <p id="userEmail" style="font-weight: bold; margin: 5px 0 15px 0; word-break: break-all;">...</p>
+    
+    <p style="margin: 0; color: #aaa; font-size: 0.8rem;">ID Utilisateur :</p>
+    <p id="userIdDisplay" style="font-size: 0.7rem; color: #666; word-break: break-all; margin: 5px 0 0 0;">...</p>
+
+    <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; text-align: center; align-items: center; background: rgba(255,255,255,0.03); padding: 15px 5px; border-radius: 10px;">
+    
+    <div>
+        <p style="margin: 0; color: #7c3aed; font-size: 1.1rem; font-weight: bold; line-height: 1.2;" id="profileBoosters">0</p>
+        <p style="margin: 0; color: #aaa; font-size: 0.65rem; text-transform: uppercase;">Boosters</p>
+    </div>
+
+    <div>
+        <p style="margin: 0; color: #fbbf24; font-size: 1.1rem; font-weight: bold; line-height: 1.2;" id="profileDust">0</p>
+        <p style="margin: 0; color: #aaa; font-size: 0.65rem; text-transform: uppercase;">Fragments</p>
+    </div>
+
+    <div>
+        <p style="margin: 0; color: #10b981; font-size: 1.1rem; font-weight: bold; line-height: 1.2;" id="profileCards">0/0</p>
+        <p style="margin: 0; color: #aaa; font-size: 0.65rem; text-transform: uppercase;">Collection</p>
+    </div>
+
+</div>
 
     <div style="display: flex; gap: 12px; width: 95%; max-width: 400px;">
         
@@ -778,6 +906,40 @@ disableSite(false);
 
 
 
+const CURRENT_VERSION = "1.32"; // Change ce numéro pour faire réapparaître le message
+
+function checkUpdateNews() {
+    const lastSeenVersion = localStorage.getItem("lastSeenVersion");
+
+    // Si la version stockée est différente de la version actuelle
+    if (lastSeenVersion !== CURRENT_VERSION) {
+        document.getElementById("newsOverlay").style.display = "flex";
+    }
+}
+
+function closeNews() {
+    // On enregistre que l'utilisateur a vu cette version
+    localStorage.setItem("lastSeenVersion", CURRENT_VERSION);
+    document.getElementById("newsOverlay").style.display = "none";
+}
+
+// Appelle la fonction au chargement du site (après la connexion par exemple)
+window.addEventListener('load', checkUpdateNews);
+
+
+
+
+function disableSiteForQuota() {
+    const maintenance = document.getElementById("maintenanceOverlay");
+    if(maintenance) {
+        maintenance.style.display = "flex";
+        // On bloque aussi toute interaction avec le clavier
+        window.addEventListener("keydown", (e) => e.stopPropagation(), true);
+    }
+}
+
+
+
 
 const bgMusic = document.getElementById("bgMusic");
 const musicBtn = document.getElementById("musicBtn");
@@ -930,11 +1092,22 @@ function loadBoosterCounter(uid) {
       .then(doc => {
         if (doc.exists) {
             const count = doc.data().boostersOpened || 0;
+            
+            // 1. Mise à jour de l'accueil
             boosterCounterDiv.innerText = `Boosters ouverts : ${count}`;
-            boosterCounterDiv.style.display = 'block'; // affiché uniquement si connecté
+            boosterCounterDiv.style.display = 'block';
+
+            // 2. Mise à jour du Profil (L'AJOUT EST ICI)
+            const profileEl = document.getElementById("profileBoosters");
+            if(profileEl) profileEl.innerText = count;
+
         } else {
             boosterCounterDiv.innerText = `Boosters ouverts : 0`;
             boosterCounterDiv.style.display = 'block';
+            
+            // Mise à jour du profil à 0 si pas de doc
+            const profileEl = document.getElementById("profileBoosters");
+            if(profileEl) profileEl.innerText = "0";
         }
       })
       .catch(err => console.error("Erreur lors du chargement du compteur :", err));
@@ -1233,86 +1406,110 @@ let boostersSinceLastSave = 0;   // Compteur local depuis la dernière sauvegard
 
 
 function openPackSequence() {
-  const chooseArea = document.getElementById("choosePackArea");
-  chooseArea.style.display = "flex";
-  chooseArea.style.justifyContent = "center";
-  chooseArea.style.gap = "30px";
-  chooseArea.style.marginTop = "40px";
+    const chooseArea = document.getElementById("choosePackArea");
+    chooseArea.style.display = "flex";
+    chooseArea.style.justifyContent = "center";
+    chooseArea.style.gap = "30px";
+    chooseArea.style.marginTop = "40px";
 
-  chooseArea.innerHTML = BOOSTER_IMAGES.map((img, i) =>
-    `<div class="booster" data-id="${i}" style="width:150px;height:220px;border-radius:14px;cursor:pointer;overflow:hidden;box-shadow:0 0 15px rgba(0,0,0,0.4);transition: transform 0.15s;">
+    chooseArea.innerHTML = BOOSTER_IMAGES.map((img, i) =>
+        `<div class="booster" data-id="${i}" style="width:150px;height:220px;border-radius:14px;cursor:pointer;overflow:hidden;box-shadow:0 0 15px rgba(0,0,0,0.4);transition: transform 0.15s;">
         <img src="${img}" style="width:100%;height:100%;object-fit:cover;">
      </div>`
-  ).join("");
+    ).join("");
 
-  document.querySelectorAll(".booster").forEach(b => {
-    b.onmouseenter = () => b.style.transform = "scale(1.08)";
-    b.onmouseleave = () => b.style.transform = "scale(1)";
+    document.querySelectorAll(".booster").forEach(b => {
+        b.onmouseenter = () => b.style.transform = "scale(1.08)";
+        b.onmouseleave = () => b.style.transform = "scale(1)";
 
-    b.onclick = async () => {
-      if (b.classList.contains("booster-opening")) return;
-      b.classList.add("booster-opening");
+        b.onclick = async () => {
 
-      const flash = document.createElement("div");
-      flash.className = "flash-effect";
-      document.body.appendChild(flash);
-      setTimeout(() => flash.remove(), 450);
+            if (b.classList.contains("booster-opening")) return;
+            b.classList.add("booster-opening");
 
-      setTimeout(() => {
-        chooseArea.style.display = "none";
+            const flash = document.createElement("div");
+            flash.className = "flash-effect";
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 450);
 
-        currentPack = [pickRandomCard(), pickRandomCard(), pickRandomCard()];
+            setTimeout(() => {
+                chooseArea.style.display = "none";
 
-        currentPack.forEach(c => {
-          const exists = collection.some(card => card.name === c.name);
-          if (!exists) {
-            c.isNew = true;
-            collection.push({...c});
-          } else {
-            c.isNew = false;
-            // Correction ici : "Brainrot God" avec espace pour matcher ton ALL_CARDS
-            const dustValues = {
-              "Commun":1, "Rare":3, "Epic":8, "Legendary":20,
-              "Mythic":50, "Brainrot God":200, "Secret":500, "OG":10000
-            };
-            dust += dustValues[c.rarity] || 1;
-          }
-        });
+                currentPack = [pickRandomCard(), pickRandomCard(), pickRandomCard()];
 
-        // --- SAUVEGARDE LOCALE ---
-        save("collection", collection);
-        save("dust", dust);
-        refreshDust();
+                currentPack.forEach(c => {
+                    const exists = collection.some(card => card.name === c.name);
+                    if (!exists) {
+                        c.isNew = true;
+                        collection.push({ ...c });
+                    } else {
+                        c.isNew = false;
+                        const dustValues = {
+                            "Commun": 1, "Rare": 3, "Epic": 8, "Legendary": 20,
+                            "Mythic": 50, "Brainrot God": 200, "Secret": 500, "OG": 10000
+                        };
+                        dust += dustValues[c.rarity] || 1;
+                    }
+                });
 
-        // --- SAUVEGARDE FIREBASE (TOUT-EN-UN) ---
-        const user = firebase.auth().currentUser;
-        if (user) {
-          db.collection("users").doc(user.uid).set({
-            collection: collection,
-            dust: dust,
-            // On ajoute le +1 ici, c'est ce qui remplace la fonction supprimée !
-            boostersOpened: firebase.firestore.FieldValue.increment(1) 
-          }, { merge: true })
-          .then(() => {
-             console.log("✅ Cloud synchronisé !");
-             // Mise à jour visuelle du compteur sur ton interface
-             const counterEl = document.getElementById("boosterCounter");
-             if(counterEl) {
-                const current = parseInt(counterEl.innerText.replace(/\D/g, "")) || 0;
-                counterEl.innerText = `Boosters ouverts : ${current + 1}`;
-             }
-          })
-          .catch(err => console.error("❌ Erreur Quota/Firebase :", err));
-        }
+                // --- SAUVEGARDE LOCALE ---
+                save("collection", collection);
+                save("dust", dust);
+                refreshDust();
 
-        console.log("AFTER PACK - collection:", collection.length, "dust:", dust);
-        currentCardIndex = 0;
-        showBigCard();
-        b.classList.remove("booster-opening");
-      }, 500);
-    };
-  });
-}
+                // --- SAUVEGARDE FIREBASE (TOUT-EN-UN) ---
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    db.collection("users").doc(user.uid).set({
+                        collection: collection,
+                        dust: dust,
+                        boostersOpened: firebase.firestore.FieldValue.increment(1)
+                    }, { merge: true })
+.then(() => {
+    console.log("✅ Cloud synchronisé !");
+    
+    // 1. Mise à jour de l'ACCUEIL (celui qui affiche "Boosters ouverts : X")
+    const counterEl = document.getElementById("boosterCounter");
+    let current = 0;
+    if (counterEl) {
+        current = parseInt(counterEl.innerText.replace(/\D/g, "")) || 0;
+        counterEl.innerText = `Boosters ouverts : ${current + 1}`;
+    }
+
+    // 2. Mise à jour du PROFIL (le petit chiffre violet dans ton menu profil)
+    const profileEl = document.getElementById("profileBoosters");
+    if (profileEl) {
+        profileEl.innerText = current + 1;
+    }
+// 3. MISE À JOUR DU PROFIL (Le chiffre des Fragments / Dust)
+    const profileDustEl = document.getElementById("profileDust");
+    if (profileDustEl) {
+        profileDustEl.innerText = dust; // Utilise la variable 'dust' globale
+    }
+// 4. MISE À JOUR DU TOTAL DE CARTES (NOUVEAU)
+    const profileCardsEl = document.getElementById("profileCards");
+    if (profileCardsEl) {
+        // Affiche par exemple "45 / 150"
+        profileCardsEl.innerText = `${collection.length} / ${ALL_CARDS.length}`;
+    }
+})
+                    .catch(err => {
+                        console.error("❌ Erreur Quota/Firebase :", err);
+                        b.classList.remove("booster-opening");
+                        if (err.code === 'resource-exhausted' || err.message.includes('quota')) {
+                            disableSiteForQuota();
+                        }
+                    });
+                } // Fin du if(user)
+
+                console.log("AFTER PACK - collection:", collection.length, "dust:", dust);
+                currentCardIndex = 0;
+                showBigCard();
+                b.classList.remove("booster-opening");
+            }, 500); // Fin du setTimeout d'ouverture
+        }; // Fin du b.onclick
+    }); // Fin du forEach
+} // Fin de la fonction
 
 document.getElementById("openPack").onclick = openPackSequence;
 
@@ -1579,15 +1776,23 @@ auth.onAuthStateChanged(user => {
     const accountBtn = document.getElementById("accountBtn");
     const userEmailText = document.getElementById("userEmail");
     const userIdText = document.getElementById("userIdDisplay");
+    
+    // Éléments des nouvelles stats dans le profil
+    const profileBoosters = document.getElementById("profileBoosters");
+    const profileDust = document.getElementById("profileDust");
 
     if(user){
         // --- Utilisateur connecté ---
         authOverlay.style.display = "none";      // Masque le formulaire de login
-        accountBtn.style.display = "block";      // Affiche le bouton "Mon Compte" en haut à droite
+        accountBtn.style.display = "flex";       // Affiche le bouton "Mon Compte" (en flex pour l'icône)
         
         // Remplissage des infos dans la section profil
         if(userEmailText) userEmailText.textContent = user.email;
         if(userIdText) userIdText.textContent = user.uid;
+
+        // Mise à jour visuelle des stats dans le profil au chargement
+        if(profileBoosters) profileBoosters.textContent = typeof boostersOpened !== 'undefined' ? boostersOpened : 0;
+        if(profileDust) profileDust.textContent = typeof dust !== 'undefined' ? dust : 0;
 
         // Chargement des données de jeu
         loadUserData(user.uid);                  
@@ -1600,7 +1805,8 @@ auth.onAuthStateChanged(user => {
         accountBtn.style.display = "none";       // Cache le bouton "Mon Compte"
         
         // On s'assure que la page profil est fermée si on se déconnecte
-        document.getElementById("accountSection").style.display = "none";
+        const accountSection = document.getElementById("accountSection");
+        if(accountSection) accountSection.style.display = "none";
     }
 });
 
@@ -1655,11 +1861,18 @@ logoutBtn.onclick = () => {
             alert("Déconnecté !");
             collection = [];  // vide collection locale
             dust = 0;         // vide fragments locaux
+            if(typeof boostersOpened !== 'undefined') boostersOpened = 0; 
+            
             save("collection", collection);
             save("dust", dust);
+            
             refreshCollection();
             refreshDust();
             refreshLimit();
+            
+            // On s'assure de masquer la section profil après déco
+            document.getElementById("accountSection").style.display = "none";
+            document.getElementById("mainMenu").style.display = "flex";
         })
         .catch(err => console.error("Erreur lors de la déconnexion :", err));
 };
@@ -1691,12 +1904,26 @@ function loadUserData(uid){
       collection = data.collection || [];
       dust = data.dust || 0;
       daily = data.daily || {date:null,opened:0};
+      
       save("collection", collection);
       save("dust", dust);
       save("daily", daily);
+      
       refreshCollection();
       refreshDust();
       refreshLimit();
+
+      // --- NOUVEAUTÉ : Mise à jour du menu Profil ---
+      const profileDustEl = document.getElementById("profileDust");
+      if (profileDustEl) profileDustEl.innerText = dust;
+
+      const profileCardsEl = document.getElementById("profileCards");
+      if (profileCardsEl) {
+          // Affiche le nombre de cartes possédées sur le total disponible
+          profileCardsEl.innerText = `${collection.length} / ${ALL_CARDS.length}`;
+      }
+      // ----------------------------------------------
+
     } else {
       saveUserData(uid);
     }
@@ -1717,8 +1944,9 @@ let pendingSave = false;
 const SAVE_DELAY = 3000; // 3 secondes entre actions pour regrouper
 
 function queueSave() {
+    if (!auth.currentUser) return; // Sécurité si l'utilisateur se déconnecte pendant le délai
+    
     pendingSave = true;
-
     if(saveTimeout) clearTimeout(saveTimeout);
 
     saveTimeout = setTimeout(() => {
@@ -1734,8 +1962,24 @@ function queueSave() {
             pendingSave = false;
         })
         .catch(err => {
-            console.error("❌ Erreur Firestore:", err);
-            pendingSave = false;
+            console.error("❌ Erreur Firestore:", err.code, err.message);
+
+            // 1. Détection spécifique du Quota Firebase (Spark Plan 50k reads/20k writes)
+            const isQuotaError = 
+                err.code === 'resource-exhausted' || 
+                err.code === 'functions/resource-exhausted' ||
+                err.message.toLowerCase().includes('quota');
+
+            // 2. Détection d'accès refusé (souvent lié au quota ou règles de sécu)
+            const isPermissionError = err.code === 'permission-denied';
+
+            if (isQuotaError || isPermissionError) {
+                disableSiteForQuota();
+            } else {
+                // Si c'est juste une micro-coupure internet, on ne bloque pas le site
+                console.warn("⚠️ Erreur de sauvegarde simple (Internet ?), tentative suivante au prochain clic.");
+                pendingSave = false; 
+            }
         });
 
     }, SAVE_DELAY);
