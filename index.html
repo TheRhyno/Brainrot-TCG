@@ -31,9 +31,49 @@ button:disabled{background:#3b3b3b;cursor:not-allowed}
 
 
 html, body {
-  overflow: hidden;  /* bloque tout scroll */
-  height: 100%;      /* s’assure que body prenne toute la hauteur */
+  /* On garde ton verrouillage de scroll */
+  overflow: hidden; 
+  height: 100%;
+  width: 100%;
+  position: fixed; 
+  margin: 0;
+  padding: 0;
+  -webkit-touch-callout: none; 
+
+  /* --- CONFIGURATION FLEXBOX --- */
+  display: flex;
+  flex-direction: column;   
+  align-items: center;       /* CENTRE EN LARGEUR */
+  justify-content: flex-start; 
+
+  /* Sécurité anti-débordement globale */
+  box-sizing: border-box;
 }
+
+/* On cible les sections qui peuvent être longues */
+#collectionSection, #allCardsSection, #homeSection {
+  width: 100%;        
+  max-width: 100vw;   /* FORCE la section à ne pas dépasser l'écran */
+  height: 100vh;      
+  overflow-y: auto;   
+  overflow-x: hidden; /* COUPE tout ce qui dépasse à droite (les boosters) */
+  padding-bottom: 80px; 
+  box-sizing: border-box; /* Inclus le padding dans le calcul des 100% */
+  
+  /* Fluidité mobile */
+  -webkit-overflow-scrolling: touch; 
+  touch-action: pan-y; 
+}
+
+
+
+/* Optionnel : Si tu veux que le Shop scrolle aussi s'il y a trop d'objets */
+#shopSection {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 
 
 @media (max-width: 600px) {
@@ -136,24 +176,28 @@ html, body {
 
 
 
-/* Overlay qui bloque tout le site */
 #disableOverlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.95);
+    background: rgba(0,0,0,0.98); 
     color: #fff;
-    display: flex;
+    
+    /* Centrage parfait PC/Mobile */
+    display: none; /* Ton JS passera ça en 'flex' */
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 1.5rem;
-    z-index: 99999;
+    
+    /* On écrase le z-index des news (100000) */
+    z-index: 9999999 !important; 
+    
     padding: 20px;
     box-sizing: border-box;
-    pointer-events: all; /* empêche tout clic dessous */
+    font-size: 1.5rem;
+    pointer-events: all; 
 }
 
 
@@ -371,10 +415,13 @@ html, body {
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.98);
-    z-index: 1000000;
+    
+    /* --- SOLUTION : On met un chiffre plus haut que le newsOverlay (100000) --- */
+    z-index: 2000000 !important; 
+    
     color: white;
     
-    /* Centrage total sur l'écran PC */
+    /* Centrage total */
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -383,11 +430,13 @@ html, body {
     box-sizing: border-box;
     text-align: center;
     font-family: sans-serif;
+    
+    /* On bloque tous les clics derrière */
+    pointer-events: all; 
 }
 
 #maintenanceOverlay h1 {
     color: #ff4444;
-    /* font-size adaptatif : 1.8rem minimum, 3rem maximum */
     font-size: clamp(1.8rem, 5vw, 3rem); 
     margin: 0 0 20px 0;
 }
@@ -409,6 +458,7 @@ html, body {
     font-size: 0.8rem;
     color: #888;
 }
+
 
 
 </style>
@@ -497,10 +547,6 @@ html, body {
 </div>
 
 
-<div id="disableOverlay" style="display:none;">
-    🚫 Le site est actuellement en maintenance.<br>
-    Veuillez revenir plus tard ou contacter le développeur.
-</div>
 
 
 
@@ -533,25 +579,26 @@ html, body {
 <div id="newsOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:100000; justify-content:center; align-items:center; padding:20px; box-sizing:border-box;">
     <div style="background:#162037; padding:30px; border-radius:15px; border:2px solid #7c3aed; max-width:420px; width:100%; text-align:center; box-shadow: 0 0 30px rgba(124, 58, 237, 0.4);">
         
-        <h2 style="color:#7c3aed; margin-top:0; margin-bottom: 25px; font-size: 1.5rem;">✨ Mise à jour 1.32</h2>
+        <h2 style="color:#7c3aed; margin-top:0; margin-bottom: 25px; font-size: 1.5rem;">✨ Mise à jour 1.40</h2>
         
         <div style="text-align:left; color:#e8eef7;">
             
             <div style="margin-bottom: 20px;">
                 <p style="margin: 0; line-height: 1.5;">
-                    💎 <b>Boutique :</b> Dépense tes fragments pour des boosters exclusifs et complète ta collection !
+                    💎 <b>Boutique :</b> Réduction des prix des boosters exclusifs ! <br>
+                    🛠️ <b>Bugs :</b> Résolution des problèmes de rareté des cartes & synchronisation de la boutique pour tous.
                 </p>
             </div>
 
             <div style="margin-bottom: 20px;">
                 <p style="margin: 0; line-height: 1.5;">
-                    👤 <b>Profil :</b> Suis tes stats (Boosters, Fragments & Collection) en temps réel sur ton Profil !
+                    🆙 <b>Niveaux :</b> Accumulez des cartes identiques pour augmenter leur niveau dans la collection !
                 </p>
             </div>
 
             <div style="margin-bottom: 20px;">
                 <p style="margin: 0; line-height: 1.5;">
-                    🎵 <b>Musique :</b> Nouveau bouton en haut à gauche pour activer ou couper l'ambiance sonore !
+                    🔜 <b>À venir :</b> Les cartes Brainrot God et Secret seront bientôt disponibles !
                 </p>
             </div>
 
@@ -567,6 +614,12 @@ html, body {
             C'est parti !
         </button>
     </div>
+</div>
+
+
+<div id="disableOverlay" style="display:none;">
+    🚫 Le site est actuellement en maintenance.<br>
+    Veuillez revenir plus tard ou contacter le développeur.
 </div>
 
 
@@ -678,6 +731,7 @@ const db = firebase.firestore();
 
 // --- Données et probabilités ---
 const ALL_CARDS = [
+
   {name:"Noobini Pizzanini", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/noobini-santanini-200x300.webp"},
   {name:"Lirilì Larilà", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Liliri_Lalira.webp"},
   {name:"Tim Cheese", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Tim_Cheese-161x300.webp"},
@@ -690,6 +744,8 @@ const ALL_CARDS = [
   {name:"Tartaragno", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/10/Tartaragnoo.webp"},
   {name:"Pipi Corni", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/pipi-corni.webp"},
   {name:"Holy Arepa", rarity:"Commun", image:"https://www.eldorado.gg/blog/wp-content/uploads/2026/03/Holy-Arepa-300x169.webp"},
+
+
 
   {name:"Trippi Troppi", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Trippi_Troppi.webp"},
   {name:"Gangster Footera", rarity:"Rare", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/gangster-footera-185x300.webp"},
@@ -793,6 +849,7 @@ const ALL_CARDS = [
   {name:"Cocofanto Elefanto", rarity:"Brainrot God", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Cocofanto.webp"},
 
 
+
   {name:"La Vacca Saturno Saturnita", rarity:"Secret", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/La_Vaccca_Saturno_Saturnita.webp"},
 
 
@@ -822,8 +879,8 @@ const BOOSTER_IMAGES = [
 
 const SHOP_CARDS = [
   { name: "Booster OR", isPack: true, packType: "gold", price: 10000, rarity: "1 Brainrot God minimum", image: "https://cdn.phototourl.com/uploads/2026-03-18-932a1812-124d-4b83-bb18-b8f14429f207.png" },
-  { name: "Booster PLATINE", isPack: true, packType: "platinum", price: 50000, rarity: "1 Secret minimum", image: "https://cdn.phototourl.com/uploads/2026-03-18-a1925a7f-b526-4171-8ab5-c88a216d2867.png" },
-  { name: "Booster DIAMANT", isPack: true, packType: "diamond", price: 100000, rarity: "1 OG minimum", image: "https://cdn.phototourl.com/uploads/2026-03-18-3bbfcd6b-5128-4913-bcdd-10ae790b137b.png" }
+  { name: "Booster PLATINE", isPack: true, packType: "platinum", price: 25000, rarity: "1 Secret minimum", image: "https://cdn.phototourl.com/uploads/2026-03-18-a1925a7f-b526-4171-8ab5-c88a216d2867.png" },
+  { name: "Booster DIAMANT", isPack: true, packType: "diamond", price: 50000, rarity: "1 OG minimum", image: "https://cdn.phototourl.com/uploads/2026-03-18-3bbfcd6b-5128-4913-bcdd-10ae790b137b.png" }
 ];
 
 
@@ -851,62 +908,82 @@ searchCollectionInput.addEventListener("input", () => {
 
 // --- Overlay site désactivé ---
 function disableSite(active) {
-    // On récupère l'overlay (assure-toi qu'il n'y a qu'un seul #disableOverlay dans le HTML)
     const overlay = document.getElementById('disableOverlay');
-
-    // Les sections principales à cacher
-    const sections = [
-        document.getElementById('homeSection'),
-        document.getElementById('collectionSection'),
-        document.getElementById('allCardsSection'),
-        document.getElementById('shopSection')
-    ];
-
-    function blockInput(e){
-        e.stopPropagation();
-        e.preventDefault();
-    }
+    const news = document.getElementById('newsOverlay');
 
     if(active) {
-        // Affiche l'overlay
-        overlay.style.display = 'flex';
-        overlay.style.pointerEvents = 'all';
-        overlay.style.zIndex = '100000';
+        document.body.classList.add('maintenance-active'); // Active le CSS forcé
+        
+        if(overlay) {
+            overlay.style.setProperty('display', 'flex', 'important');
+        }
+        
+        // Cache explicitement la MAJ si elle est déjà là
+        if(news) news.style.setProperty('display', 'none', 'important');
 
-        // Cache les sections principales
-        sections.forEach(sec => { if(sec) sec.style.display = 'none'; });
-
-        // Empêche scroll et interactions
+        // Bloque le scroll PC
         document.body.style.overflow = 'hidden';
 
-        // Bloque clavier et clics
-        document.addEventListener('keydown', blockInput, true);
-        document.addEventListener('click', blockInput, true);
-        document.addEventListener('touchstart', blockInput, true); // pour mobile
-    } else {
-        // Masque l'overlay
-        overlay.style.display = 'none';
-
-        // Restaure les sections
-        sections.forEach(sec => { if(sec) sec.style.display = 'block'; });
-
-        // Restaure scroll
-        document.body.style.overflow = 'auto';
-
-        // Supprime le blocage clavier et clics
-        document.removeEventListener('keydown', blockInput, true);
-        document.removeEventListener('click', blockInput, true);
-        document.removeEventListener('touchstart', blockInput, true);
+        // Bloque les clics (Capture phase)
+        window.addEventListener('click', blockInput, true);
+        window.addEventListener('keydown', blockInput, true);
     }
 }
 
-// Bloque le site dès le chargement
+function blockInput(e) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+}
+
+// Lancement
 disableSite(false);
 
 
 
 
-const CURRENT_VERSION = "1.32"; // Change ce numéro pour faire réapparaître le message
+let canClickCard = true;
+
+
+// Cette fonction simule le clic sur une carte du booster
+function handleCardClick(cardElement, cardData) {
+    // SI ON A DÉJÀ CLIQUÉ SUR UNE CARTE, ON BLOQUE TOUT
+    if (!canClickCard) return; 
+
+    // ON ACTIVE LE VERROU IMMÉDIATEMENT
+    canClickCard = false;
+
+    // 1. On révèle la carte cliquée (ton code actuel pour l'animation)
+    cardElement.classList.add("revealed"); 
+    
+    // 2. On ajoute la carte à la collection
+    collection.push(cardData);
+    save("collection", collection);
+
+    // 3. OPTIONNEL : On grise ou on cache les deux autres cartes
+    const allPackCards = document.querySelectorAll(".pack-card-item"); // Remplace par ta classe
+    allPackCards.forEach(c => {
+        if (c !== cardElement) {
+            c.style.opacity = "0.5";
+            c.style.pointerEvents = "none"; // Sécurité supplémentaire
+        }
+    });
+
+    console.log("Une seule carte récupérée, les autres sont bloquées !");
+
+    // Une fois que l'animation est finie et qu'on ferme l'overlay
+    // Il faudra remettre canClickCard = true; pour le prochain booster.
+}
+
+
+
+
+
+
+
+
+
+
+const CURRENT_VERSION = "1.40"; // Change ce numéro pour faire réapparaître le message
 
 function checkUpdateNews() {
     const lastSeenVersion = localStorage.getItem("lastSeenVersion");
@@ -1285,7 +1362,7 @@ const bigName=document.getElementById('bigCardName');
 function showBigCard() {
     if (currentCardIndex >= currentPack.length) {
         overlay.style.display = 'none';
-        refreshCollection();
+        refreshCollection(); // C'est ici que les chiffres s'actualiseront dans la grille
         refreshLimit();
         return;
     }
@@ -1305,76 +1382,45 @@ function showBigCard() {
 
     if (c.rarity === "OG") {
         cardDiv.className = "card big-card big-OG";
-        cardDiv.style.border = "none";
-        cardDiv.style.padding = "0";
-        cardDiv.style.background = "none";
+        cardDiv.style.cssText = "border:none; padding:0; background:none; position:relative;";
 
         const cardImg = document.createElement("img");
         cardImg.src = c.image;
         cardImg.style.cssText = "max-width:90vw; max-height:90vh; object-fit:contain; display:block; margin:auto; border-radius:12px;";
         cardDiv.appendChild(cardImg);
 
-        // Canvas feu d’artifice
+        // --- Animation feu d’artifice ---
         const canvas = document.createElement("canvas");
-        canvas.style.position = "fixed";
-        canvas.style.top = "0";
-        canvas.style.left = "0";
-        canvas.style.width = "100%";
-        canvas.style.height = "100%";
-        canvas.style.pointerEvents = "none";
-        canvas.style.zIndex = "20000";
+        canvas.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:20000;";
         document.body.appendChild(canvas);
-
         const ctx = canvas.getContext("2d");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const particles = [];
         for (let i = 0; i < 150; i++) {
             particles.push({
-                x: canvas.width / 2,
-                y: canvas.height / 2,
-                vx: (Math.random() - 0.5) * 10,
-                vy: (Math.random() - 1.5) * 10,
-                alpha: 1,
-                radius: Math.random() * 3 + 2,
+                x: canvas.width / 2, y: canvas.height / 2,
+                vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 1.5) * 10,
+                alpha: 1, radius: Math.random() * 3 + 2,
                 color: `hsl(${Math.random() * 360},100%,50%)`
             });
         }
-
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.alpha -= 0.02;
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill();
+            particles.forEach((p, i) => {
+                p.x += p.vx; p.y += p.vy; p.alpha -= 0.02;
+                ctx.globalAlpha = p.alpha; ctx.fillStyle = p.color;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
+                if (p.alpha <= 0) particles.splice(i, 1);
             });
-            // Supprimer les particules mortes
-            for (let i = particles.length - 1; i >= 0; i--) {
-                if (particles[i].alpha <= 0) particles.splice(i, 1);
-            }
-
-            if (particles.length > 0) {
-                requestAnimationFrame(animate);
-            } else {
-                // Une fois fini, enlever le canvas
-                canvas.remove();
-            }
+            if (particles.length > 0) requestAnimationFrame(animate); else canvas.remove();
         }
         animate();
 
-        // Bloquer le skip pendant 1,5s
         overlay.removeEventListener('click', overlayClickHandler);
-        setTimeout(() => {
-            overlay.addEventListener('click', overlayClickHandler);
-        }, 1500);
+        setTimeout(() => { overlay.addEventListener('click', overlayClickHandler); }, 1500);
 
     } else {
+        // STYLE CLASSIQUE SANS LES NIVEAUX (Juste l'essentiel)
         cardDiv.className = "card big-card big-" + c.rarity.replace(/ /g, "-");
         cardDiv.innerHTML = `
           <div style="font-size:1rem;color:#ccc;margin-bottom:6px;">${escapeHtml(c.rarity)}</div>
@@ -1389,19 +1435,26 @@ function showBigCard() {
     overlay.style.display = "flex";
 }
 
-// Skip normal
+
+
+
+// Gestionnaire de clic pour passer à la carte suivante
 function overlayClickHandler() {
     currentCardIndex++;
     showBigCard();
 }
 
-// Toujours lié pour toutes les cartes
+// On s'assure qu'on n'ajoute pas l'écouteur 50 fois
+
+overlay.removeEventListener('click', overlayClickHandler);
 overlay.addEventListener('click', overlayClickHandler);
+
 
 
 
 let boostersOpened = 0;          // Compteur total de boosters ouverts
 let boostersSinceLastSave = 0;   // Compteur local depuis la dernière sauvegarde
+let isAnyBoosterOpening = false; // Placée en dehors pour être globale
 
 
 
@@ -1418,11 +1471,15 @@ function openPackSequence() {
      </div>`
     ).join("");
 
+    // On attache les événements immédiatement après avoir créé le HTML
     document.querySelectorAll(".booster").forEach(b => {
         b.onmouseenter = () => b.style.transform = "scale(1.08)";
         b.onmouseleave = () => b.style.transform = "scale(1)";
 
         b.onclick = async () => {
+            // Sécurité anti-spam : on vérifie le verrou global
+            if (isAnyBoosterOpening) return; 
+            isAnyBoosterOpening = true; 
 
             if (b.classList.contains("booster-opening")) return;
             b.classList.add("booster-opening");
@@ -1435,15 +1492,54 @@ function openPackSequence() {
             setTimeout(() => {
                 chooseArea.style.display = "none";
 
+                // --- TIRAGE ---
                 currentPack = [pickRandomCard(), pickRandomCard(), pickRandomCard()];
 
+                // --- LOGIQUE DE NIVEAUX ET EXP ---
                 currentPack.forEach(c => {
-                    const exists = collection.some(card => card.name === c.name);
-                    if (!exists) {
+                    const existingCard = collection.find(card => card.name === c.name);
+                    
+                    if (!existingCard) {
+                        // NOUVELLE CARTE
                         c.isNew = true;
+                        c.level = 1;
+                        c.exp = 0;
                         collection.push({ ...c });
                     } else {
+                        // DOUBLON : On augmente l'EXP
                         c.isNew = false;
+                        
+                        // Initialisation si les propriétés n'existent pas encore
+                        if (existingCard.level === undefined) existingCard.level = 1;
+                        if (existingCard.exp === undefined) existingCard.exp = 0;
+
+// --- DANS openPackSequence (Logique Doublon) ---
+const expTable = {
+ "Commun": 15, 
+"Rare": 12, 
+"Epic": 10, 
+"Legendary": 8,
+"Mythic": 5, 
+"Brainrot God": 4, 
+"Secret": 3, 
+"OG": 2 
+};
+
+// 1. On ajoute l'EXP
+existingCard.exp = (existingCard.exp || 0) + 1;
+if (!existingCard.level) existingCard.level = 1;
+
+// 2. On récupère le palier selon la rareté
+let needed = expTable[existingCard.rarity] || 10;
+
+// 3. Boucle de Level Up : tant qu'on a assez d'EXP, on monte de niveau
+while (existingCard.exp >= needed) {
+    existingCard.exp -= needed; // On consomme l'EXP
+    existingCard.level += 1;    // On monte de niveau
+    console.log(`🚀 ${existingCard.name} monte au niveau ${existingCard.level} !`);
+}
+
+                        // Gain de fragments (Dust)
                         const dustValues = {
                             "Commun": 1, "Rare": 3, "Epic": 8, "Legendary": 20,
                             "Mythic": 50, "Brainrot God": 200, "Secret": 500, "OG": 10000
@@ -1452,12 +1548,12 @@ function openPackSequence() {
                     }
                 });
 
-                // --- SAUVEGARDE LOCALE ---
+                // Sauvegardes locales
                 save("collection", collection);
                 save("dust", dust);
                 refreshDust();
 
-                // --- SAUVEGARDE FIREBASE (TOUT-EN-UN) ---
+                // --- FIREBASE ET COMPTEURS ---
                 const user = firebase.auth().currentUser;
                 if (user) {
                     db.collection("users").doc(user.uid).set({
@@ -1465,69 +1561,54 @@ function openPackSequence() {
                         dust: dust,
                         boostersOpened: firebase.firestore.FieldValue.increment(1)
                     }, { merge: true })
-.then(() => {
-    console.log("✅ Cloud synchronisé !");
-    
-    // 1. Mise à jour de l'ACCUEIL (celui qui affiche "Boosters ouverts : X")
-    const counterEl = document.getElementById("boosterCounter");
-    let current = 0;
-    if (counterEl) {
-        current = parseInt(counterEl.innerText.replace(/\D/g, "")) || 0;
-        counterEl.innerText = `Boosters ouverts : ${current + 1}`;
-    }
-
-    // 2. Mise à jour du PROFIL (le petit chiffre violet dans ton menu profil)
-    const profileEl = document.getElementById("profileBoosters");
-    if (profileEl) {
-        profileEl.innerText = current + 1;
-    }
-// 3. MISE À JOUR DU PROFIL (Le chiffre des Fragments / Dust)
-    const profileDustEl = document.getElementById("profileDust");
-    if (profileDustEl) {
-        profileDustEl.innerText = dust; // Utilise la variable 'dust' globale
-    }
-// 4. MISE À JOUR DU TOTAL DE CARTES (NOUVEAU)
-    const profileCardsEl = document.getElementById("profileCards");
-    if (profileCardsEl) {
-        // Affiche par exemple "45 / 150"
-        profileCardsEl.innerText = `${collection.length} / ${ALL_CARDS.length}`;
-    }
-})
-                    .catch(err => {
-                        console.error("❌ Erreur Quota/Firebase :", err);
-                        b.classList.remove("booster-opening");
-                        if (err.code === 'resource-exhausted' || err.message.includes('quota')) {
-                            disableSiteForQuota();
+                    .then(() => {
+                        const counterEl = document.getElementById("boosterCounter");
+                        if (counterEl) {
+                            let current = parseInt(counterEl.innerText.replace(/\D/g, "")) || 0;
+                            counterEl.innerText = `Boosters ouverts : ${current + 1}`;
                         }
+                        if (document.getElementById("profileBoosters")) document.getElementById("profileBoosters").innerText = (parseInt(document.getElementById("profileBoosters").innerText) || 0) + 1;
+                        if (document.getElementById("profileDust")) document.getElementById("profileDust").innerText = dust;
+                        if (document.getElementById("profileCards")) document.getElementById("profileCards").innerText = `${collection.length} / ${ALL_CARDS.length}`;
+                    })
+                    .catch(err => {
+                        console.error("Erreur Firebase:", err);
+                        isAnyBoosterOpening = false;
                     });
-                } // Fin du if(user)
+                }
 
-                console.log("AFTER PACK - collection:", collection.length, "dust:", dust);
                 currentCardIndex = 0;
                 showBigCard();
                 b.classList.remove("booster-opening");
+                
+                // On libère le verrou après l'ouverture
+                isAnyBoosterOpening = false; 
+
             }, 500); // Fin du setTimeout d'ouverture
         }; // Fin du b.onclick
     }); // Fin du forEach
-} // Fin de la fonction
+} // Fin de la fonction openPackSequence
 
+
+// Liaison du bouton principal
 document.getElementById("openPack").onclick = openPackSequence;
 
 
 
 // Fonction dédiée pour envoyer les données à Firestore
 function saveToFirebase(uid) {
-  db.collection("users").doc(uid).set({
-    collection: collection,
-    dust: dust,
-    lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
-  }, { merge: true })
-  .then(() => console.log("✅ Sauvegarde Firebase réussie !"))
-  .catch(err => console.error("❌ Erreur Firebase :", err));
+  db.collection("users").doc(uid).set({
+    collection: collection,
+    dust: dust,
+    lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
+  }, { merge: true })
+  .then(() => console.log("✅ Sauvegarde Firebase réussie !"))
+  .catch(err => console.error("❌ Erreur Firebase :", err));
 }
 
 // Liaison du bouton d'ouverture
 document.getElementById("openPack").addEventListener("click", openPackSequence);
+
 
 
 
@@ -1615,6 +1696,18 @@ function refreshCollection(cardsToShow) {
 
     const cards = cardsToShow || collection;
 
+    // --- TABLEAU DE RÉFÉRENCE ---
+    const expTable = {
+        "Commun": 15, 
+        "Rare": 12, 
+        "Epic": 10, 
+        "Legendary": 8,
+        "Mythic": 5, 
+        "Brainrot God": 4, 
+        "Secret": 3, 
+        "OG": 2
+    };
+
     // --- COMPTEUR cartes obtenues / total ---
     const collectionSection = document.getElementById("collectionSection");
     let compteurDiv = collectionSection.querySelector(".compteur-cards");
@@ -1640,6 +1733,47 @@ function refreshCollection(cardsToShow) {
     cards.forEach(c => {
         const wrapper = document.createElement("div");
         wrapper.className = "card-wrapper";
+        wrapper.style.position = "relative"; 
+
+        const level = c.level || 1;
+        const exp = c.exp || 0;
+        const expNeeded = expTable[c.rarity] || 10;
+        const progressPercent = Math.min((exp / expNeeded) * 100, 100);
+
+        // --- INDICATEUR DE NIVEAU (Badge) ---
+        const levelBadge = document.createElement("div");
+        levelBadge.style.cssText = `
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #ffd700, #ffa500);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            z-index: 5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            border: 1px solid #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        `;
+        
+        // Texte du niveau
+        const levelText = document.createElement("span");
+        levelText.innerText = `Niv. ${level}`;
+        levelBadge.appendChild(levelText);
+
+        // --- AJOUT SPÉCIAL OG : Compteur sous le niveau ---
+        if (c.rarity === "OG") {
+            const ogCounter = document.createElement("span");
+            ogCounter.style.cssText = "font-size: 0.6rem; opacity: 0.8; margin-top: -2px;";
+            ogCounter.innerText = `${exp}/${expNeeded}`;
+            levelBadge.appendChild(ogCounter);
+        }
+        
+        wrapper.appendChild(levelBadge);
 
         if(c.isNew){
             const label = document.createElement("div");
@@ -1651,25 +1785,29 @@ function refreshCollection(cardsToShow) {
         const cardDiv = document.createElement("div");
 
         if (c.rarity === "OG") {
-            // OG : même style que dans "Chances d'obtention"
+            // --- STYLE OG : SANS BARRE EXP ---
             cardDiv.className = "card";
-            cardDiv.style.position = "relative";
-            cardDiv.style.border = "none";
-            cardDiv.style.padding = "0";
-            cardDiv.style.background = "none";
-            cardDiv.style.overflow = "hidden";
+            cardDiv.style.cssText = "position:relative; border:none; padding:0; background:none; overflow:hidden;";
 
             cardDiv.innerHTML = `
-                <img src="${c.image}" 
-                     style="width:100%;height:100%;object-fit:contain;display:block;border-radius:0;">
+                <img src="${c.image}" style="width:100%;height:100%;object-fit:contain;display:block;border-radius:0;">
             `;
         } else {
-            // autres cartes : inchangé
+            // --- STYLE CLASSIQUE : AVEC BARRE EXP ---
             cardDiv.className = "card r-" + c.rarity.replace(/ /g, "-");
+            
+            const expBarHTML = `
+                <div class="exp-container" style="width:100%; height:6px; background:rgba(0,0,0,0.3); border-radius:3px; margin-top:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); position:relative;">
+                    <div class="exp-fill" style="width:${progressPercent}%; height:100%; background:linear-gradient(90deg, #4facfe 0%, #00f2fe 100%); transition: width 0.3s;"></div>
+                </div>
+                <div style="font-size: 0.6rem; color: #aaa; text-align: right; margin-top: 2px;">${exp}/${expNeeded}</div>
+            `;
+
             cardDiv.innerHTML = `
                 <div style="font-size:0.8rem;color:#ccc;margin-bottom:4px;">${c.rarity}</div>
                 <img src="${c.image}" alt="${c.name}" style="width:100%;border-radius:8px;margin-bottom:8px">
                 <strong>${c.name}</strong>
+                ${expBarHTML}
             `;
         }
 
@@ -1685,6 +1823,9 @@ function refreshCollection(cardsToShow) {
         searchWrapper.style.marginBottom = "10px";
     }
 }
+
+
+
 
 
 function refreshAllCards() {
@@ -1897,36 +2038,52 @@ function saveUserData(uid){
 
 
 // Charger les données depuis Firebase
-function loadUserData(uid){
+function loadUserData(uid) {
   db.collection("users").doc(uid).get().then(doc => {
-    if(doc.exists){
+    if (doc.exists) {
       const data = doc.data();
-      collection = data.collection || [];
+
+      // --- RÉPARATION DES DONNÉES (Fix Level/Exp) ---
+      // On parcourt la collection récupérée du serveur
+      let rawCollection = data.collection || [];
+      collection = rawCollection.map(card => {
+        return {
+          ...card,
+          // Si level n'existe pas ou est null, on met 1
+          level: (card.level !== undefined && card.level !== null) ? card.level : 1,
+          // Si exp n'existe pas ou est null, on met 0
+          exp: (card.exp !== undefined && card.exp !== null) ? card.exp : 0
+        };
+      });
+
       dust = data.dust || 0;
-      daily = data.daily || {date:null,opened:0};
-      
+      daily = data.daily || { date: null, opened: 0 };
+
+      // Sauvegarde locale pour synchroniser
       save("collection", collection);
       save("dust", dust);
       save("daily", daily);
-      
+
+      // Mise à jour de l'interface
       refreshCollection();
       refreshDust();
       refreshLimit();
 
-      // --- NOUVEAUTÉ : Mise à jour du menu Profil ---
+      // --- Mise à jour du menu Profil ---
       const profileDustEl = document.getElementById("profileDust");
       if (profileDustEl) profileDustEl.innerText = dust;
 
       const profileCardsEl = document.getElementById("profileCards");
       if (profileCardsEl) {
-          // Affiche le nombre de cartes possédées sur le total disponible
-          profileCardsEl.innerText = `${collection.length} / ${ALL_CARDS.length}`;
+        profileCardsEl.innerText = `${collection.length} / ${ALL_CARDS.length}`;
       }
-      // ----------------------------------------------
 
     } else {
+      // Si l'utilisateur n'a pas de document, on le crée
       saveUserData(uid);
     }
+  }).catch(err => {
+    console.error("Erreur lors du chargement des données :", err);
   });
 }
 
@@ -2012,15 +2169,23 @@ window.addEventListener("beforeunload", flushSave);
 
 async function checkDailyShop() {
     const now = new Date();
-    const updateHour = 0;
+    const updateHour = 0; 
     const updateMinute = 0;
     const updateTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), updateHour, updateMinute);
 
     const userId = auth.currentUser?.uid;
-    if (!userId) return; // pas connecté
+    if (!userId) return;
 
-    const docRef = db.collection("dailyShop").doc(userId);
-    const docSnap = await docRef.get();
+    // --- CIBLE LE DOCUMENT COMMUN ---
+    const docRef = db.collection("globalShop").doc("today");
+    
+    let docSnap;
+    try {
+        docSnap = await docRef.get();
+    } catch (e) {
+        console.error("Erreur Firestore Shop:", e);
+        return;
+    }
 
     let shouldUpdate = false;
     let shopCardsFromDb = [];
@@ -2032,6 +2197,7 @@ async function checkDailyShop() {
         const lastUpdate = data?.lastUpdate ? new Date(data.lastUpdate) : null;
         shopCardsFromDb = data?.cards || [];
 
+        // Si l'heure de reset est passée et que la boutique globale est obsolète
         if (!lastUpdate || (now >= updateTime && lastUpdate < updateTime)) {
             shouldUpdate = true;
         }
@@ -2039,63 +2205,68 @@ async function checkDailyShop() {
 
     if (shouldUpdate) {
         const RARITY_PRICES = {
-            "Commun": 1000,
-            "Rare": 2000,
-            "Epic": 6000,
-            "Legendary": 8000,
-            "Mythic": 10000,
-            "Brainrot God": 20000,
-            "Secret": 50000,
-            "OG": 100000
+            "Commun": 1000, "Rare": 2000, "Epic": 6000, "Legendary": 8000,
+            "Mythic": 10000, "Brainrot God": 20000, "Secret": 50000, "OG": 100000
         };
 
-        // Définir la probabilité de chaque rareté (en %)
         const RARITY_PROBABILITIES = {
-            "Commun": 35,
-            "Rare": 30,
-            "Epic": 25,
-            "Legendary": 20,
-            "Mythic": 15,
-            "Brainrot God": 10,
-            "Secret": 5,
-            "OG": 1
+            "Commun": 1, "Rare": 1, "Epic": 3, "Legendary": 15,
+            "Mythic": 25, "Brainrot God": 20, "Secret": 20, "OG": 15
         };
+
+        const totalWeight = Object.values(RARITY_PROBABILITIES).reduce((a, b) => a + b, 0);
 
         function pickRandomRarity() {
-            const roll = Math.random() * 100;
+            const roll = Math.random() * totalWeight;
             let cumulative = 0;
             for (const [rarity, chance] of Object.entries(RARITY_PROBABILITIES)) {
                 cumulative += chance;
                 if (roll <= cumulative) return rarity;
             }
-            return "Commun"; // fallback
+            return "Commun";
         }
 
         function pickRandomCardWithProbability() {
-            const rarity = pickRandomRarity();
-            const card = pickRandomCard(); // ton pickRandomCard existant
-            return {
-                ...card,
-                rarity, // override rareté selon probabilité
-                price: RARITY_PRICES[rarity] || 10
-            };
+            const chosenRarity = pickRandomRarity();
+            const possibleCards = ALL_CARDS.filter(c => c.rarity === chosenRarity);
+            const card = possibleCards.length > 0 
+                ? possibleCards[Math.floor(Math.random() * possibleCards.length)]
+                : ALL_CARDS[Math.floor(Math.random() * ALL_CARDS.length)];
+
+            return { ...card, price: RARITY_PRICES[card.rarity] || 1000 };
         }
 
-        // Créer 4 cartes aléatoires avec prix selon probabilité
-        const newShop = [1,2,3,4].map(() => pickRandomCardWithProbability());
+        // --- GÉNÉRATION DES 4 CARTES UNIQUES ---
+        const newShop = [];
+        let attempts = 0;
+        while (newShop.length < 4 && attempts < 50) {
+            const candidate = pickRandomCardWithProbability();
+            // Vérifie si le nom de la carte est déjà présent dans la sélection
+            if (!newShop.some(c => c.name === candidate.name)) {
+                newShop.push(candidate);
+            }
+            attempts++;
+        }
 
         shopCards = newShop;
 
-        // Enregistrer dans Firestore
+        // --- SAUVEGARDE COMMUNE ---
         await docRef.set({
             lastUpdate: now.toISOString(),
             cards: newShop
         });
+        
+        console.log("🏪 Boutique commune mise à jour sans doublons !");
     } else {
         shopCards = shopCardsFromDb;
     }
 
+    if (typeof showShop === "function" && isVisible(shopSection)) {
+        showShop(); 
+    }
 }
+
+
 
 
 // --- GESTION DU COMPTE ---
