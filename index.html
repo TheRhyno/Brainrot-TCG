@@ -865,7 +865,7 @@ Ne rate pas tes récompenses !
         padding-top: 15px;
         width: 80%;
     ">
-        <span id="app-version">v2.0.0</span><br>
+        <span id="app-version">v2.0.1</span><br>
         <span>© 2026 BRAINROT TCG</span>
     </div>
 </div>
@@ -3202,7 +3202,7 @@ signupBtn.onclick = () => {
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
     // On récupère le pseudo
-    const username = document.getElementById("usernameInput").value.trim();
+const username = document.getElementById("reg-username").value.trim();
 
     // Vérification si le pseudo est rempli
     if (!username || username.length < 3) {
@@ -3598,4 +3598,4 @@ if (logoutBtnEl) {
 
 </script>
 </body>
-  </html>
+</html>
