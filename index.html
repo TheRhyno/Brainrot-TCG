@@ -371,6 +371,56 @@ html, body {
 
 
 
+
+/* --- Contours pour les 4 Lucky Blocks (Petites Cartes) --- */
+.r-Mythic-Lucky-Block { border-color: #FF8C00; box-shadow: 0 0 10px #FF8C00; }
+.r-Brainrot-God-Lucky-Block { border-color: #FF4500; box-shadow: 0 0 15px #FF4500; }
+.r-Secret-Lucky-Block { border-color: #DA70D6; box-shadow: 0 0 20px #DA70D6; animation: glow-white 2s infinite alternate; }
+.r-Admin-Lucky-Block { border-color: #ff0000; box-shadow: 0 0 25px #ff0000; animation: glitch-admin 0.4s infinite; }
+
+/* --- Couleurs du texte (Petites Cartes) --- */
+.r-Mythic-Lucky-Block strong { color: #FF8C00; }
+.r-Brainrot-God-Lucky-Block strong { color: #FF4500; }
+.r-Secret-Lucky-Block strong { color: #DA70D6; text-shadow: 0 0 5px #DA70D6; }
+.r-Admin-Lucky-Block strong { color: #ff0000; text-shadow: 0 0 8px #ff0000; }
+
+/* --- Bordures pour Grandes Cartes (Ouverture Booster) --- */
+.big-Mythic-Lucky-Block { border-color: #FF8C00; box-shadow: 0 0 30px #FF8C00; }
+.big-Brainrot-God-Lucky-Block { border-color: #FF4500; box-shadow: 0 0 40px #FF4500; }
+.big-Secret-Lucky-Block { border-color: #DA70D6; box-shadow: 0 0 50px #DA70D6; }
+.big-Admin-Lucky-Block { border-color: #ff0000; box-shadow: 0 0 60px #ff0000; }
+
+/* --- Texte pour Grandes Cartes --- */
+.big-Mythic-Lucky-Block strong { color: #FF8C00; }
+.big-Brainrot-God-Lucky-Block strong { color: #FF4500; }
+.big-Secret-Lucky-Block strong { color: #DA70D6; }
+.big-Admin-Lucky-Block strong { color: #ff0000; }
+
+/* --- Badges de rareté --- */
+.rarity-indicator.r-Mythic-Lucky-Block { background: #FF8C00; color: #000; }
+.rarity-indicator.r-Brainrot-God-Lucky-Block { background: #FF4500; color: #fff; }
+.rarity-indicator.r-Secret-Lucky-Block { background: #DA70D6; color: #000; }
+.rarity-indicator.r-Admin-Lucky-Block { background: #ff0000; color: #fff; }
+
+/* --- Animations Spéciales --- */
+@keyframes glow-white {
+    from { box-shadow: 0 0 5px #DA70D6; }
+    to { box-shadow: 0 0 25px #DA70D6; }
+}
+
+@keyframes glitch-admin {
+    0% { transform: translate(0); }
+    25% { transform: translate(-1px, 1px); }
+    50% { transform: translate(1px, -1px); }
+    75% { transform: translate(-1px, -1px); }
+    100% { transform: translate(0); }
+}
+
+
+
+
+
+
 /* Animation OG avec overlay qui bloque tout */
 #ogAnimation {
   position: fixed;
@@ -472,6 +522,97 @@ html, body {
 
 
 
+.quest-btn {
+    position: fixed !important;
+    bottom: 100px !important;
+    right: 20px !important;
+    width: 65px !important;
+    height: 65px !important;
+    background: #7c3aed !important; /* Violet */
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 30px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6) !important;
+    z-index: 9999 !important;
+    border: 3px solid #fff !important;
+    transition: transform 0.1s ease !important;
+}
+
+/* L'effet de clic qui fonctionne enfin */
+.quest-btn:active {
+    transform: scale(0.9) !important;
+}
+
+
+
+
+
+
+
+.floating-market-btn {
+    position: fixed;
+    bottom: 100px;
+    left: 20px;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%; /* C'est ça qui fait le rond */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Pour passer devant tout le reste */
+    
+    /* Le reste de ton style */
+    background: linear-gradient(135deg, #fbbf24, #d97706);
+    border: 3px solid #fff;
+    cursor: pointer;
+}
+
+.floating-market-btn:active { transform: scale(0.9); }
+
+/* Style de la page Marché Plein Écran */
+#marketSection {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0e1525;
+    z-index: 2000; /* Très haut pour tout couvrir */
+    overflow-y: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    display: none;
+}
+
+.back-btn-market {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background: #4b5563;
+    margin-bottom: 20px;
+    z-index: 2001;
+}
+
+
+/* Badge de prix sur les cartes */
+.market-price-tag {
+    background: #fbbf24;
+    color: #000;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin: 5px 0;
+    display: inline-block;
+}
+
+
+
+
+
 </style>
 
 <!-- Empêche le cache dans WebView -->
@@ -504,9 +645,28 @@ html, body {
 
 
 
-<div id="questIcon" onclick="toggleQuests()" style="position: fixed; bottom: 100px; right: 20px; width: 60px; height: 60px; background: #7c3aed; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.6); z-index: 100; border: 3px solid #fff; visibility: visible !important; opacity: 1 !important; transition: transform 0.2s;" onmouseenter="this.style.transform='scale(1.1)'" onmouseleave="this.style.transform='scale(1)'">
+
+
+<div id="streakDisplay" style="position: fixed; top: 55px; left: 10px; z-index: 1000; 
+     background: rgba(22, 32, 55, 0.85); padding: 5px 12px; border-radius: 20px; 
+     font-weight: bold; color: #ff9f43; border: 2px solid #ff9f43; 
+     font-size: 16px; display: flex; align-items: center; gap: 8px; 
+     box-shadow: 0 0 15px rgba(255, 159, 67, 0.2); backdrop-filter: blur(4px);">
+     <span id="streakValue">0</span> 🔥
+</div>
+
+
+<div id="questIcon" class="quest-btn" onclick="toggleQuests()" 
+     style="position: fixed; bottom: 100px; right: 20px; width: 65px; height: 65px; border-radius: 50%; background: #7c3aed; display: flex; justify-content: center; align-items: center; font-size: 30px; z-index: 9999; border: 3px solid #fff; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.4); transition: transform 0.1s ease;">
     🎯
 </div>
+
+
+<div class="floating-market-btn" id="tabMarket" onclick="document.getElementById('marketSection').style.display='block'; chargerMarche();" style="position: fixed; bottom: 100px; left: 20px; width: 65px; height: 65px; border-radius: 50%; background: linear-gradient(135deg, #fbbf24, #d97706); display: flex; justify-content: center; align-items: center; font-size: 28px; z-index: 9999; border: 3px solid #fff; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.4);">
+    🏪
+</div>
+
+
 
 <div id="questOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200001; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
     <div style="background: #162037; width: 90%; max-width: 400px; padding: 25px; border-radius: 20px; border: 2px solid #3b82f6; position: relative; box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); color: white; text-align: center;">
@@ -528,13 +688,86 @@ html, body {
 
 
 
+<div id="marketSection" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#0e1525; z-index:10000; overflow-y:auto; padding:20px; box-sizing:border-box;">
+    <button class="back-btn-market" onclick="quitterMarche()">⬅ Retour au Jeu</button>
+    
+    <h2 style="color: #fbbf24; text-shadow: 0 0 10px rgba(251,191,36,0.3); margin-top:50px;">🏪 MARCHÉ ENTRE JOUEURS</h2>
+    
+    <div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px;">
+        <button onclick="afficherOngletMarket('buy')" id="btnMarketBuy" style="background: #7c3aed;">🛒 Acheter</button>
+        <button onclick="afficherOngletMarket('mySales')" id="btnMarketMine" style="background: #4b5563;">📦 Mes Ventes</button>
+    </div>
+
+
+    <div id="marketactionBtn" style="margin-bottom: 20px; display:block;">
+        <button onclick="ouvrirSelecteurVente()" style="background: #10b981; width: 100%; font-weight: bold; padding: 15px; border-radius:10px;">➕ VENDRE UNE CARTE</button>
+    </div>
+
+
+    <div id="marketCards" class="cards"></div>
+</div>
+
+<div id="selectCardOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:200002; overflow-y:auto; padding:20px; box-sizing:border-box;">
+    <button onclick="fermerSelecteur()" style="background:#ef4444; margin-bottom:20px;">✖ Annuler</button>
+    <h2 style="color:#10b981">Quelle carte voulez-vous vendre ?</h2>
+
+<input type="text" id="searchSellCard" placeholder="Rechercher une carte à vendre..." style="padding:10px; border-radius:8px; border:none; margin-bottom:20px; width:90%; max-width:300px; display:block; margin-left:auto; margin-right:auto;">
+
+    <div id="selectCardGrid" class="cards">
+        </div>
+
+
+
+<p id="noCardMessage" style="display:none; color:#ef4444; margin-top:20px; font-weight:bold;">
+        Aucune carte ne correspond à votre recherche. 🧐
+    </p>
+
+
+</div>
+
+<div id="sellOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:200003; justify-content:center; align-items:center;">
+    <div style="background:#162037; padding:25px; border-radius:15px; border:2px solid #10b981; text-align:center; width:280px;">
+        <h3 id="sellCardName">Vendre</h3>
+        <input type="number" id="sellPriceInput" placeholder="Prix en Fragments" style="padding:12px; border-radius:8px; width:100%; margin-bottom:15px; border:none; outline:none; background:#0e1525; color:white;">
+        <div style="display:flex; gap:10px;">
+            <button id="confirmSellBtn" style="background:#10b981; flex:1;">Mettre en vente</button>
+            <button onclick="fermerVente()" style="background:#ef4444; flex:1;">Annuler</button>
+        </div>
+    </div>
+</div>
+
+
+
 
   <div id="boosterCounter" style="color:#fff;font-weight:bold;font-size:1rem;margin-bottom:10px;">
     Boosters ouverts : 0
   </div>
+
+
+
+<div id="luckyBlockUI" style="display:none; margin-top: 15px; padding: 12px; background: rgba(30, 27, 75, 0.8); border: 2px solid #fbbf24; border-radius: 10px; text-align: center; transition: all 0.3s;">
+    <div id="luckyBlockType" style="font-weight: bold; margin-bottom: 5px; color: #fff; font-size: 1em;">
+        Lucky Block
+    </div>
+
+    <div id="luckyTimerDisplay" style="color: #fbbf24; font-weight: bold; font-size: 0.9em;">
+        🍀 Le Lucky Block s'ouvre dans : --:--:--
+    </div>
+
+    <button id="btnRecupereLucky" onclick="ouvrirCadeauLuckyBlock()" style="display:none; margin-top: 8px; background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+        🎁 RÉCUPÉRER !
+    </button>
+</div>
+
+
+
+
     <div id="choosePackArea" style="display:none; margin-top:20px;"></div>
   </div>
 
+
+
+</div>
   <div id="collectionSection" style="display:none;margin-bottom:80px">
     <h2>Ta collection</h2>
 
@@ -682,10 +915,10 @@ html, body {
 
 
 
-<div id="newsOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:100000; justify-content:center; align-items:center; padding:20px; box-sizing:border-box;">
-    <div style="background:#162037; padding:30px; border-radius:15px; border:2px solid #7c3aed; max-width:420px; width:100%; text-align:center; box-shadow: 0 0 30px rgba(124, 58, 237, 0.4);">
+<div id="newsOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:100000; justify-content:center; align-items:flex-start; padding:20px; box-sizing:border-box; overflow-y:auto;">
+<div style="background:#162037; padding:30px; border-radius:15px; border:2px solid #7c3aed; max-width:420px; width:100%; text-align:center; box-shadow: 0 0 30px rgba(124, 58, 237, 0.4); margin: auto; max-height: 90vh; overflow-y: auto;">
         
-        <h2 style="color:#7c3aed; margin-top:0; margin-bottom: 25px; font-size: 1.5rem;">✨ Mise à jour 2.0.0</h2>
+        <h2 style="color:#7c3aed; margin-top:0; margin-bottom: 25px; font-size: 1.5rem;">✨ Mise à jour 2.1.0</h2>
         
         <div style="text-align:left; color:#e8eef7;">
             
@@ -698,26 +931,38 @@ html, body {
 
             <div style="margin-bottom: 20px;">
                 <p style="margin: 0; line-height: 1.5;">
-                    💎 <b>Boutique :</b> Un compte à rebours pour la nouvelle boutique a été ajouté ! <br>
+                    🏪 <b>Le Marché est ouvert !</b> Vends tes cartes au prix que tu souhaites et achète celles des autres joueurs !<br>
+                                     🚀 Rendez-vous dans l'onglet Marché pour faire tes premières affaires !
+     </p>
             </div>
+
 
             <div style="margin-bottom: 20px;">
                 <p style="margin: 0; line-height: 1.5;">
-                    ⚔️ <b>Combat :</b> Tu peux maintenant affronter les autres joueurs et capturer leurs cartes grâce à l'arène de duel !
+                    🔥 <b>Streak : </b> Ouvre au moins 1 booster chaque jour pour faire grimper ta streak !<br>
+                                     Ne manque aucun jour où tu retombes à zéro !
+     </p>
+            </div>
+
+
+            <div style="margin-bottom: 20px;">
+                <p style="margin: 0; line-height: 1.5;">
+                    🍀 <b>Lucky Block :</b> Gagne des Lucky Block de différentes raretés qui s'ouvrent après un décompte pour débloquer des cadeaux exclusifs !
                 </p>
             </div>
 
+
             <div style="margin-bottom: 20px;">
                 <p style="margin: 0; line-height: 1.5;">
-                    🎯 <b>Quêtes quotidiennes :</b> Relève de nouveaux défis chaque jour pour accumuler des fragments. <br>
-Ne rate pas tes récompenses !
+                    🏆 <b>Niveaux :</b> Gagne de l'XP à chaque action et monte en Niveau !
                 </p>
             </div>
 
 
             <div style="margin-bottom: 20px;">
                 <p style="margin: 0; line-height: 1.5;">
-                    🔜 <b>À venir :</b> Les cartes Brainrot God et Secret seront bientôt disponibles !
+                    🔜 <b>À venir :</b> Les cartes Brainrot God et Secret seront bientôt disponibles !<br>
+                                        ⚔️ Un Passe de Combat arrive bientôt avec des récompenses inédites à débloquer !
                 </p>
             </div>
 
@@ -839,10 +1084,37 @@ Ne rate pas tes récompenses !
         <p style="margin: 0; color: #aaa; font-size: 0.65rem; text-transform: uppercase;">Collection</p>
     </div>
 
+<div>
+    <p style="margin: 0; color: #ff9f43; font-size: 1.1rem; font-weight: bold; line-height: 1.2;" id="profileStreak">0</p>
+    <p style="margin: 0; color: #aaa; font-size: 0.65rem; text-transform: uppercase;">Streak</p>
+</div>
 
 
+<div>
+        <p style="margin: 0; color: #60a5fa; font-size: 1rem; font-weight: bold; line-height: 1.2;" id="profileLevelStat">1</p>
+        <p style="margin: 0; color: #aaa; font-size: 0.55rem; text-transform: uppercase;">Niveau</p>
+    </div>
 
 </div>
+
+
+
+<div id="xpProgressionContainer" style="display: block; margin-top: 20px; padding-top: 15px; border-top: 1px solid #2d3748;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="color: #7c3aed; font-size: 0.75rem; font-weight: bold; text-transform: uppercase;">Progression du Niveau</span>
+            <span id="xpPercent" style="color: #7c3aed; font-size: 0.8rem; font-weight: bold;">0%</span>
+        </div>
+        
+        <div style="background: #0e1525; width: 100%; height: 10px; border-radius: 5px; overflow: hidden; border: 1px solid #333;">
+            <div id="profileXpBar" style="background: linear-gradient(90deg, #7c3aed, #a855f7); width: 0%; height: 100%; transition: width 0.8s ease-out;"></div>
+        </div>
+        
+        <p id="profileXpText" style="margin: 8px 0 0 0; color: #8da0b8; font-size: 0.7rem; text-align: center;">0 / 100 XP pour le prochain niveau</p>
+    </div>
+
+
+
+
 
 
 
@@ -865,7 +1137,7 @@ Ne rate pas tes récompenses !
         padding-top: 15px;
         width: 80%;
     ">
-        <span id="app-version">v2.0.1</span><br>
+        <span id="app-version">v2.1.0</span><br>
         <span>© 2026 BRAINROT TCG</span>
     </div>
 </div>
@@ -1044,7 +1316,6 @@ const ALL_CARDS = [
 
 
 
-
   { name:"Skibidi Toilet", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-3be000d4-c396-4f70-9827-7b9f3208525e.png" },
   { name:"Headless Horseman", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-afc3dd97-67c3-4c8b-94be-e3909d345d21.png" },
   { name:"John Pork", rarity:"OG", image:"https://cdn.phototourl.com/uploads/2026-03-14-e72fbeb0-d333-45cc-afd2-f501c066d2f8.png" },
@@ -1054,10 +1325,16 @@ const ALL_CARDS = [
 
 
 
+  {name:"Mythic Lucky Block", rarity:"Mythic Lucky Block", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Mythic_Lucky_Block.webp"},
+  {name:"Brainrot God Lucky Block", rarity:"Brainrot God Lucky Block", image:"https://cdn.salla.sa/jDznl/055f835a-5b83-4d15-80c1-18252dc910e6-1000x1000-DEmFSHFtiyojCAST96F8MOmiMD9gjRpPDDYPsBJa.png"},
+  {name:"Secret Lucky Block", rarity:"Secret Lucky Block", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/11/SecretLuckyBlock-300x265.webp"},
+  {name:"Admin Lucky Block", rarity:"Admin Lucky Block", image:"https://static.wikia.nocookie.net/stealabr/images/7/7c/AdminLuckyBlock.png/revision/latest?cb=20251007132226"},
+
 ];
 
 
-const RARITY_PROBS = { 'Commun': 50, 'Rare': 25, 'Epic': 13, 'Legendary': 6, 'Mythic': 3, 'Brainrot God': 1, 'Secret': 0.07, 'OG': 0.03 };
+const RARITY_PROBS = { 'Commun': 50, 'Rare': 25, 'Epic': 13, 'Legendary': 6, 'Mythic': 3, 'Brainrot God': 1, 'Secret': 0.07, 'OG': 0.03, 'Mythic Lucky Block': 1, 'Brainrot God Lucky Block': 0.3, 'Secret Lucky Block': 0.05, 'Admin Lucky Block': 0.005 };
+
 
 const BOOSTER_IMAGES = [
   "https://cdn.phototourl.com/uploads/2026-03-17-f809674f-b5b6-4b59-9785-8c5bdb113b28.png",
@@ -1135,6 +1412,824 @@ disableSite(false);
 
 
 
+
+
+
+let luckyInterval; // Pour éviter les doublons d'intervalles
+
+function updateLuckyTimer(unlockTime, type) {
+    const ui = document.getElementById("luckyBlockUI");
+    const timerText = document.getElementById("luckyTimerDisplay");
+    const btn = document.getElementById("btnRecupereLucky");
+    // AJOUT : On récupère l'élément qui affiche le nom du bloc
+    const typeText = document.getElementById("luckyBlockType");
+
+    if (!unlockTime) {
+        ui.style.display = "none";
+        if (luckyInterval) clearInterval(luckyInterval);
+        return;
+    }
+
+    ui.style.display = "block";
+
+    // AJOUT : On met à jour le nom du bloc s'il est fourni
+    if (typeText && type) {
+        typeText.innerText = type;
+    }
+
+    if (luckyInterval) clearInterval(luckyInterval);
+
+    luckyInterval = setInterval(() => {
+        const maintenant = Date.now();
+        const reste = unlockTime - maintenant;
+
+        if (reste <= 0) {
+            // LE TEMPS EST ÉCOULÉ
+            clearInterval(luckyInterval);
+            timerText.innerHTML = "✨ Ton cadeau est prêt !";
+            timerText.style.color = "#10b981";
+            btn.style.display = "inline-block"; // On montre le bouton
+            ui.style.borderColor = "#10b981";   // Le cadre devient vert
+        } else {
+            // ON AFFICHE LE DÉCOMPTE
+            const h = Math.floor(reste / 3600000);
+            const m = Math.floor((reste % 3600000) / 60000);
+            const s = Math.floor((reste % 60000) / 1000);
+            
+            // On garde ton texte original
+            timerText.innerHTML = `🍀 Le Lucky Block s'ouvre dans : ${h}h ${m}m ${s}s`;
+            btn.style.display = "none";
+            timerText.style.color = "#fbbf24";
+            ui.style.borderColor = "#fbbf24";
+        }
+    }, 1000);
+}
+
+
+
+async function ouvrirCadeauLuckyBlock() {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+
+    // 1. On récupère les données pour savoir quel type de cadeau c'est
+    const doc = await db.collection("users").doc(user.uid).get();
+    const data = doc.data();
+
+    if (data && data.luckyBlockUnlockTime) {
+        // Sécurité : on vérifie encore l'heure
+        if (Date.now() < data.luckyBlockUnlockTime) return;
+
+        // 2. Calcul des gains selon les 4 types
+        let gainDust = 5000;
+        let gainXP = 500;
+
+        // On ajuste selon le type stocké dans Firebase
+        if (data.luckyBlockType === "Brainrot God Lucky Block") {
+            gainDust = 15000; 
+            gainXP = 1500;
+        } else if (data.luckyBlockType === "Secret Lucky Block") {
+            gainDust = 50000; 
+            gainXP = 5000;
+        } else if (data.luckyBlockType === "Admin Lucky Block") {
+            gainDust = 250000; 
+            gainXP = 25000;
+        } else {
+            // Par défaut (Mythic Lucky Block)
+            gainDust = 5000;
+            gainXP = 500;
+        }
+
+        // 3. Mise à jour locale
+        dust += gainDust;
+        if (typeof ajouterXP === "function") await ajouterXP(gainXP);
+        refreshDust();
+
+        // 4. Nettoyage Firebase (On remet tout à null pour pouvoir en re-piocher un)
+        await db.collection("users").doc(user.uid).update({
+            luckyBlockUnlockTime: null,
+            luckyBlockType: null,
+            luckyBlockReady: false,
+            dust: dust
+        });
+
+        // 5. UI
+        const uiContainer = document.getElementById("luckyBlockUI");
+        if (uiContainer) uiContainer.style.display = "none";
+        
+        alert(`🎉 BOOM !\nTon ${data.luckyBlockType} contenait :\n💰 +${gainDust} Dust\n✨ +${gainXP} XP !`);
+    }
+}
+
+
+
+
+
+
+// --- SYSTÈME DE NIVEAU ---
+let xp = parseInt(localStorage.getItem("xp")) || 0;
+
+// Calcule le niveau (Niveau 1 = 0 XP, Niveau 2 = 100 XP, Niveau 3 = 400 XP...)
+function calculerNiveau(points) {
+    return Math.floor(Math.sqrt(points / 500)) + 1;
+}
+
+// Fonction pour afficher/cacher la barre d'XP
+function toggleXPBar() {
+    const container = document.getElementById("xpProgressionContainer");
+    if (container) {
+        container.style.display = (container.style.display === "none") ? "block" : "none";
+    }
+}
+
+async function ajouterXP(montant) {
+    
+    let niveauAvant = calculerNiveau(xp);
+    xp += montant;
+    
+    // 1. Sauvegarde Locale
+    localStorage.setItem("xp", xp); 
+    
+    // 2. SAUVEGARDE SUR FIREBASE
+    const user = auth.currentUser;
+    
+    if (user) {
+        try {
+            // On calcule le niveau actuel pour l'envoyer aussi (plus propre pour ta base)
+            let niveauActuel = calculerNiveau(xp);
+
+            await db.collection("users").doc(user.uid).set({
+                xp: xp,
+                level: niveauActuel, // On l'ajoute ici pour qu'il soit créé sur le serveur
+                dust: dust 
+            }, { merge: true });
+
+
+        } catch (error) {
+            console.error("❌ ERREUR Firebase : La sauvegarde a échoué. Vérifie tes Rules !", error);
+        }
+    } else {
+        console.warn("⚠️ ATTENTION : Aucun utilisateur connecté. L'XP est uniquement locale (perdue au refresh).");
+    }
+    
+    // 3. Logique de passage de niveau
+    let niveauApres = calculerNiveau(xp);
+    if (niveauApres > niveauAvant) {
+        console.log("🎊 Passage de niveau détecté ! Niveau " + niveauAvant + " -> " + niveauApres);
+        alert("🎉 NIVEAU SUPÉRIEUR ! Tu es maintenant Niveau " + niveauApres);
+        dust += 100; 
+        save("dust", dust);
+        if(typeof refreshDust === "function") refreshDust();
+        
+        if (user) {
+            db.collection("users").doc(user.uid).set({ dust: dust }, { merge: true })
+              .then(() => console.log("🎁 Cadeau de niveau (Dust) synchronisé."));
+        }
+    }
+
+    // 4. Actualisation visuelle
+    actualiserProfil(); 
+}
+
+
+
+
+function actualiserProfil() {
+    
+    // 1. Calcul du niveau
+    const niveau = calculerNiveau(xp);
+
+    // 2. Mise à jour du chiffre du RANG (On essaie plusieurs IDs au cas où)
+    const lvlStat = document.getElementById("profileLevelStat");
+    const lvlSimple = document.getElementById("profileLevel");
+    if (lvlStat) lvlStat.innerText = niveau;
+    if (lvlSimple) lvlSimple.innerText = niveau;
+
+    // 3. Calcul et mise à jour de la BARRE
+    try {
+        const xpPalierActuel = Math.pow(niveau - 1, 2) * 500;
+        const xpPalierSuivant = Math.pow(niveau, 2) * 500;
+        const xpDansLeNiveau = xp - xpPalierActuel;
+        const xpRequisPourNiveau = xpPalierSuivant - xpPalierActuel;
+        const pourcentage = Math.min(Math.floor((xpDansLeNiveau / xpRequisPourNiveau) * 100), 100);
+
+        if (document.getElementById("profileXpBar")) document.getElementById("profileXpBar").style.width = pourcentage + "%";
+        if (document.getElementById("xpPercent")) document.getElementById("xpPercent").innerText = pourcentage + "%";
+        if (document.getElementById("profileXpText")) document.getElementById("profileXpText").innerText = Math.floor(xpDansLeNiveau) + " / " + xpRequisPourNiveau + " XP";
+    } catch(e) { console.log("Erreur calcul barre:", e); }
+
+    // 4. Mise à jour des autres stats (avec protections)
+    if (document.getElementById("profileDust")) document.getElementById("profileDust").innerText = (typeof dust !== 'undefined') ? dust : 0;
+    
+    // Gestion sécurisée de la collection (évite le plantage si ALL_CARDS est mal nommé)
+    let totalPossible = 0;
+    if (typeof ALL_CARDS !== 'undefined') totalPossible = ALL_CARDS.length;
+    else if (typeof allCards !== 'undefined') totalPossible = allCards.length;
+
+    const cardsEl = document.getElementById("profileCards") || document.getElementById("profileCardsText");
+    if (cardsEl) cardsEl.innerText = collection.length + " / " + totalPossible;
+
+    if (document.getElementById("profileStreak")) {
+        document.getElementById("profileStreak").innerText = (typeof streakCount !== 'undefined') ? streakCount : 0;
+    }
+   
+}
+
+
+
+
+
+
+
+
+
+// Écouteur d'événement
+document.getElementById('searchSellCard').addEventListener('input', function(e) {
+    const searchTerms = e.target.value.toLowerCase();
+    filtrerCartesVente(searchTerms);
+});
+
+function filtrerCartesVente(filtre) {
+    const grid = document.getElementById('selectCardGrid');
+    const toutesLesCartes = grid.querySelectorAll('.card'); 
+    const messageAucunResultat = document.getElementById('noCardMessage');
+    
+    let cartesTrouvees = 0; // Compteur
+
+    toutesLesCartes.forEach(card => {
+        const nameTag = card.querySelector('strong');
+        if (nameTag) {
+            const cardName = nameTag.innerText.toLowerCase();
+            
+            if (cardName.includes(filtre)) {
+                card.style.display = ""; // On remet le style d'origine
+                cartesTrouvees++; // On a trouvé une carte !
+            } else {
+                card.style.display = "none";
+            }
+        }
+    });
+
+    // On affiche le message seulement si aucune carte n'est visible
+    if (cartesTrouvees === 0 && filtre !== "") {
+        messageAucunResultat.style.display = "block";
+    } else {
+        messageAucunResultat.style.display = "none";
+    }
+}
+
+
+
+function ouvrirSelecteurVente() {
+    document.getElementById('searchSellCard').value = ""; 
+    document.getElementById('noCardMessage').style.display = "none"; // On cache le message
+    
+    document.getElementById('selectCardOverlay').style.display = 'block';
+    chargerMesCartesPourVente(); 
+}
+
+
+
+
+let streakCount = parseInt(localStorage.getItem("streakCount")) || 0;
+let lastOpenDate = localStorage.getItem("lastOpenDate") || "";
+
+
+function updateStreak() {
+    const now = new Date();
+    // On récupère la date au format YYYY-MM-DD pour ignorer l'heure
+    const today = now.toISOString().split('T')[0];
+    
+    if (lastOpenDate === today) {
+        // Le joueur a déjà ouvert un booster aujourd'hui, on ne fait rien
+        return;
+    }
+
+    const lastDate = new Date(lastOpenDate);
+    const diffTime = now - lastDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (lastOpenDate === "") {
+        // Première fois que le joueur ouvre un booster
+        streakCount = 1;
+    } else if (diffDays === 1) {
+        // C'tétait hier ! La streak continue
+        streakCount++;
+    } else if (diffDays > 1) {
+        // Trop tard, on a sauté un jour ou plus
+        streakCount = 1;
+    }
+
+    lastOpenDate = today;
+    
+    // Sauvegarde
+    localStorage.setItem("streakCount", streakCount);
+    localStorage.setItem("lastOpenDate", lastOpenDate);
+    
+    alert(`🔥 Streak: ${streakCount} jour(s) !`);
+    renderStreak(); // Pour mettre à jour l'affichage
+}
+
+
+
+
+function renderStreak() {
+    const display = document.getElementById("streakDisplay");
+    if (display) {
+        display.innerText = `${streakCount} 🔥`;
+    }
+}
+// Appelle renderStreak() au chargement de la page
+renderStreak();
+
+
+
+
+
+
+
+// Gérer l'affichage des onglets et du bouton de vente
+function afficherOngletMarket(tab) {
+    currentMarketTab = tab;
+
+    // 1. ON FORCE LE NETTOYAGE DES COULEURS
+    const btnBuy = document.getElementById('btnMarketBuy');
+    const btnMine = document.getElementById('btnMarketMine');
+    if (btnBuy) btnBuy.style.background = '#4b5563';
+    if (btnMine) btnMine.style.background = '#4b5563';
+
+    // 2. ON ALLUME LE BON ONGLET
+    const activeBtn = (tab === 'buy') ? btnBuy : btnMine;
+    if (activeBtn) activeBtn.style.background = '#7c3aed';
+
+    // 3. LE BOUTON "VENDRE" (C'est ici qu'on force l'apparition)
+    // On cible l'ID exact de ton HTML : marketactionBtn
+    const conteneurVente = document.getElementById('marketactionBtn');
+    
+    if (conteneurVente) {
+        if (tab === 'mySales') {
+            // ON FORCE L'AFFICHAGE (Le "display: block" écrase le "display: none")
+            conteneurVente.style.display = 'block';
+        } else {
+            // ON FORCE LA DISPARITION
+            conteneurVente.style.display = 'none';
+        }
+    }
+
+    // 4. ON CHARGE LES CARTES
+    chargerMarche();
+}
+
+
+// 1. Ouvrir le sélecteur de cartes
+function ouvrirSelecteurVente() {
+    const grid = document.getElementById('selectCardGrid');
+    if (!grid) return;
+    
+    grid.innerHTML = ""; // On vide
+    document.getElementById('selectCardOverlay').style.display = "block";
+
+    if (collection.length === 0) {
+        grid.innerHTML = "<p>Aucune carte disponible.</p>";
+        return;
+    }
+
+    collection.forEach((card, index) => {
+        const cardEl = document.createElement('div');
+        cardEl.className = `card r-${card.rarity}`;
+        cardEl.style.cursor = "pointer";
+        cardEl.onclick = () => choisirPrixVente(index);
+        
+        cardEl.innerHTML = `
+            <div style="color:#fbbf24; font-size:0.8rem; font-weight:bold;">Lvl. ${card.level || 1}</div>
+            <img src="${card.image}" style="width:100%; border-radius:5px;">
+            <strong>${card.name}</strong>
+            <small>${card.rarity.toUpperCase()}</small>
+        `;
+        grid.appendChild(cardEl);
+    });
+}
+
+
+
+
+
+function fermerSelecteur() {
+    document.getElementById('selectCardOverlay').style.display = "none";
+}
+
+// 2. Ouvrir le menu du prix après avoir cliqué sur une carte
+function choisirPrixVente(index) {
+    cardToSellIndex = index;
+    const card = collection[index];
+    fermerSelecteur(); // On ferme le sélecteur de cartes
+    
+    document.getElementById('sellCardName').innerText = "Vendre " + card.name;
+    document.getElementById('sellOverlay').style.display = 'flex'; // On ouvre ton menu de prix
+}
+
+function fermerVente() {
+    document.getElementById('sellOverlay').style.display = 'none';
+    cardToSellIndex = null;
+}
+
+// 3. Validation finale avec "Êtes-vous sûr ?"
+document.getElementById('confirmSellBtn').onclick = async () => {
+    const price = parseInt(document.getElementById('sellPriceInput').value);
+    
+    if (!price || price <= 0) {
+        alert("Veuillez entrer un prix valide !");
+        return;
+    }
+
+    const card = collection[cardToSellIndex];
+    
+    const confirmation = confirm(`Êtes-vous sûr de vouloir vendre ${card.name} (Lvl ${card.level || 1}) pour ${price} fragments ?`);
+    
+    if (confirmation) {
+        // Supprimer la carte de la collection locale
+        collection.splice(cardToSellIndex, 1);
+        
+        // Ajouter à Firebase
+        try {
+            await db.collection("market").add({
+                sellerId: auth.currentUser.uid,
+                sellerName: document.getElementById('profileName').innerText || "Joueur",
+                card: card,
+                price: price,
+                date: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            await saveData(); // Sauvegarder la collection sans la carte
+            fermerVente();
+            alert("Ta carte est maintenant en vente sur le marché !");
+            chargerMarche(); // Rafraîchir l'affichage
+        } catch (error) {
+            console.error("Erreur de vente:", error);
+            alert("Erreur lors de la mise en vente.");
+        }
+    }
+};
+
+
+
+
+
+// Fonction pour ouvrir le Marché
+document.getElementById('tabMarket').onclick = () => {
+    // 1. On cache tout
+    homeSection.style.display = "none";
+    collectionSection.style.display = "none";
+    allCardsSection.style.display = "none";
+    shopSection.style.display = "none";
+    combatSection.style.display = "none";
+    
+    // 2. On cache la barre de navigation du bas et le bouton profil
+    document.querySelector('nav').style.display = "none";
+    if(document.getElementById('accountBtn')) document.getElementById('accountBtn').style.display = "none";
+    
+    // 3. On cache le bouton flottant lui-même
+    document.getElementById('tabMarket').style.display = "none";
+
+    // 4. On affiche la page Marché
+    document.getElementById('marketSection').style.display = "block";
+    
+    // On lance le chargement des cartes du marché
+    afficherOngletMarket('buy');
+};
+
+// Fonction pour quitter le Marché et revenir au menu
+function quitterMarche() {
+    // 1. On cache le marché
+    document.getElementById('marketSection').style.display = "none";
+
+    // 2. On réaffiche les menus
+    document.querySelector('nav').style.display = "flex";
+    if(document.getElementById('accountBtn')) document.getElementById('accountBtn').style.display = "block";
+    document.getElementById('tabMarket').style.display = "flex";
+
+    // 3. On affiche l'accueil
+    showHome();
+}
+
+
+
+
+
+
+
+
+
+
+function quitterMarche() {
+    // --- AJOUT : Arrêter l'écoute en temps réel du marché ---
+    if (typeof marketUnsubscribe === "function") {
+        marketUnsubscribe();
+        marketUnsubscribe = null;
+        console.log("Écouteur du marché arrêté.");
+    }
+
+    // 1. Cacher le marché
+    document.getElementById('marketSection').style.display = 'none';
+
+    // 2. Réafficher la navigation du bas
+    const nav = document.querySelector('nav');
+    if (nav) nav.style.display = 'flex';
+
+    // 3. Réafficher le bouton profil
+    const accBtn = document.getElementById('accountBtn');
+    if (accBtn) accBtn.style.display = 'block';
+
+    // 4. Réafficher le bouton flottant
+    document.getElementById('tabMarket').style.display = 'flex';
+
+    // 5. Revenir à l'accueil proprement
+    showHome();
+}
+
+
+
+
+
+let currentMarketTab = 'buy';
+let cardToSellIndex = null;
+
+// Gestion du clic sur le bouton flottant
+document.getElementById('tabMarket').onclick = () => {
+    // On nettoie tout
+   
+
+    // On affiche la section marché
+    const marketSection = document.getElementById('marketSection');
+    marketSection.style.display = 'block'; 
+    
+    // On force le chargement des données
+    currentMarketTab = 'buy';
+    chargerMarche(); 
+};
+
+
+// Intégration dans ton hideAllSections existant
+function hideAllSections() {
+    const ids = ['homeSection', 'collectionSection', 'allCardsSection', 'shopSection', 'accountSection', 'marketSection', 'combatSection'];
+    ids.forEach(id => { 
+        const el = document.getElementById(id);
+        if(el) el.style.display = 'none';
+    });
+    // Réaffiche le bouton flottant si on quitte le marché
+    document.getElementById('tabMarket').style.display = 'flex';
+}
+
+function afficherOngletMarket(tab) {
+    currentMarketTab = tab;
+    document.getElementById('btnMarketBuy').style.background = tab === 'buy' ? '#7c3aed' : '#4b5563';
+    document.getElementById('btnMarketMine').style.background = tab === 'mySales' ? '#7c3aed' : '#4b5563';
+    chargerMarche();
+}
+
+
+
+// 1. Ouvrir la vente depuis la collection
+function preparerVente(index) {
+    cardToSellIndex = index;
+    const card = collection[index];
+    document.getElementById('sellCardName').innerText = "Vendre " + card.name;
+    document.getElementById('sellOverlay').style.display = 'flex';
+}
+
+function fermerVente() {
+    document.getElementById('sellOverlay').style.display = 'none';
+    cardToSellIndex = null;
+}
+
+// 2. Confirmer la mise en vente
+document.getElementById('confirmSellBtn').onclick = async () => {
+    const price = parseInt(document.getElementById('sellPriceInput').value);
+    if (!price || price <= 0) return alert("Prix invalide !");
+
+    if (typeof avancerQuete === "function") {
+        avancerQuete("sell_card", 1);
+    }
+
+    const card = collection[cardToSellIndex];
+    
+    // --- ÉTAPE 1 : RETRAIT LOCAL IMMÉDIAT ---
+    collection.splice(cardToSellIndex, 1);
+    
+    try {
+        // --- ÉTAPE 2 : AJOUT AU MARCHÉ ---
+        await db.collection("market").add({
+            sellerId: auth.currentUser.uid,
+            sellerName: document.getElementById('profileName').innerText || "Joueur",
+            card: card,
+            price: price,
+            date: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // --- ÉTAPE 3 : GAIN D'XP ---
+        const xpVente = 50; 
+        if (typeof ajouterXP === "function") {
+            // On attend que l'XP soit traité
+            await ajouterXP(xpVente);
+        }
+
+        // --- ÉTAPE 4 : SAUVEGARDE FORCÉE ---
+        // On utilise .update pour modifier uniquement la collection
+        await db.collection("users").doc(auth.currentUser.uid).update({
+            collection: collection
+        });
+
+        // Mise à jour du LocalStorage pour éviter les doublons au refresh
+        localStorage.setItem("collection", JSON.stringify(collection));
+
+        // --- ÉTAPE 5 : MISE À JOUR INTERFACE ---
+        fermerVente();
+        
+        if (typeof showCollection === "function") showCollection();
+        if (typeof displayCollection === "function") displayCollection();
+        
+        // Message plus complet pour le joueur
+        alert(`Annonce publiée ! 💎\nLa carte a été mise en vente et vous avez gagné +${xpVente} XP.`);
+
+    } catch (error) {
+        console.error("Erreur lors de la mise en vente:", error);
+        alert("Une erreur est survenue. La carte n'a pas été vendue.");
+        
+        // Optionnel : Recharger la collection si erreur pour éviter de "perdre" la carte localement
+        if (typeof showCollection === "function") showCollection();
+    }
+};
+
+
+
+// 3. Charger le marché
+let marketUnsubscribe = null;
+
+async function chargerMarche() {
+    const marketDiv = document.getElementById('marketCards');
+    marketDiv.innerHTML = "Chargement en temps réel...";
+    
+    // --- NOUVEAU : Arrêter l'ancien écouteur s'il existe déjà ---
+    if (marketUnsubscribe) {
+        marketUnsubscribe();
+    }
+
+    // --- TRANSFORMATION EN TEMPS RÉEL (onSnapshot) ---
+    marketUnsubscribe = db.collection("market").orderBy("date", "desc").onSnapshot(snapshot => {
+        marketDiv.innerHTML = "";
+
+        // --- AJOUT : Compteur pour vérifier si la liste est vide ---
+        let count = 0;
+
+        snapshot.forEach(doc => {
+            const item = doc.data();
+            const isMine = item.sellerId === auth.currentUser.uid;
+
+            if (currentMarketTab === 'buy' && isMine) return;
+            if (currentMarketTab === 'mySales' && !isMine) return;
+
+            // Si on arrive ici, c'est qu'une carte va être affichée
+            count++;
+
+            const cardEl = document.createElement('div');
+            cardEl.className = `card r-${item.card.rarity}`;
+            cardEl.innerHTML = `
+                <img src="${item.card.image}" style="width:100%">
+                <strong>${item.card.name}</strong>
+                <div class="market-price-tag">${item.price} 💎</div>
+                ${isMine 
+                    ? `<button onclick="annulerVente('${doc.id}')" style="background:#ef4444; width:100%">Annuler</button>`
+                    : `<button onclick="acheterCarte('${doc.id}', ${item.price}, '${item.sellerId}')" style="background:#10b981; width:100%">Acheter</button>`
+                }
+            `;
+            marketDiv.appendChild(cardEl);
+        });
+
+        // --- AJOUT : Affichage du message si aucune carte n'est trouvée ---
+        if (count === 0) {
+            const message = currentMarketTab === 'mySales' 
+                ? "Vous n'avez aucune vente en cours." 
+                : "Aucune carte n'est disponible sur le marché.";
+                
+            marketDiv.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #94a3b8; border: 2px dashed #4b5563; border-radius: 15px;">
+                    <div style="font-size: 40px; margin-bottom: 10px;">📭</div>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+    }, error => {
+        console.error("Erreur lors de l'écoute du marché:", error);
+        marketDiv.innerHTML = "Erreur de connexion au marché.";
+    });
+}
+
+
+// 4. Acheter une carte
+async function acheterCarte(id, price, sellerId) {
+    // Vérification initiale du solde
+    if (dust < price) return alert("Pas assez de fragments !");
+    
+    const ref = db.collection("market").doc(id);
+
+    try {
+        const snap = await ref.get();
+        if(!snap.exists) {
+            alert("Désolé, cette carte n'est plus disponible !");
+            return;
+        }
+
+        const item = snap.data();
+        const purchasedCard = item.card;
+
+        // 1. SUPPRESSION DU MARCHÉ
+        await ref.delete();
+
+        // 2. LOGIQUE DE NIVEAU / DOUBLON
+        let existingCard = collection.find(c => c.name === purchasedCard.name);
+
+        if (existingCard) {
+            // On augmente le niveau
+            existingCard.level = (existingCard.level || 1) + 1;
+            alert(`Doublon ! Votre ${purchasedCard.name} monte au niveau ${existingCard.level} !`);
+        } else {
+            // On ajoute la nouvelle carte avec un niveau 1 par défaut
+            purchasedCard.level = 1;
+            collection.push(purchasedCard);
+        }
+
+        // --- AJOUT XP DE COMPTE ---
+        const xpGagne = 50; // Tu peux varier selon le prix si tu veux
+        if (typeof ajouterXP === "function") {
+            // On attend que l'XP soit ajouté (et sauvegardé via ta fonction ajouterXP)
+            await ajouterXP(xpGagne);
+        }
+
+        // 3. MISE À JOUR DU DUST LOCAL
+        dust -= price;
+
+        // 4. SAUVEGARDE SUR FIREBASE (Acheteur)
+        // On utilise .set avec { merge: true } comme dans ton code d'origine
+        await db.collection("users").doc(auth.currentUser.uid).set({
+            dust: dust,
+            collection: collection
+        }, { merge: true });
+
+        // --- MISE À JOUR DU STOCKAGE LOCAL (pour éviter le bug du refresh) ---
+        localStorage.setItem("collection", JSON.stringify(collection));
+        localStorage.setItem("dust", dust);
+
+        // 5. TRANSFERT AU VENDEUR
+        await db.collection("users").doc(sellerId).update({
+            dust: firebase.firestore.FieldValue.increment(price)
+        });
+
+        // ✅ MISE À JOUR VISUELLE
+        if (typeof displayCollection === "function") displayCollection();
+        if (typeof showCollection === "function") showCollection(); // Rafraîchit l'affichage si l'onglet est ouvert
+        refreshDust();
+        if (typeof updateButtons === "function") updateButtons();
+        
+        alert(`Achat effectué ! +${xpGagne} XP gagnés.`);
+
+    } catch (error) {
+        console.error("Erreur achat:", error);
+        alert("Une erreur est survenue lors de la transaction.");
+    }
+}
+
+
+
+
+// 5. Annuler une vente
+async function annulerVente(id) {
+    const ref = db.collection("market").doc(id);
+    const snap = await ref.get();
+
+    if(snap.exists) {
+        collection.push(snap.data().card);
+        
+        await ref.delete();
+
+        if (auth.currentUser) {
+            saveToFirebase(auth.currentUser.uid);
+        }
+
+        if (typeof chargerMarche === "function") {
+            chargerMarche();
+        }
+
+        alert("Carte récupérée !");
+    } else {
+        alert("Cette annonce n'existe plus.");
+    }
+}
+
+
+
+
+
+
+
 function annulerModification() {
     // 1. On cache la box d'édition
     document.getElementById('editPseudoBox').style.display = 'none';
@@ -1199,7 +2294,6 @@ async function validerNouveauPseudo() {
 
 
 
-// --- FONCTIONS DE L'INTERFACE ---
 
 function toggleQuests() {
     const overlay = document.getElementById("questOverlay");
@@ -1223,17 +2317,18 @@ function toggleQuests() {
 
 
 
-// --- CONFIGURATION DES QUÊTES ---
+
 const TOUTES_LES_QUETES = [
     { id: 1, desc: "Ouvrir 50 boosters", cible: 50, recompense: 500, type: "open" },
     { id: 2, desc: "Obtenir une carte Rare", cible: 1, recompense: 100, type: "rare" },
-    { id: 3, desc: "Obtenir 5 doublons", cible: 5, recompense: 100, type: "duplicate" },
+    { id: 3, desc: "Obtenir 5 doublons", cible: 5, recompense: 200, type: "duplicate" },
     { id: 4, desc: "Se connecter", cible: 1, recompense: 30, type: "login" },
     { id: 5, desc: "Obtenir une carte Mythic", cible: 1, recompense: 700, type: "mythic" },
     { id: 6, desc: "Atteindre le Niveau 5 sur une carte", cible: 5, recompense: 700, type: "lvlup" },
     { id: 7, desc: "Faire 3 combats", cible: 3, recompense: 600, type: "combat" },
     { id: 8, desc: "Gagner 2 combats", cible: 2, recompense: 700, type: "win_combat" },
     { id: 9, desc: "Acheter un booster dans la boutique", cible: 1, recompense: 1000, type: "shop_booster" },
+    { id: 10, desc: "Vendre une carte sur le Marché", cible: 1, recompense: 500, type: "sell_card" },
 ];
 
 // Variable globale pour stocker les quêtes en cours
@@ -1280,6 +2375,29 @@ function afficherQuetes(quetes) {
     if (!list) return;
     list.innerHTML = "";
 
+    // --- AJOUT DU BANDEAU DE PROGRESSION DU BONUS ---
+    const nbRecuperees = quetes.filter(q => q.recuperee).length;
+    const bonusFinalDonne = (typeof quetesActives !== 'undefined' && quetesActives.bonusFinalDonne);
+    
+    // On définit les montants d'XP pour l'affichage
+    const xpParQuete = 100;
+    const xpBonusFinal = 400;
+
+    let bonusHTML = `
+        <div style="background: #1e1b4b; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #4338ca; text-align: center;">
+            <div style="font-weight: bold; color: #fbbf24; font-size: 0.9em;">
+                🏆 OBJECTIF DU JOUR : ${nbRecuperees}/3
+            </div>
+            <div style="font-size: 0.75em; color: #a5b4fc; margin-top: 4px;">
+                ${bonusFinalDonne ? `✨ Bonus de 1000 💎 et ${xpBonusFinal} XP récupérés !` : `Complétez tout pour : +1000 💎 | ✨ +${xpBonusFinal} XP`}
+            </div>
+            <div style="width: 100%; background: #312e81; height: 6px; border-radius: 3px; margin-top: 8px; overflow: hidden;">
+                <div style="width: ${(nbRecuperees / 3) * 100}%; background: #fbbf24; height: 100%; transition: width 0.3s;"></div>
+            </div>
+        </div>
+    `;
+    list.innerHTML = bonusHTML;
+
     quetes.forEach((q, index) => {
         let statusHTML = "";
         let bgColor = "#1e293b";
@@ -1299,13 +2417,23 @@ function afficherQuetes(quetes) {
         list.innerHTML += `
             <div ${clickAction} style="background: ${bgColor}; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid ${q.fini ? '#10b981' : '#3b82f6'}; margin-bottom: 8px; cursor: ${q.fini && !q.recuperee ? 'pointer' : 'default'}">
                 <div style="text-align: left;">
-                    <div style="font-weight: bold; font-size: 0.9em; color: white;">${q.desc}</div>
-                    <div style="font-size: 0.8em; color: #fbbf24;">+${q.recompense} Fragments</div>
+                    <div style="font-weight: bold; font-size: 0.9em; color: white; line-height: 1.2;">${q.desc}</div>
+                    
+                    <div style="font-size: 0.8em; display: flex; align-items: center; gap: 10px; margin-top: 5px; line-height: 1;">
+                        <span style="color: #fbbf24; display: flex; align-items: center; gap: 3px;">
+                            +${q.recompense} 💎
+                        </span>
+                        <span style="color: #4fc3f7; font-weight: bold; display: flex; align-items: center; gap: 3px;">
+                            +${xpParQuete} XP
+                        </span>
+                    </div>
                 </div>
                 <div>${statusHTML}</div>
             </div>`;
     });
 }
+
+
 
 async function recupererCadeauFirebase(index) {
     const user = firebase.auth().currentUser;
@@ -1321,6 +2449,19 @@ async function recupererCadeauFirebase(index) {
         dust += q.recompense; 
 
         try {
+            // --- AJOUT DU BONUS FINAL ---
+            // On vérifie si les 3 quêtes sont maintenant récupérées
+            const toutesRecuperees = quetesActives.active.every(quest => quest.recuperee === true);
+            let messageBonus = "";
+
+            if (toutesRecuperees && !quetesActives.bonusFinalDonne) {
+                const MONTANT_BONUS = 1000;
+                dust += MONTANT_BONUS;
+                quetesActives.bonusFinalDonne = true; // Marqueur pour ne pas le donner deux fois
+                messageBonus = `\n\n🌟 BONUS QUOTIDIEN : +${MONTANT_BONUS} Fragments !`;
+            }
+   
+
             // 2. Sauvegarde synchronisée sur Firebase
             await db.collection("users").doc(user.uid).set({
                 dust: dust,
@@ -1338,7 +2479,8 @@ async function recupererCadeauFirebase(index) {
             // 5. Rafraîchir la liste des quêtes pour afficher "TERMINÉ ✅"
             afficherQuetes(quetesActives.active);
             
-            alert(`🎁 +${q.recompense} Fragments récupérés !`);
+            alert(`🎁 +${q.recompense} Fragments récupérés !${messageBonus}`);
+            
         } catch (error) {
             console.error("Erreur lors de la récupération de la récompense:", error);
             alert("Erreur de connexion à Firebase. Réessaie.");
@@ -1348,42 +2490,106 @@ async function recupererCadeauFirebase(index) {
 
 
 
-function avancerQuete(type, montant = 1) {
+async function avancerQuete(type, montant = 1) {
     if (!quetesActives) return;
 
     let aChange = false;
-    quetesActives.active.forEach(q => {
+    // On passe sur chaque quête pour voir si elle correspond
+    for (const q of quetesActives.active) {
         if (q.type === type && !q.fini) {
             q.progres += montant;
+            
+            // --- DÉTECTION QUÊTE TERMINÉE ---
             if (q.progres >= q.cible) {
                 q.progres = q.cible;
                 q.fini = true;
+
+                // --- GAIN D'XP ---
+                const xpQuete = 100; // Bonus d'XP par quête finie
+                if (typeof ajouterXP === "function") {
+                    // On utilise await pour être sûr que le niveau est calculé avant la suite
+                    await ajouterXP(xpQuete);
+                    console.log(`✨ +${xpQuete} XP gagnés via la quête : ${q.nom}`);
+                }
             }
             aChange = true;
         }
-    });
+    }
 
     if (aChange) {
-        // Optionnel : tu peux sauvegarder à chaque étape ou seulement à la fin
-        // Pour éviter trop d'écritures Firebase, on sauvegarde ici :
         const user = firebase.auth().currentUser;
         if(user) {
+            // Sauvegarde de l'état des quêtes
+            // Note : l'XP est déjà géré par ajouterXP()
             db.collection("users").doc(user.uid).set({ dailyQuests: quetesActives }, { merge: true });
         }
-        if (document.getElementById("questOverlay").style.display === "flex") {
+        
+        if (document.getElementById("questOverlay") && document.getElementById("questOverlay").style.display === "flex") {
             afficherQuetes(quetesActives.active);
         }
     }
 }
 
+
+
 // Lancement au démarrage (Assure-toi que Firebase est prêt)
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
+
+        // 1. Récupération des données globales du joueur
+        db.collection("users").doc(user.uid).get().then((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+
+                // SYNCHRONISATION DES VARIABLES GLOBALES
+                dust = data.dust || 0;
+                xp = data.xp || 0;
+                level = data.level || 1; 
+                
+                if (data.collection) {
+                    collection = data.collection;
+                }
+
+                // --- 🎁 SYNCHRONISATION DU LUCKY BLOCK (RÉTABLISSEMENT DU TIMER) ---
+                if (data.luckyBlockUnlockTime) {
+                    // Si un temps de déblocage existe, on relance le chrono visuel
+                    if (typeof updateLuckyTimer === "function") {
+                        // MODIFICATION : On ajoute data.luckyBlockType pour mettre à jour le nom à l'écran
+                        updateLuckyTimer(data.luckyBlockUnlockTime, data.luckyBlockType);
+                    }
+                } else {
+                    // Si aucun chrono n'est actif, on cache l'interface par sécurité
+                    const luckyUI = document.getElementById("luckyBlockUI");
+                    if (luckyUI) luckyUI.style.display = "none";
+                }
+
+                // 2. MISE À JOUR DE L'INTERFACE
+                if (typeof refreshDust === "function") refreshDust();
+                
+                const profileDust = document.getElementById("profileDust");
+                if (profileDust) profileDust.innerText = dust;
+
+                // Mise à jour visuelle de l'XP/Level au chargement
+                if (typeof updateXPBar === "function") updateXPBar();
+
+                console.log("Données chargées depuis le serveur avec succès !");
+            } else {
+                console.log("Nouveau compte détecté sur le serveur.");
+            }
+        }).catch((error) => {
+            console.error("Erreur de synchronisation :", error);
+        });
+
+        // 3. Lancement des quêtes
         chargerQuetesFirebase();
+        
+        // Petit délai pour laisser le temps aux données de charger avant d'avancer la quête login
         setTimeout(() => avancerQuete("login"), 3000);
+        
+    } else {
+        console.log("Utilisateur non connecté.");
     }
 });
-
 
 
 
@@ -1856,7 +3062,13 @@ let currentOpponentCard = null;
 function preparerAdversaire() {
     // 1. L'IA choisit une carte au hasard dans TOUTES les cartes existantes // ICI
     const randomIndex = Math.floor(Math.random() * ALL_CARDS.length);
-    currentOpponentCard = ALL_CARDS[randomIndex];
+    
+    // On crée une copie pour ne pas modifier l'original dans ALL_CARDS
+    currentOpponentCard = { ...ALL_CARDS[randomIndex] };
+
+    // --- NOUVEAU : On donne un niveau aléatoire à l'IA (ex: entre 1 et 5) ---
+    // Cela permet à getPower d'utiliser le niveau pour calculer l'ATK de l'IA
+    currentOpponentCard.level = Math.floor(Math.random() * 5) + 1;
 
     // 2. On récupère le slot de l'IA (à droite) // ICI
     const opponentSlot = document.getElementById("opponent-slot");
@@ -1865,7 +3077,7 @@ function preparerAdversaire() {
     opponentSlot.innerHTML = `
         <div class="card" style="width:100%; height:100%; margin:0; position:relative; border:2px solid #ff4444;">
             <img src="${currentOpponentCard.image}" style="width:100%; border-radius:8px;">
-            <div style="font-size:0.7rem; font-weight:bold;">${currentOpponentCard.name}</div>
+            <div style="font-size:0.7rem; font-weight:bold;">${currentOpponentCard.name} (Niv. ${currentOpponentCard.level})</div>
             <div style="color:#ff4444; font-weight:bold;">ATK: ${getPower(currentOpponentCard)}</div>
         </div>
     `;
@@ -1885,6 +3097,11 @@ function preparerAdversaire() {
 
 
 async function lancerLeCombat() {
+    // 1. Appeler la quête en premier
+    if (typeof avancerQuete === "function") {
+        avancerQuete("combat", 1);
+    }
+
     if (!currentRoomId || combatEnCours) return;
 
     const roomRef = db.collection("battles").doc(currentRoomId);
@@ -1893,14 +3110,7 @@ async function lancerLeCombat() {
     btn.disabled = true;
     btn.innerText = "Envoi du signal...";
 
-    // --- AJOUT QUÊTE ---
-    if (typeof progresserQuete === "function") {
-        progresserQuete("combat", 1);
-    }
-    // -------------------
-
-    // On envoie juste le statut "processing"
-    // L'écouteur (onSnapshot) recevra l'info et lancera executerCalculCombat() pour TOUT LE MONDE
+    // 2. IMPORTANT : On attend que la quête soit traitée avant de changer de statut
     await roomRef.update({ status: "processing" });
 }
 
@@ -1938,13 +3148,17 @@ async function executerCalculCombat() {
     btn.innerText = "Calcul du gagnant...";
     await new Promise(r => setTimeout(r, 1500));
 
+let xpGagne = 20;
+
     // --- 3. VERDICT (LOGIQUE FRAGMENTS ET QUÊTES) ---
     if (p1Power > p2Power) {
-        // --- AJOUT QUÊTE VICTOIRE ---
-        if (typeof progresserQuete === "function") {
-            progresserQuete("win_combat", 1);
+
+xpGagne = 100;
+
+if (typeof avancerQuete === "function") {
+            avancerQuete("win_combat", 1);
         }
-        // ----------------------------
+
 
         // Gain de base pour la victoire
         dust += 500;
@@ -1955,19 +3169,24 @@ async function executerCalculCombat() {
         if (possèdeDéjà) {
             // BONUS DOUBLON : +1000 fragments
             dust += 1000;
-            alert(`🏆 VICTOIRE ! +500 Dust.\n✨ Tu possèdes déjà cette carte : BONUS +1000 Dust ! (Total: 1500)`);
+            alert(`🏆 VICTOIRE !\n+${xpGagne} XP | +500 Dust.\n✨ Tu possèdes déjà cette carte : BONUS +1000 Dust ! (Total: 1500)`);
         } else {
             // NOUVELLE CARTE : On l'ajoute normalement
             collection.push({ ...carteAdversaire });
-            alert(`🏆 VICTOIRE ! +500 Dust.\nNouveau champion capturé : ${carteAdversaire.name} !`);
+            alert(`🏆 VICTOIRE !\n+${xpGagne} XP | +500 Dust.\nNouveau champion capturé : ${carteAdversaire.name} !`);
         }
     } else if (p1Power < p2Power) {
         // DÉFAITE
         dust = Math.max(0, dust - 500);
         if (selectedPlayerCardIndex !== -1) collection.splice(selectedPlayerCardIndex, 1);
-        alert(`💀 DÉFAITE ! -500 Dust. Ta carte ${maCarte.name} est détruite.`);
+        alert(`💀 DÉFAITE !\n+${xpGagne} XP | -500 Dust. Ta carte ${maCarte.name} est détruite.`);
     } else {
-        alert("🤝 MATCH NUL ! Personne ne perd rien.");
+        alert(`🤝 MATCH NUL !\n+${xpGagne} XP gagnés.`);
+    }
+
+
+if (typeof ajouterXP === "function") {
+        await ajouterXP(xpGagne);
     }
 
     // 4. SAUVEGARDE
@@ -2025,22 +3244,31 @@ function resetArena() {
 
 
 
-// Fonction pour calculer la puissance d'une carte selon sa rareté // ICI
+// Fonction mise à jour pour utiliser l'ATK dynamique (Rareté + Niveau)
 function getPower(card) {
-    const powers = {
-        "Commun": 10,
-        "Rare": 20,
-        "Epic": 40,
-        "Legendary": 70,
-        "Mythic": 100,
-        "Brainrot-God": 150,
-        "Secret": 200,
-        "OG": 500
-    };
-    // Retourne la puissance basée sur la rareté, ou 5 par défaut
-    return powers[card.rarity] || 5;
-}
+    // Si la carte a déjà une valeur .atk (calculée au tirage ou au level up)
+    if (card.atk !== undefined && card.atk !== null) {
+        return card.atk;
+    }
 
+    // Sécurité (Fallback) : Si c'est une carte de l'IA ou une ancienne carte sans .atk
+    const basePowers = {
+        "Commun": 20,
+        "Rare": 45,
+        "Epic": 80,
+        "Legendary": 175,
+        "Mythic": 425,
+        "Brainrot God": 1050,
+        "Secret": 3250,
+        "OG": 55000
+    };
+    
+    // On ajoute un petit bonus de niveau même pour le fallback si le niveau existe
+    const niveau = card.level || 1;
+    const base = basePowers[card.rarity] || 15;
+    
+    return base + (niveau * 10);
+}
 
 
 
@@ -2134,10 +3362,7 @@ function handleCardClick(cardElement, cardData) {
 
 
 
-
-
-
-const CURRENT_VERSION = "2.0.0"; // Change ce numéro pour faire réapparaître le message
+const CURRENT_VERSION = "2.1.0"; // Change ce numéro pour faire réapparaître le message
 
 function checkUpdateNews() {
     const lastSeenVersion = localStorage.getItem("lastSeenVersion");
@@ -2476,12 +3701,18 @@ combatSection.style.display = "none";
             const price = parseInt(btn.getAttribute("data-price"));
             const item = fullShopList.find(i => i.name === name);
 
-            if (item && dust >= price) {
+     if (item && dust >= price) {
                 dust -= price;
                 save("dust", dust);
                 refreshDust();
 
                 if (item.isPack) {
+                    // --- AJOUT QUÊTE BOOSTER ---
+                    if (typeof avancerQuete === "function") {
+                        avancerQuete("shop_booster", 1);
+                    }
+                    // ---------------------------
+                    
                     openSpecialPack(item.packType);
                 } else {
                     collection.push({...item});
@@ -2502,7 +3733,6 @@ combatSection.style.display = "none";
         };
     });
 }
-
 
 
 
@@ -2683,7 +3913,6 @@ function openPackSequence() {
             if (isAnyBoosterOpening) return; 
             isAnyBoosterOpening = true;
 
-
             if (b.classList.contains("booster-opening")) return;
             b.classList.add("booster-opening");
 
@@ -2698,22 +3927,105 @@ function openPackSequence() {
                 // --- TIRAGE ---
                 currentPack = [pickRandomCard(), pickRandomCard(), pickRandomCard()];
 
-avancerQuete("open", 1);
+                avancerQuete("open", 1);
+                ajouterXP(50);
 
                 // --- LOGIQUE DE NIVEAUX ET EXP ---
-                currentPack.forEach(c => {
+currentPack.forEach(c => {
 
+    // --- 🎁 CAS SPÉCIAL : LUCKY BLOCKS (4 TYPES : Mythic, Brainrot, Secret, Admin) ---
+    const listLucky = [
+        "Mythic Lucky Block", 
+        "Brainrot God Lucky Block", 
+        "Secret Lucky Block", 
+        "Admin Lucky Block"
+    ];
 
+    if (listLucky.includes(c.rarity)) {
+        
+        // 🛡️ SÉCURITÉ & HIÉRARCHIE : On vérifie si un Lucky Block est déjà actif
+        const uiLucky = document.getElementById("luckyBlockUI");
+        if (uiLucky && uiLucky.style.display !== "none") {
+            
+            // Définition de la puissance (plus c'est haut, plus c'est rare)
+            const luckyPower = {
+                "Mythic Lucky Block": 1,
+                "Brainrot God Lucky Block": 2,
+                "Secret Lucky Block": 3,
+                "Admin Lucky Block": 4
+            };
 
-if (c.rarity === "Rare") {
-                avancerQuete("rare", 1);
+            // On récupère le nom du block actuel via le texte de l'interface
+            const currentLuckyName = document.getElementById("luckyBlockType")?.innerText || "";
+            
+            let activePower = 0;
+            if (currentLuckyName.includes("Mythic")) activePower = 1;
+            else if (currentLuckyName.includes("Brainrot")) activePower = 2;
+            else if (currentLuckyName.includes("Secret")) activePower = 3;
+            else if (currentLuckyName.includes("Admin")) activePower = 4;
+
+            const newPower = luckyPower[c.rarity];
+
+            // --- LE CHANGEMENT EST ICI ---
+            // Si le nouveau est STRICTEMENT plus puissant, on écrase.
+            // Si c'est identique ou plus faible, on annule (return).
+            if (newPower > activePower) {
+                console.log(`🔥 Remplacement : Le ${c.rarity} remplace le bloc actuel plus faible.`);
+                alert(`🚀 INCROYABLE ! Ton Lucky Block a été amélioré en ${c.rarity} !`);
+                // On laisse le code continuer pour écraser
+            } else {
+                console.log(`🚫 Annulation : Un Lucky Block de rareté identique ou supérieure est déjà en cours.`);
+                return; // Annule le nouveau bloc
             }
+        }
+        
+        // Détermination du temps d'attente selon la rareté
+        let heures = 1;
+        if (c.rarity === "Brainrot God Lucky Block") heures = 6;
+        if (c.rarity === "Secret Lucky Block") heures = 12;
+        if (c.rarity === "Admin Lucky Block") heures = 24;
 
-if (c.rarity === "Mythic") {
-                avancerQuete("mythic", 1);
-            }
+        const delai = heures * 60 * 60 * 1000; 
+        const dateDeblocage = Date.now() + delai;
+        
+        const user = firebase.auth().currentUser;
+        if (user) {
+            // .set avec { merge: true } : Crée le champ s'il est absent, le modifie s'il existe.
+            db.collection("users").doc(user.uid).set({
+                luckyBlockUnlockTime: dateDeblocage,
+                luckyBlockType: c.rarity,
+                luckyBlockReady: false
+            }, { merge: true })
+            .then(() => {
+                console.log(`✅ Chrono ${c.rarity} initialisé dans Firebase.`);
+                // On lance le compte à rebours visuel immédiatement avec le TYPE
+                if (typeof updateLuckyTimer === "function") {
+                    updateLuckyTimer(dateDeblocage, c.rarity);
+                }
+            });
+        }
+
+        // On n'affiche l'alerte de base que si ce n'était pas un remplacement
+        if (!(uiLucky && uiLucky.style.display !== "none")) {
+            alert(`🍀 ${c.name} ! Cadeau débloqué dans ${heures}h.`);
+        }
+        return;
+    }
+    
 
 
+                    if (c.rarity === "Rare") {
+                        avancerQuete("rare", 1);
+                    }
+
+                    if (c.rarity === "Mythic") {
+                        avancerQuete("mythic", 1);
+                        ajouterXP(25);
+                    }
+
+                    if (c.rarity === "OG") {
+                        ajouterXP(500);
+                    }
 
                     const existingCard = collection.find(card => card.name === c.name);
                     
@@ -2723,47 +4035,44 @@ if (c.rarity === "Mythic") {
                         c.level = 1;
                         c.exp = 0;
                         collection.push({ ...c });
+                        ajouterXP(20);
                     } else {
                         // DOUBLON : On augmente l'EXP
                         c.isNew = false;
-           avancerQuete("duplicate", 1);
+                        avancerQuete("duplicate", 1);
                         
                         // Initialisation si les propriétés n'existent pas encore
                         if (existingCard.level === undefined) existingCard.level = 1;
                         if (existingCard.exp === undefined) existingCard.exp = 0;
 
+                        const expTable = {
+                            "Commun": 15, 
+                            "Rare": 12, 
+                            "Epic": 10, 
+                            "Legendary": 7,
+                            "Mythic": 4, 
+                            "Brainrot God": 3, 
+                            "Secret": 2, 
+                            "OG": 1 
+                        };
 
-const expTable = {
- "Commun": 15, 
-"Rare": 12, 
-"Epic": 10, 
-"Legendary": 7,
-"Mythic": 4, 
-"Brainrot God": 3, 
-"Secret": 2, 
-"OG": 1 
-};
+                        // 1. On ajoute l'EXP
+                        existingCard.exp = (existingCard.exp || 0) + 1;
+                        if (!existingCard.level) existingCard.level = 1;
 
-// 1. On ajoute l'EXP
-existingCard.exp = (existingCard.exp || 0) + 1;
-if (!existingCard.level) existingCard.level = 1;
+                        // 2. On récupère le palier selon la rareté
+                        let needed = expTable[existingCard.rarity] || 10;
 
-// 2. On récupère le palier selon la rareté
-let needed = expTable[existingCard.rarity] || 10;
+                        // 3. Boucle de Level Up : tant qu'on a assez d'EXP, on monte de niveau
+                        while (existingCard.exp >= needed) {
+                            existingCard.exp -= needed; // On consomme l'EXP
+                            existingCard.level += 1;    // On monte de niveau
+                            console.log(`🚀 ${existingCard.name} monte au niveau ${existingCard.level} !`);
 
-// 3. Boucle de Level Up : tant qu'on a assez d'EXP, on monte de niveau
-while (existingCard.exp >= needed) {
-    existingCard.exp -= needed; // On consomme l'EXP
-    existingCard.level += 1;    // On monte de niveau
-    console.log(`🚀 ${existingCard.name} monte au niveau ${existingCard.level} !`);
-
-if (existingCard.level === 5) {
-        avancerQuete("lvlup", 1);
-    }
-}
-
-
-
+                            if (existingCard.level === 5) {
+                                avancerQuete("lvlup", 1);
+                            }
+                        }
 
                         // Gain de fragments (Dust)
                         const dustValues = {
@@ -2779,13 +4088,19 @@ if (existingCard.level === 5) {
                 save("dust", dust);
                 refreshDust();
 
+                updateStreak();
+
                 // --- FIREBASE ET COMPTEURS ---
                 const user = firebase.auth().currentUser;
                 if (user) {
                     db.collection("users").doc(user.uid).set({
                         collection: collection,
                         dust: dust,
-                        boostersOpened: firebase.firestore.FieldValue.increment(1)
+                        xp: xp, // Synchronisation de l'XP de compte
+                        level: level, // Synchronisation du niveau de compte
+                        boostersOpened: firebase.firestore.FieldValue.increment(1),
+                        lastOpenDate: firebase.firestore.FieldValue.serverTimestamp(),
+                        streakCount: streakCount 
                     }, { merge: true })
                     .then(() => {
                         const counterEl = document.getElementById("boosterCounter");
@@ -2816,6 +4131,7 @@ if (existingCard.level === 5) {
 } // Fin de la fonction openPackSequence
 
 
+
 // Liaison du bouton principal
 document.getElementById("openPack").onclick = openPackSequence;
 
@@ -2823,13 +4139,17 @@ document.getElementById("openPack").onclick = openPackSequence;
 
 // Fonction dédiée pour envoyer les données à Firestore
 function saveToFirebase(uid) {
-  db.collection("users").doc(uid).set({
-    collection: collection,
-    dust: dust,
-    lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
-  }, { merge: true })
-  .then(() => console.log("✅ Sauvegarde Firebase réussie !"))
-  .catch(err => console.error("❌ Erreur Firebase :", err));
+  db.collection("users").doc(uid).set({
+    collection: collection,
+    dust: dust,
+    // --- AJOUT DES DONNÉES DE STREAK ---
+    streakCount: streakCount,
+    lastOpenDate: lastOpenDate,
+
+    lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
+  }, { merge: true })
+  .then(() => console.log("✅ Sauvegarde Firebase (incluant la streak) réussie !"))
+  .catch(err => console.error("❌ Erreur Firebase :", err));
 }
 
 // Liaison du bouton d'ouverture
@@ -2923,7 +4243,20 @@ function refreshCollection(cardsToShow) {
     const collectionDiv = document.getElementById("collection");
     collectionDiv.innerHTML = "";
 
-    const cards = cardsToShow || collection;
+    // --- FILTRE : On ignore les Lucky Blocks pour ne pas fausser la collection ---
+    const listLucky = [
+        "Mythic Lucky Block", 
+        "Brainrot God Lucky Block", 
+        "Secret Lucky Block", 
+        "Admin Lucky Block"
+    ];
+
+    // On filtre la collection possédée et la base totale pour le compteur
+    const filteredCollection = collection.filter(c => !listLucky.includes(c.rarity));
+    const filteredAllCards = ALL_CARDS.filter(c => !listLucky.includes(c.rarity));
+    
+    // On filtre les cartes à afficher
+    const cards = (cardsToShow || collection).filter(c => !listLucky.includes(c.rarity));
 
     // --- TABLEAU DE RÉFÉRENCE ---
     const expTable = {
@@ -2956,7 +4289,8 @@ function refreshCollection(cardsToShow) {
         }
     }
 
-    compteurDiv.innerText = `Cartes obtenues : ${collection.length} / ${ALL_CARDS.length}`;
+    // Utilisation des versions filtrées pour le compteur
+    compteurDiv.innerText = `Cartes obtenues : ${filteredCollection.length} / ${filteredAllCards.length}`;
 
     // --- Affichage des cartes ---
     cards.forEach(c => {
@@ -3052,7 +4386,6 @@ function refreshCollection(cardsToShow) {
         searchWrapper.style.marginBottom = "10px";
     }
 }
-
 
 
 
@@ -3285,59 +4618,52 @@ function loadUserData(uid) {
     if (doc.exists) {
       const data = doc.data();
 
-      // --- AJOUT : Récupération du Pseudo ---
-      // On stocke le pseudo dans une variable globale pour l'utiliser dans les salons
+      // --- Pseudo ---
       window.userPseudo = data.username || "Anonyme";
 
-      // --- RÉPARATION DES DONNÉES (Fix Level/Exp) ---
-      // On parcourt la collection récupérée du serveur
+      // --- STREAK & DATE (Adaptation au Timestamp) ---
+      streakCount = data.streakCount || 0;
+      
+      // On convertit le Timestamp Google en format YYYY-MM-DD pour le code local
+      if (data.lastOpenDate && typeof data.lastOpenDate.toDate === 'function') {
+          lastOpenDate = data.lastOpenDate.toDate().toISOString().split('T')[0];
+      } else {
+          lastOpenDate = data.lastOpenDate || ""; // Cas des anciennes données string
+      }
+
+
+      localStorage.setItem("streakCount", streakCount);
+      localStorage.setItem("lastOpenDate", lastOpenDate);
+      
+      if (typeof renderStreak === "function") renderStreak(streakCount);
+
+      // --- LE RESTE DE TA FONCTION (Inchangé) ---
       let rawCollection = data.collection || [];
-      collection = rawCollection.map(card => {
-        return {
+      collection = rawCollection.map(card => ({
           ...card,
-          // Si level n'existe pas ou est null, on met 1
-          level: (card.level !== undefined && card.level !== null) ? card.level : 1,
-          // Si exp n'existe pas ou est null, on met 0
-          exp: (card.exp !== undefined && card.exp !== null) ? card.exp : 0
-        };
-      });
+          level: (card.level ?? 1),
+          exp: (card.exp ?? 0)
+      }));
 
       dust = data.dust || 0;
       daily = data.daily || { date: null, opened: 0 };
 
-      // Sauvegarde locale pour synchroniser
       save("collection", collection);
       save("dust", dust);
       save("daily", daily);
 
-      // Mise à jour de l'interface
       refreshCollection();
       refreshDust();
       refreshLimit();
 
-      // --- Mise à jour du menu Profil ---
-      const profileDustEl = document.getElementById("profileDust");
-      if (profileDustEl) profileDustEl.innerText = dust;
-
-      const profileCardsEl = document.getElementById("profileCards");
-      if (profileCardsEl) {
-        profileCardsEl.innerText = `${collection.length} / ${ALL_CARDS.length}`;
-      }
-
-      // --- AJOUT : Affichage du Pseudo dans le profil (si l'élément existe) ---
-      const profileNameEl = document.getElementById("profileName");
-      if (profileNameEl) profileNameEl.innerText = window.userPseudo;
+      if (document.getElementById("profileDust")) document.getElementById("profileDust").innerText = dust;
+      if (document.getElementById("profileName")) document.getElementById("profileName").innerText = window.userPseudo;
 
     } else {
-      // Si l'utilisateur n'a pas de document, on le crée
       saveUserData(uid);
     }
-  }).catch(err => {
-    console.error("Erreur lors du chargement des données :", err);
-  });
+  }).catch(err => console.error("❌ Erreur chargement :", err));
 }
-
-
 
 
 
@@ -3551,6 +4877,12 @@ const userIdText = document.getElementById("userIdDisplay");
 // Ouvrir la page compte
 if (accountBtn) {
     accountBtn.onclick = () => {
+
+actualiserProfil();
+
+document.getElementById("profileCards").innerText = collection.length + " / " + ALL_CARDS.length;
+document.getElementById("profileStreak").innerText = (typeof streakCount !== 'undefined') ? streakCount : 0;
+
         // On cache les sections du jeu
         homeSection.style.display = "none";
         collectionSection.style.display = "none";
@@ -3598,4 +4930,4 @@ if (logoutBtnEl) {
 
 </script>
 </body>
-</html>
+  </html>
