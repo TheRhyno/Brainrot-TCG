@@ -943,7 +943,8 @@ html, body {
 
 
 
-  </div>
+
+</div>
 
   <div id="allCardsSection" style="display:none;margin-bottom:80px">
     <h2>Chances d'obtention</h2>
@@ -1076,7 +1077,7 @@ html, body {
 <div id="newsOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:100000; justify-content:center; align-items:flex-start; padding:20px; box-sizing:border-box; overflow-y:auto;">
 <div style="background:#162037; padding:30px; border-radius:15px; border:2px solid #7c3aed; max-width:420px; width:100%; text-align:center; box-shadow: 0 0 30px rgba(124, 58, 237, 0.4); margin: auto; max-height: 90vh; overflow-y: auto;">
         
-        <h2 style="color:#7c3aed; margin-top:0; margin-bottom: 25px; font-size: 1.5rem;">✨ Mise à jour 2.2.1</h2>
+        <h2 style="color:#7c3aed; margin-top:0; margin-bottom: 25px; font-size: 1.5rem;">✨ Mise à jour 2.2.2</h2>
         
         <div style="text-align:left; color:#e8eef7;">
             
@@ -1301,7 +1302,7 @@ html, body {
         padding-top: 15px;
         width: 80%;
     ">
-        <span id="app-version">v2.2.1</span><br>
+        <span id="app-version">v2.2.2</span><br>
         <span>© 2026 BRAINROT TCG</span>
     </div>
 </div>
@@ -1771,7 +1772,7 @@ const ALL_CARDS = [
 ];
 
 
-const RARITY_PROBS = { 'Commun': 50, 'Rare': 25, 'Epic': 13, 'Legendary': 6, 'Mythic': 3, 'Brainrot God': 1, 'Secret': 0.07, 'OG': 0.03, 'Mythic Lucky Block': 1, 'Brainrot God Lucky Block': 0.3, 'Secret Lucky Block': 0.05, 'Admin Lucky Block': 0.0005 };
+const RARITY_PROBS = { 'Commun': 50, 'Rare': 25, 'Epic': 13, 'Legendary': 6, 'Mythic': 3, 'Brainrot God': 1, 'Secret': 0.07, 'OG': 0.03, 'Mythic Lucky Block': 0.5, 'Brainrot God Lucky Block': 0.3, 'Secret Lucky Block': 0.05, 'Admin Lucky Block': 0.0001 };
 
 
 const BOOSTER_IMAGES = [
@@ -1851,7 +1852,6 @@ disableSite(false);
 
 
 function descendreToutEnBas() {
-    console.log("--- TENTATIVE FORCE BRUTE ---");
     
     // On récupère la div qui contient vraiment les cartes
     const listeCartes = document.getElementById("collection"); 
@@ -1870,7 +1870,6 @@ function descendreToutEnBas() {
             behavior: 'smooth'
         });
         
-        console.log("Scroll envoyé à 100.000px");
     }
 }
 
@@ -2514,28 +2513,38 @@ function afficherOngletMarket(tab) {
 
 // 1. Ouvrir la vente depuis la collection
 function preparerVente(index) {
-    cardToSellIndex = index;
-    const card = collection[index];
-    document.getElementById('sellCardName').innerText = "Vendre " + card.name;
-    document.getElementById('sellOverlay').style.display = 'flex';
+    cardToSellIndex = index;
+    const card = collection[index];
+    document.getElementById('sellCardName').innerText = "Vendre " + card.name;
+    document.getElementById('sellOverlay').style.display = 'flex';
 }
 
 function fermerVente() {
-    document.getElementById('sellOverlay').style.display = 'none';
-    cardToSellIndex = null;
+    document.getElementById('sellOverlay').style.display = 'none';
+    cardToSellIndex = null;
 }
 
 // 2. Confirmer la mise en vente
 document.getElementById('confirmSellBtn').onclick = async () => {
     const price = parseInt(document.getElementById('sellPriceInput').value);
+    
+    // --- AJOUT DES LIMITES DE PRIX ---
+    const PRIX_MIN = 1;
+    const PRIX_MAX = 1000000;
+
     if (!price || price <= 0) return alert("Prix invalide !");
+    if (price < PRIX_MIN) return alert(`Le prix est trop bas ! Minimum : ${PRIX_MIN} fragments.`);
+    if (price > PRIX_MAX) return alert(`Le prix est trop élevé ! Maximum : ${PRIX_MAX} fragments.`);
+
+    const card = collection[cardToSellIndex];
+    
+    // --- SÉCURITÉ ANTI-DOUBLON ---
+    if (card.enVente) return alert("Cette carte est déjà enregistrée comme étant en vente !");
 
     if (typeof avancerQuete === "function") {
         avancerQuete("sell_card", 1);
     }
 
-    const card = collection[cardToSellIndex];
-    
     // --- ÉTAPE 1 : MARQUAGE AU LIEU DU RETRAIT ---
     // On ne fait plus collection.splice, on marque la carte
     card.enVente = true;
@@ -2582,7 +2591,6 @@ document.getElementById('confirmSellBtn').onclick = async () => {
         if (typeof showCollection === "function") showCollection();
     }
 };
-
 
 
 
@@ -4073,7 +4081,7 @@ function handleCardClick(cardElement, cardData) {
 
 
 
-const CURRENT_VERSION = "2.2.1"; // Change ce numéro pour faire réapparaître le message
+const CURRENT_VERSION = "2.2.2"; // Change ce numéro pour faire réapparaître le message
 
 function checkUpdateNews() {
     const lastSeenVersion = localStorage.getItem("lastSeenVersion");
@@ -4995,7 +5003,7 @@ function refreshCollection(cardsToShow) {
         "Epic": 10, 
         "Legendary": 7,
         "Mythic": 4, 
-        "Brainrot God": 4, 
+        "Brainrot God": 3, 
         "Secret": 2, 
         "OG": 1
     };
@@ -5694,4 +5702,4 @@ if (logoutBtnEl) {
 
 </script>
 </body>
-  </html>
+</html>
