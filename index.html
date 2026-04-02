@@ -374,32 +374,32 @@ html, body {
 
 /* --- Contours pour les 4 Lucky Blocks (Petites Cartes) --- */
 .r-Mythic-Lucky-Block { border-color: #FF8C00; box-shadow: 0 0 10px #FF8C00; }
-.r-Brainrot-God-Lucky-Block { border-color: #FF4500; box-shadow: 0 0 15px #FF4500; }
-.r-Secret-Lucky-Block { border-color: #DA70D6; box-shadow: 0 0 20px #DA70D6; animation: glow-white 2s infinite alternate; }
+.r-Brainrot-God-Lucky-Block { border-color: #007BFF; box-shadow: 0 0 15px #007BFF; }
+.r-Secret-Lucky-Block { border-color: #8A2BE2; box-shadow: 0 0 20px #8A2BE2; animation: glow-white 2s infinite alternate; }
 .r-Admin-Lucky-Block { border-color: #ff0000; box-shadow: 0 0 25px #ff0000; animation: glitch-admin 0.4s infinite; }
 
 /* --- Couleurs du texte (Petites Cartes) --- */
 .r-Mythic-Lucky-Block strong { color: #FF8C00; }
-.r-Brainrot-God-Lucky-Block strong { color: #FF4500; }
-.r-Secret-Lucky-Block strong { color: #DA70D6; text-shadow: 0 0 5px #DA70D6; }
+.r-Brainrot-God-Lucky-Block strong { color: #007BFF; }
+.r-Secret-Lucky-Block strong { color: #8A2BE2; text-shadow: 0 0 5px #8A2BE2; }
 .r-Admin-Lucky-Block strong { color: #ff0000; text-shadow: 0 0 8px #ff0000; }
 
 /* --- Bordures pour Grandes Cartes (Ouverture Booster) --- */
 .big-Mythic-Lucky-Block { border-color: #FF8C00; box-shadow: 0 0 30px #FF8C00; }
-.big-Brainrot-God-Lucky-Block { border-color: #FF4500; box-shadow: 0 0 40px #FF4500; }
-.big-Secret-Lucky-Block { border-color: #DA70D6; box-shadow: 0 0 50px #DA70D6; }
+.big-Brainrot-God-Lucky-Block { border-color: #007BFF; box-shadow: 0 0 40px #007BFF; }
+.big-Secret-Lucky-Block { border-color: #8A2BE2; box-shadow: 0 0 50px #8A2BE2; }
 .big-Admin-Lucky-Block { border-color: #ff0000; box-shadow: 0 0 60px #ff0000; }
 
 /* --- Texte pour Grandes Cartes --- */
 .big-Mythic-Lucky-Block strong { color: #FF8C00; }
-.big-Brainrot-God-Lucky-Block strong { color: #FF4500; }
-.big-Secret-Lucky-Block strong { color: #DA70D6; }
+.big-Brainrot-God-Lucky-Block strong { color: #007BFF; }
+.big-Secret-Lucky-Block strong { color: #8A2BE2; }
 .big-Admin-Lucky-Block strong { color: #ff0000; }
 
 /* --- Badges de rareté --- */
 .rarity-indicator.r-Mythic-Lucky-Block { background: #FF8C00; color: #000; }
-.rarity-indicator.r-Brainrot-God-Lucky-Block { background: #FF4500; color: #fff; }
-.rarity-indicator.r-Secret-Lucky-Block { background: #DA70D6; color: #000; }
+.rarity-indicator.r-Brainrot-God-Lucky-Block { background: #007BFF; color: #fff; }
+.rarity-indicator.r-Secret-Lucky-Block { background: #8A2BE2; color: #000; }
 .rarity-indicator.r-Admin-Lucky-Block { background: #ff0000; color: #fff; }
 
 /* --- Animations Spéciales --- */
@@ -890,6 +890,10 @@ html, body {
 
 
 
+
+
+
+
   <div id="boosterCounter" style="color:#fff;font-weight:bold;font-size:1rem;margin-bottom:10px;">
     Boosters ouverts : 0
   </div>
@@ -1084,13 +1088,20 @@ html, body {
 
             <div style="margin-bottom: 20px;">
                 <p style="margin: 0; line-height: 1.5;">
-                    👤 <b>Profil</b> Choisis ton Pseudo en le modifiant dans le Profil ! <br>
+                    👤 <b>Profil :</b> Choisis ton Pseudo en le modifiant dans le Profil ! <br>
             </div>
 
 
             <div style="margin-bottom: 20px;">
                 <p style="margin: 0; line-height: 1.5;">
-                    🍀 <b>Nouvelles cartes :</b> Les Brainrot God et les Secret sont désormais disponibles !
+                    🎨 <b>Fond personalisé :</b> Vous pouvez désormais personnaliser votre interface avec le fond de votre choix dans le Profil !
+                </p>
+            </div>
+
+
+            <div style="margin-bottom: 20px;">
+                <p style="margin: 0; line-height: 1.5;">
+                    🆕 <b>Nouvelles cartes :</b> Les Brainrot God et les Secret sont désormais disponibles !
                 </p>
             </div>
 
@@ -1105,7 +1116,7 @@ html, body {
 
             <div style="margin-bottom: 20px;">
                 <p style="margin: 0; line-height: 1.5;">
-                    🔥 <b>Streak : </b> Ouvre au moins 1 booster chaque jour pour faire grimper ta streak !<br>
+                    🔥 <b>Streak :</b> Ouvre au moins 1 booster chaque jour pour faire grimper ta streak !<br>
                                      Ne manque aucun jour où tu retombes à zéro !
      </p>
             </div>
@@ -1282,6 +1293,21 @@ html, body {
 
 
 
+<div style="background: #1a1a1a; padding: 15px; border-radius: 12px; width: 95%; max-width: 400px; border: 1px solid #333; margin-top: 20px;">
+    <p style="margin: 0 0 15px 0; color: #aaa; font-size: 0.8rem; text-align: center; text-transform: uppercase; letter-spacing: 1px;">Ambiance de l'accueil</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <button onclick="changerFond('espace')" style="padding: 10px; background: #333; color: white; border: 1px solid #444; border-radius: 8px; cursor: pointer; font-size: 0.75rem;">🌌 Espace</button>
+        <button onclick="changerFond('mythic')" style="padding: 10px; background: #4c1d95; color: white; border: 1px solid #7c3aed; border-radius: 8px; cursor: pointer; font-size: 0.75rem;">🔮 Mythique</button>
+        <button onclick="changerFond('abysse')" style="padding: 10px; background: #064e3b; color: white; border: 1px solid #10b981; border-radius: 8px; cursor: pointer; font-size: 0.75rem;">🌿 Abysse</button>
+        <button onclick="changerFond('gold')" style="padding: 10px; background: #78350f; color: white; border: 1px solid #fbbf24; border-radius: 8px; cursor: pointer; font-size: 0.75rem;">✨ Doré</button>
+    </div>
+</div>
+
+
+
+
+
 
 <div style="
     display: flex; 
@@ -1305,6 +1331,9 @@ html, body {
         <span id="app-version">v2.2.2</span><br>
         <span>© 2026 BRAINROT TCG</span>
     </div>
+
+
+
 </div>
 
 
@@ -1764,10 +1793,10 @@ const ALL_CARDS = [
 
 
 
-  {name:"Mythic Lucky Block", rarity:"Mythic Lucky Block", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Mythic_Lucky_Block.webp"},
-  {name:"Brainrot God Lucky Block", rarity:"Brainrot God Lucky Block", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/12/Brainrot_God_Gambling_Block.webp"},
-  {name:"Secret Lucky Block", rarity:"Secret Lucky Block", image:"https://www.eldorado.gg/blog/wp-content/uploads/2025/11/SecretLuckyBlock-300x265.webp"},
-  {name:"Admin Lucky Block", rarity:"Admin Lucky Block", image:"https://static.wikia.nocookie.net/stealabr/images/7/7c/AdminLuckyBlock.png/revision/latest?cb=20251007132226"},
+  {name:"Mythic Lucky Block", rarity:"Mythic Lucky Block", image:"https://cdn.phototourl.com/free/2026-04-01-2edf73c6-3e2e-4b33-ae53-6c1c44fcf906.png"},
+  {name:"Brainrot God Lucky Block", rarity:"Brainrot God Lucky Block", image:"https://cdn.phototourl.com/free/2026-04-01-1b915287-bc30-41b2-a3b7-18430ab224f5.png"},
+  {name:"Secret Lucky Block", rarity:"Secret Lucky Block", image:"https://cdn.phototourl.com/free/2026-04-01-a0056889-8807-4e3b-aacf-e0b0c6d3f416.jpg"},
+  {name:"Admin Lucky Block", rarity:"Admin Lucky Block", image:"https://cdn.phototourl.com/free/2026-04-01-c8d900b7-abd6-4fac-bb8a-d13b20ce6016.jpg"},
 
 ];
 
@@ -1846,6 +1875,45 @@ disableSite(false);
 
 
 
+
+
+
+
+
+
+
+// --- 🖼️ CONFIGURATION DES FONDS D'ÉCRAN ---
+const FONDS_DISPONIBLES = {
+    "espace": "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2000&auto=format&fit=crop",
+    "mythic": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000&auto=format&fit=crop",
+    "abysse": "https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?q=80&w=2000&auto=format&fit=crop",
+    "gold": "https://img.pikbest.com/back_our/20210222/bg/82b06224639f8.png!w700wp"
+};
+
+// RENOMMÉE EN : changerFond (pour correspondre au onclick="changerFond(...)")
+function changerFond(nomDesign) {
+    const lien = FONDS_DISPONIBLES[nomDesign];
+    if (lien) {
+        // On applique l'image au body
+        document.body.style.backgroundImage = `url('${lien}')`;
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundAttachment = "fixed";
+        document.body.style.backgroundPosition = "center";
+        
+        // On sauvegarde le choix pour que ça reste au refresh de la page
+        localStorage.setItem("pref_fond_ecran", nomDesign);
+        console.log("Fond changé : " + nomDesign);
+    } else {
+        console.error("Lien introuvable pour le fond : " + nomDesign);
+    }
+}
+
+// --- 🔄 CHARGEMENT AUTOMATIQUE ---
+window.addEventListener('load', () => {
+    // On récupère le choix ou on met "defaut" par défaut
+    const choixSauvegarde = localStorage.getItem("pref_fond_ecran") || "defaut"; 
+    changerFond(choixSauvegarde);
+});
 
 
 
@@ -4526,16 +4594,21 @@ function showBigCard() {
 
     const cardDiv = document.createElement("div");
 
-    if (c.rarity === "OG") {
-        cardDiv.className = "card big-card big-OG";
+    // --- 🟢 AJOUT RARETÉS "PLEIN ÉCRAN" ICI ---
+
+    if (c.rarity === "OG" || c.rarity === "Mythic Lucky Block"  || c.rarity === "Brainrot God Lucky Block"  || c.rarity === "Secret Lucky Block"  || c.rarity === "Admin Lucky Block") {
+        
+        // On copie le style exact de l'OG : Pas de bordure, pas de fond
+        cardDiv.className = "card big-card big-" + c.rarity.replace(/ /g, "-");
         cardDiv.style.cssText = "border:none; padding:0; background:none; position:relative;";
 
         const cardImg = document.createElement("img");
         cardImg.src = c.image;
+        // Taille maximale comme l'OG (90vw / 90vh)
         cardImg.style.cssText = "max-width:90vw; max-height:90vh; object-fit:contain; display:block; margin:auto; border-radius:12px;";
         cardDiv.appendChild(cardImg);
 
-        // --- Animation feu d’artifice OG ---
+        // --- Animation feu d’artifice (Adaptée à la rareté) ---
         const canvas = document.createElement("canvas");
         canvas.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:20000;";
         document.body.appendChild(canvas);
@@ -4543,11 +4616,13 @@ function showBigCard() {
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         const particles = [];
         for (let i = 0; i < 150; i++) {
+            // Couleur : Arc-en-ciel pour OG, Violet/Rose pour Mythic
+            let hue = (c.rarity === "OG") ? Math.random() * 360 : (280 + Math.random() * 60);
             particles.push({
                 x: canvas.width / 2, y: canvas.height / 2,
                 vx: (Math.random() - 0.5) * 10, vy: (Math.random() - 1.5) * 10,
                 alpha: 1, radius: Math.random() * 3 + 2,
-                color: `hsl(${Math.random() * 360},100%,50%)`
+                color: `hsl(${hue},100%,50%)`
             });
         }
         function animate() {
@@ -4562,7 +4637,7 @@ function showBigCard() {
         }
         animate();
 
-        // --- BLOCAGE OG (1.5s) ---
+        // --- BLOCAGE (1.5s) ---
         overlay.removeEventListener('click', overlayClickHandler);
         setTimeout(() => { overlay.addEventListener('click', overlayClickHandler); }, 1500);
 
@@ -4576,7 +4651,7 @@ function showBigCard() {
         `;
 
         // --- ⚡ LISTE DES LUCKY BLOCKS POUR L'EFFET ---
-        const listLucky = ["Mythic Lucky Block", "Brainrot God Lucky Block", "Secret Lucky Block", "Admin Lucky Block"];
+        const listLucky = ["Brainrot God Lucky Block", "Secret Lucky Block", "Admin Lucky Block"];
 
         // --- ✨ AJOUT FEU D'ARTIFICE ET FREEZE POUR SECRET OU LUCKY BLOCKS ---
         if (c.rarity === "Secret" || listLucky.includes(c.rarity)) {
@@ -4589,7 +4664,6 @@ function showBigCard() {
             const particles = [];
             
             for (let i = 0; i < 150; i++) {
-                // Couleur : Jaune/Or pour Lucky Blocks (45-60), Violet pour Secret (280+)
                 let hue = listLucky.includes(c.rarity) ? (45 + Math.random() * 15) : (280 + Math.random() * 50);
                 
                 particles.push({
@@ -5076,12 +5150,15 @@ function refreshCollection(cardsToShow) {
         
         wrapper.appendChild(levelBadge);
 
+        // --- 🟢 BLOC NOUVEAU (Mis en commentaire pour ne plus l'afficher) ---
+        /*
         if(c.isNew){
             const label = document.createElement("div");
             label.className = "new-label";
             label.textContent = "NOUVEAU";
             wrapper.appendChild(label);
         }
+        */
 
         const cardDiv = document.createElement("div");
 
@@ -5128,6 +5205,7 @@ function refreshCollection(cardsToShow) {
 
 
 
+
 function refreshAllCards() {
     const allDiv = document.getElementById("allCardsList");
     allDiv.innerHTML = "";
@@ -5147,31 +5225,34 @@ function refreshAllCards() {
 
 
 
-
 function displayCards(cards) {
     const sortedCards = [...cards].sort(
         (a, b) => (RARITY_PROBS[b.rarity] || 0) - (RARITY_PROBS[a.rarity] || 0)
     );
 
     document.getElementById("allCardsList").innerHTML = sortedCards.map(c => {
-        if (c.rarity === "OG") {
+
+           if (c.rarity === "OG" || c.rarity === "Mythic Lucky Block" || c.rarity === "Brainrot God Lucky Block"  || c.rarity === "Secret Lucky Block"  || c.rarity === "Admin Lucky Block") {
+
+            // On garde la classe r-rarity pour avoir la bordure colorée du CSS
             return `
-            <div class="card" style="position:relative; border:none; padding:0; background:none; overflow:hidden;">
+            <div class="card r-${c.rarity.replace(/ /g, "-")}" style="position:relative; padding:0; overflow:hidden;">
                 <img src="${c.image}" 
-                     style="width:100%;height:100%;object-fit:contain;display:block;border-radius:0;">
-                <span class="rarity-indicator r-OG" 
-                      style="position:absolute; bottom:5px; right:5px;">
+                     style="width:100%; height:100%; object-fit:cover; display:block; position:absolute; top:0; left:0; z-index:1;">
+                
+                <span class="rarity-indicator r-${c.rarity.replace(/ /g, "-")}" 
+                      style="position:absolute; bottom:5px; right:5px; z-index:2;">
                     ${RARITY_PROBS[c.rarity] || 0}%
                 </span>
             </div>`;
         } else {
             return `
             <div class="card r-${c.rarity.replace(/ /g, "-")}" style="position:relative;">
-                <div style="font-size:0.8rem;color:#ccc;margin-bottom:6px;font-weight:bold;">
+                <div style="font-size:0.8rem; color:#ccc; margin-bottom:6px; font-weight:bold;">
                     ${escapeHtml(c.rarity)}
                 </div>
                 <img src="${c.image}" alt="${c.name}" 
-                     style="width:100%;height:50%;object-fit:contain;margin:0 auto 10px auto;border-radius:8px;display:block">
+                     style="width:100%; height:50%; object-fit:contain; margin:0 auto 10px auto; border-radius:8px; display:block">
                 <strong>${escapeHtml(c.name)}</strong>
                 <span class="rarity-indicator r-${c.rarity.replace(/ /g, "-")}" 
                       style="position:absolute; bottom:5px; right:5px;">
@@ -5702,4 +5783,4 @@ if (logoutBtnEl) {
 
 </script>
 </body>
-</html>
+  </html>
