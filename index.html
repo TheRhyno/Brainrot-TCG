@@ -764,6 +764,19 @@ html, body {
 
 
 
+
+#accountSection {
+    overflow-x: hidden;   /* Interdit le défilement horizontal */
+    overflow-y: auto;     /* Autorise le défilement vertical si besoin */
+    width: 100vw;         /* Force la largeur à celle de l'écran */
+    position: fixed;      /* Ou absolute selon ta structure */
+    left: 0;
+    top: 0;
+}
+
+
+
+
 </style>
 
 <!-- Empêche le cache dans WebView -->
@@ -937,12 +950,19 @@ html, body {
     </button>
   </div>
 
+
+
+<button id="triRareteBtn" onclick="trierParRarete()" style="padding:6px 10px;border-radius:6px;border:none;background:#facc15;color:#000;cursor:pointer;font-weight:bold;margin-left:5px">
+    💎 Trier par Rareté
+</button>
+
+
+
     <div id="collection" class="cards"></div>
 
 <div id="scrollToBottom" onclick="descendreToutEnBas()">
     ↓
 </div>
-
 
 
 
@@ -1081,7 +1101,7 @@ html, body {
 <div id="newsOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:100000; justify-content:center; align-items:flex-start; padding:20px; box-sizing:border-box; overflow-y:auto;">
 <div style="background:#162037; padding:30px; border-radius:15px; border:2px solid #7c3aed; max-width:420px; width:100%; text-align:center; box-shadow: 0 0 30px rgba(124, 58, 237, 0.4); margin: auto; max-height: 90vh; overflow-y: auto;">
         
-        <h2 style="color:#7c3aed; margin-top:0; margin-bottom: 25px; font-size: 1.5rem;">✨ Mise à jour 2.2.2</h2>
+        <h2 style="color:#7c3aed; margin-top:0; margin-bottom: 25px; font-size: 1.5rem;">✨ Mise à jour 2.2.3</h2>
         
         <div style="text-align:left; color:#e8eef7;">
             
@@ -1197,7 +1217,7 @@ html, body {
     👤
 </button>
 
-<div id="accountSection" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; flex-direction:column; align-items:center; justify-content:center; padding:20px; box-sizing:border-box; background:rgba(17, 17, 17, 0.95); color:white; backdrop-filter: blur(10px); overflow-y: auto;">
+<div id="accountSection" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; flex-direction:column; align-items:center; justify-content: flex-start; padding:20px; box-sizing:border-box; background:rgba(17, 17, 17, 0.95); color:white; backdrop-filter: blur(10px); overflow-y: auto;">
     
 
 <h2 style="margin-top: 40px; margin-bottom: 20px;">Mon Profil</h2>
@@ -1328,7 +1348,7 @@ html, body {
         padding-top: 15px;
         width: 80%;
     ">
-        <span id="app-version">v2.2.2</span><br>
+        <span id="app-version">v2.2.3</span><br>
         <span>© 2026 BRAINROT TCG</span>
     </div>
 
@@ -1351,6 +1371,10 @@ html, body {
 
     </div>
 </div>
+
+
+
+
 
 
 
@@ -1882,6 +1906,67 @@ disableSite(false);
 
 
 
+
+
+let triEtat = "defaut"; 
+// On va stocker l'ordre de base pour avoir une référence solide
+let collectionSourceFixe = null; 
+
+function trierParRarete() {
+    const btn = document.getElementById("triRareteBtn");
+    const ordreRareteValeurs = {
+        "Commun": 1, "Rare": 2, "Epic": 3, "Legendary": 4,
+        "Mythic": 5, "Brainrot God": 6, "Secret": 7, "OG": 8
+    };
+
+    // --- SÉCURITÉ : On synchronise TOUJOURS avec la collection réelle ---
+    // On utilise l'ordre naturel (chronologique) de ton inventaire
+    collectionSourceFixe = [...collection]; 
+
+    if (triEtat === "defaut") {
+        // --- PASSAGE AU TRI PAR RARETÉ ---
+        triEtat = "rarete";
+
+        // On trie une copie de la source (ordre chronologique) par rareté
+        let tableauTrie = [...collectionSourceFixe].sort((a, b) => {
+            const scoreA = ordreRareteValeurs[a.rarity] || 0;
+            const scoreB = ordreRareteValeurs[b.rarity] || 0;
+            return scoreA - scoreB;
+        });
+
+        // Mise à jour visuelle
+        if (btn) {
+            btn.innerHTML = "🆕 Trier par Nouveauté";
+            btn.style.background = "#7c3aed"; 
+            btn.style.color = "#fff";
+        }
+
+        refreshCollection(tableauTrie);
+
+    } else {
+        // --- RETOUR AU TRI PAR NOUVEAUTÉ ---
+        triEtat = "defaut";
+
+        // On reprend la source (ordre chronologique) et on l'inverse proprement.
+        // Puisqu'on repart de 'collectionSourceFixe' qui n'a jamais été inversé,
+        // le résultat sera TOUJOURS : le plus récent en haut.
+        const ordreNouveaute = [...collectionSourceFixe].reverse();
+
+        if (btn) {
+            btn.innerHTML = "💎 Trier par Rareté";
+            btn.style.background = "#facc15"; 
+            btn.style.color = "#000";
+        }
+
+        refreshCollection(ordreNouveaute);
+    }
+}
+
+
+
+
+
+
 // --- 🖼️ CONFIGURATION DES FONDS D'ÉCRAN ---
 const FONDS_DISPONIBLES = {
     "espace": "https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2000&auto=format&fit=crop",
@@ -1894,50 +1979,94 @@ const FONDS_DISPONIBLES = {
 function changerFond(nomDesign) {
     const lien = FONDS_DISPONIBLES[nomDesign];
     if (lien) {
-        // On applique l'image au body
+        // 1. On applique le nouveau fond au body
         document.body.style.backgroundImage = `url('${lien}')`;
         document.body.style.backgroundSize = "cover";
         document.body.style.backgroundAttachment = "fixed";
         document.body.style.backgroundPosition = "center";
         
-        // On sauvegarde le choix pour que ça reste au refresh de la page
+        // 2. On sauvegarde le choix pour le prochain rafraîchissement
         localStorage.setItem("pref_fond_ecran", nomDesign);
-        console.log("Fond changé : " + nomDesign);
+
+        // --- 3. SIMULATION DU CLIC SUR RETOUR ---
+        // On récupère ton bouton par son ID "backFromAccount"
+        const btnRetour = document.getElementById("backFromAccount");
+        
+        if (btnRetour) {
+            btnRetour.click(); 
+        }
     } else {
         console.error("Lien introuvable pour le fond : " + nomDesign);
     }
 }
 
-// --- 🔄 CHARGEMENT AUTOMATIQUE ---
+// --- CHARGEMENT AUTOMATIQUE (Au démarrage de la page) ---
 window.addEventListener('load', () => {
-    // On récupère le choix ou on met "defaut" par défaut
     const choixSauvegarde = localStorage.getItem("pref_fond_ecran") || "defaut"; 
-    changerFond(choixSauvegarde);
+    const lienInitial = FONDS_DISPONIBLES[choixSauvegarde];
+    
+  
+    if (lienInitial) {
+        document.body.style.backgroundImage = `url('${lienInitial}')`;
+        document.body.style.backgroundSize = "cover";
+        document.body.style.backgroundAttachment = "fixed";
+        document.body.style.backgroundPosition = "center";
+    }
 });
 
 
 
 
 
+
+
+
+
+// On surveille le scroll de la section collection
+const sectionCol = document.getElementById("collectionSection");
+if (sectionCol) {
+    sectionCol.onscroll = function() {
+        const btn = document.getElementById("scrollToBottom");
+        if (!btn) return;
+
+        // Si on arrive en bas, on met la flèche vers le haut
+        const isAtBottom = (this.scrollHeight - this.scrollTop) <= (this.clientHeight + 60);
+        btn.innerText = isAtBottom ? "↑" : "↓";
+    };
+}
+
+
+
 function descendreToutEnBas() {
-    
-    // On récupère la div qui contient vraiment les cartes
-    const listeCartes = document.getElementById("collection"); 
     const sectionComplete = document.getElementById("collectionSection");
+    const btnScroll = document.getElementById("scrollToBottom");
 
-    if (sectionComplete) {
-        // On force le scroll de la fenêtre ET de la section
-        window.scrollTo({
-            top: 100000, // On balance un chiffre énorme pour forcer le bas
-            behavior: 'smooth'
-        });
+    if (sectionComplete && btnScroll) {
+        // On calcule si on est déjà en bas (avec une marge de 50px)
+        const isAtBottom = (sectionComplete.scrollHeight - sectionComplete.scrollTop) <= (sectionComplete.clientHeight + 50);
 
-        // Si ta section est en "fixed" ou "absolute" avec son propre scroll :
-        sectionComplete.scrollTo({
-            top: sectionComplete.scrollHeight,
-            behavior: 'smooth'
-        });
-        
+        if (isAtBottom) {
+            // --- ACTION : REMONTER ---
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            sectionComplete.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // On change l'icône pour indiquer qu'on peut redescendre
+            btnScroll.innerText = "↓";
+        } else {
+            // --- ACTION : DESCENDRE ---
+            window.scrollTo({
+                top: 100000, 
+                behavior: 'smooth'
+            });
+
+            sectionComplete.scrollTo({
+                top: sectionComplete.scrollHeight,
+                behavior: 'smooth'
+            });
+
+            // On change l'icône pour indiquer qu'on peut remonter
+            btnScroll.innerText = "↑";
+        }
     }
 }
 
@@ -3437,6 +3566,7 @@ function ouvrirLobby() {
 
             snapshot.forEach((doc) => {
                 const data = doc.data();
+                const user = auth.currentUser; // Récupération de l'utilisateur actuel
                 
                 // --- FIX : Définir dateData avant de l'utiliser ---
                 const dateData = data.createdAt ? data.createdAt.toDate() : new Date();
@@ -3448,12 +3578,32 @@ function ouvrirLobby() {
                 const item = document.createElement("div");
                 item.style = "display:flex; justify-content:space-between; align-items:center; background:#1e293b; padding:15px; margin-bottom:12px; border-radius:12px; border-left:5px solid #7c3aed; box-shadow: 0 4px 6px rgba(0,0,0,0.2);";
                 
+                // --- LOGIQUE DU BOUTON DYNAMIQUE ---
+                let boutonAction = "";
+                
+                // On vérifie si l'utilisateur connecté est le créateur du salon
+                if (user && data.player1 === user.uid) {
+                    // C'est SON salon -> Afficher la croix de suppression
+                    boutonAction = `
+                        <button onclick="supprimerMonSalon('${doc.id}')" 
+                                style="background:#ef4444; color:white; width:36px; height:36px; border-radius:8px; font-weight:bold; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.2rem;">
+                            ✕
+                        </button>`;
+                } else {
+                    // C'est le salon d'un autre -> Afficher Rejoindre
+                    boutonAction = `
+                        <button onclick="rejoindreCeDuel('${doc.id}')" 
+                                style="background:#4ade80; color:#0e1525; padding:10px 18px; border-radius:8px; font-weight:900; border:none; cursor:pointer; text-transform:uppercase;">
+                            Rejoindre
+                        </button>`;
+                }
+                
                 item.innerHTML = `
                     <div style="text-align:left;">
                         <strong style="color:#fff; font-size:1.1rem;">${data.player1Name || 'Anonyme'}</strong>
                         <div style="font-size:0.75rem; color:#8da0b8;">Ouvert à ${heure}</div>
                     </div>
-                    <button onclick="rejoindreCeDuel('${doc.id}')" style="background:#4ade80; color:#0e1525; padding:10px 18px; border-radius:8px; font-weight:900; border:none; cursor:pointer; text-transform:uppercase;">Rejoindre</button>
+                    ${boutonAction}
                 `;
                 listeDiv.appendChild(item);
             });
@@ -3461,6 +3611,40 @@ function ouvrirLobby() {
             console.error("Erreur Lobby:", error);
         });
 }
+
+
+
+async function supprimerMonSalon(id) {
+    if (!confirm("Voulez-vous vraiment supprimer votre salon ?")) return;
+    try {
+        await db.collection("battles").doc(id).delete();
+
+
+        const statusDiv = document.getElementById("status-recherche");
+        if (statusDiv) {
+            statusDiv.innerHTML = ""; 
+        }
+
+        const battleInfo = document.getElementById("battle-info");
+        if (battleInfo) {
+            battleInfo.innerText = "";
+        }
+
+
+        currentRoomId = null;
+
+        if (typeof resetArena === 'function') {
+            resetArena();
+        }
+
+
+    } catch (e) {
+        console.error("Erreur suppression:", e);
+        alert("Erreur lors de la suppression.");
+    }
+}
+
+
 
 
 
@@ -3489,7 +3673,6 @@ async function creerNouvellePartie() {
         }
 
         // --- NOUVEAUTÉ : TIRAGE DES 3 CARTES DÈS LA CRÉATION ---
-        // On génère le tirage fixe pour le créateur (Player 1)
         genererTirageCombat();
 
         // UTILISATION DU PSEUDO
@@ -3511,6 +3694,26 @@ async function creerNouvellePartie() {
         
         fermerLobby();
         
+        // --- 🔓 DÉVERROUILLAGE DU TAPIS ET DU DECK (NOUVEAU) ---
+        const playerSlot = document.getElementById("player-slot");
+        const deckZone = document.getElementById("choix-cartes") || document.getElementById("cards-container");
+
+if (playerSlot) {
+    playerSlot.style.pointerEvents = "auto";
+    playerSlot.style.opacity = "1";
+    // On remet le message d'action !
+    playerSlot.innerHTML = `
+        <span style="color: #4ade80; font-size: 0.8rem; text-align:center; font-weight:bold;">
+            Clique ici pour<br>choisir ta carte
+        </span>
+    `;
+}
+        if (deckZone) {
+            deckZone.style.pointerEvents = "auto";
+            deckZone.style.filter = "none";
+            deckZone.style.opacity = "1";
+        }
+        
         const statusDiv = document.getElementById("status-recherche");
         if (statusDiv) {
             statusDiv.innerHTML = "<span style='color:#4ade80;'>✅ Salon créé. En attente d'un adversaire...</span>";
@@ -3522,9 +3725,6 @@ async function creerNouvellePartie() {
         alert("Erreur lors de la création : " + e.message);
     }
 }
-
-
-
 
 async function rejoindreCeDuel(id) {
     const user = auth.currentUser;
@@ -3547,7 +3747,6 @@ async function rejoindreCeDuel(id) {
         }
 
         // --- NOUVEAUTÉ : TIRAGE DES 3 CARTES POUR LE JOUEUR 2 ---
-        // On génère le tirage fixe au moment de rejoindre
         genererTirageCombat();
 
         // 3. Si c'est bon, on rejoint la partie
@@ -3564,6 +3763,27 @@ async function rejoindreCeDuel(id) {
         });
 
         fermerLobby();
+
+        // --- 🔓 DÉVERROUILLAGE DU TAPIS ET DU DECK (NOUVEAU) ---
+        const playerSlot = document.getElementById("player-slot");
+        const deckZone = document.getElementById("choix-cartes") || document.getElementById("cards-container");
+
+if (playerSlot) {
+    playerSlot.style.pointerEvents = "auto";
+    playerSlot.style.opacity = "1";
+    // On remet le message d'action !
+    playerSlot.innerHTML = `
+        <span style="color: #4ade80; font-size: 0.8rem; text-align:center; font-weight:bold;">
+            Clique ici pour<br>choisir ta carte
+        </span>
+    `;
+}
+        if (deckZone) {
+            deckZone.style.pointerEvents = "auto";
+            deckZone.style.filter = "none";
+            deckZone.style.opacity = "1";
+        }
+
         ecouterLaPartie();
         
         console.log("Duel rejoint avec succès ! Tirage généré pour le combat.");
@@ -3572,8 +3792,6 @@ async function rejoindreCeDuel(id) {
         alert("Impossible de rejoindre : " + e.message);
     }
 }
-
-
 
 
 
@@ -3630,6 +3848,7 @@ async function chercherPartie() {
 
 let combatEnCours = false; 
 
+
 function ecouterLaPartie() {
     if (!currentRoomId) return;
 
@@ -3640,10 +3859,16 @@ function ecouterLaPartie() {
         const btnStart = document.getElementById("btn-start-fight");
         const opponentSlot = document.getElementById("opponent-slot");
         const battleInfo = document.getElementById("battle-info");
+        const statusDiv = document.getElementById("status-recherche");
 
         // --- 1. AFFICHAGE DE L'ADVERSAIRE (DÈS QU'IL REJOINT) ---
         if (data.player1 && data.player2) {
-            // On détermine qui est l'adversaire par rapport à notre rôle
+            
+            // --- MODIFICATION ICI : On change le message au lieu de l'effacer ---
+            if (statusDiv) {
+                statusDiv.innerHTML = "<span style='color:#ff4444; font-weight:bold; text-transform:uppercase; letter-spacing:1px;'>⚡ COMBAT EN COURS ⚡</span>";
+            }
+
             const nomAdversaire = (role === "player1") ? data.player2Name : data.player1Name;
             
             if (battleInfo) {
@@ -3660,6 +3885,12 @@ function ecouterLaPartie() {
                 btnStart.disabled = true;
                 btnStart.style.display = "none";
             }
+            
+            // On peut aussi mettre à jour le message ici pour plus de dynamisme
+            if (statusDiv) {
+                statusDiv.innerHTML = "<span style='color:#facc15; font-weight:bold;'>🔥 CALCUL DU VAINQUEUR... 🔥</span>";
+            }
+
             console.log("🚀 Lancement du combat synchronisé...");
             executerCalculCombat(); 
             return; 
@@ -3670,11 +3901,10 @@ function ecouterLaPartie() {
             if (battleInfo) {
                 battleInfo.innerHTML = `<span style="color:#4ade80; font-weight:bold;">🔥 LES DEUX SONT PRÊTS ! 🔥</span>`;
             }
-            // Seul celui qui a le bouton "Lancer" le voit (Player 1 par exemple)
             if (btnStart) btnStart.style.display = "block";
         }
 
-        // Affichage du "?" pour l'adversaire (indique qu'il a choisi sa carte)
+        // Affichage du "?" pour l'adversaire
         const opponentCard = (role === "player1") ? data.card2 : data.card1;
         if (opponentCard && opponentSlot && data.status === "ready") {
             opponentSlot.innerHTML = `
@@ -3685,9 +3915,6 @@ function ecouterLaPartie() {
         }
     });
 }
-
-
-
 
 
 
@@ -3916,17 +4143,16 @@ async function executerCalculCombat() {
     btn.innerText = "Calcul du gagnant...";
     await new Promise(r => setTimeout(r, 1500));
 
-let xpGagne = 20;
+    let xpGagne = 20;
 
     // --- 3. VERDICT (LOGIQUE FRAGMENTS ET QUÊTES) ---
     if (p1Power > p2Power) {
 
-xpGagne = 100;
+        xpGagne = 100;
 
-if (typeof avancerQuete === "function") {
+        if (typeof avancerQuete === "function") {
             avancerQuete("win_combat", 1);
         }
-
 
         // Gain de base pour la victoire
         dust += 500;
@@ -3952,8 +4178,7 @@ if (typeof avancerQuete === "function") {
         alert(`🤝 MATCH NUL !\n+${xpGagne} XP gagnés.`);
     }
 
-
-if (typeof ajouterXP === "function") {
+    if (typeof ajouterXP === "function") {
         await ajouterXP(xpGagne);
     }
 
@@ -3966,10 +4191,18 @@ if (typeof ajouterXP === "function") {
     // 5. RESET FINAL
     combatEnCours = false; 
     btn.style.display = "none";
+
+    // --- NETTOYAGE DU MESSAGE DE STATUT ---
+    const statusDiv = document.getElementById("status-recherche");
+    if (statusDiv) {
+        statusDiv.innerHTML = ""; // Supprime le message "Calcul du vainqueur"
+    }
+
     resetArena();
     showCollection(); 
     currentRoomId = null; 
 }
+
 
 
 
@@ -3980,28 +4213,45 @@ function resetArena() {
     selectedPlayerCardIndex = null;
     currentOpponentCard = null;
 
-    // 2. On remet le texte "Clique ici" à gauche // ICI
+    // 2. On remet le texte de guidage à gauche // ICI
     const playerSlot = document.getElementById("player-slot");
-    playerSlot.innerHTML = `
-        <span style="color: #8da0b8; font-size: 0.8rem; text-align:center;">
-            Clique ici pour<br>choisir ta carte
-        </span>
-    `;
+    if (playerSlot) {
+        playerSlot.innerHTML = `
+            <span style="color: #8da0b8; font-size: 0.75rem; text-align:center; padding: 5px; line-height: 1.2;">
+                Rejoins ou crée un salon<br>pour combattre
+            </span>
+        `;
+        // --- BLOCAGE DU SLOT ---
+        playerSlot.style.pointerEvents = "none"; 
+        playerSlot.style.opacity = "0.5";
+    }
 
     // 3. On remet le "?" à droite // ICI
     const opponentSlot = document.getElementById("opponent-slot");
-    opponentSlot.innerHTML = `<span>?</span>`;
+    if (opponentSlot) {
+        opponentSlot.innerHTML = `<span>?</span>`;
+    }
 
     // 4. On cache le bouton de combat (il ne doit pas rester là) // ICI
     const btnFight = document.getElementById("btn-start-fight");
-    btnFight.style.display = "none";
-    btnFight.disabled = false;
-    btnFight.innerText = "🔥 LANCER LE COMBAT ! 🔥";
+    if (btnFight) {
+        btnFight.style.display = "none";
+        btnFight.disabled = false;
+        btnFight.innerText = "🔥 LANCER LE COMBAT ! 🔥";
+    }
 
     // 5. On efface les messages de victoire/défaite sur l'écran
-    document.getElementById("battle-info").innerText = "";
-}
+    const battleInfo = document.getElementById("battle-info");
+    if (battleInfo) battleInfo.innerText = "";
 
+    // --- 🛡️ BLOCAGE DU CHOIX DE CARTES (DECK) ---
+    const deckZone = document.getElementById("choix-cartes") || document.getElementById("cards-container");
+    if (deckZone) {
+        deckZone.style.pointerEvents = "none";
+        deckZone.style.filter = "grayscale(1)"; 
+        deckZone.style.opacity = "0.6";
+    }
+}
 
 
 
@@ -4149,7 +4399,7 @@ function handleCardClick(cardElement, cardData) {
 
 
 
-const CURRENT_VERSION = "2.2.2"; // Change ce numéro pour faire réapparaître le message
+const CURRENT_VERSION = "2.2.3"; // Change ce numéro pour faire réapparaître le message
 
 function checkUpdateNews() {
     const lastSeenVersion = localStorage.getItem("lastSeenVersion");
@@ -4406,24 +4656,37 @@ function loadBoosterCounter(uid) {
 
 
 
-
 const showMissingBtn = document.getElementById("showMissingBtn");
 let showingMissing = false; // pour basculer
 
 showMissingBtn.addEventListener("click", () => {
     showingMissing = !showingMissing; // inverse l'état
 
-    if(showingMissing){
+    // On récupère l'élément du bouton de tri par rareté
+    const triBtn = document.getElementById("triRareteBtn");
+
+    if (showingMissing) {
         showMissingBtn.textContent = "Voir ma collection"; // bouton pour revenir
         searchCollectionInput.style.display = "none"; // cache la recherche
+        
+        // --- ON CACHE LE BOUTON DE TRI ---
+        if (triBtn) triBtn.style.display = "none";
+
         const missingCards = ALL_CARDS.filter(c => !collection.some(col => col.name === c.name));
         refreshCollection(missingCards);
     } else {
         showMissingBtn.textContent = "Voir les cartes manquantes";
         searchCollectionInput.style.display = "block"; // réaffiche la recherche
+        
+        // --- ON RÉAFFICHE LE BOUTON DE TRI ---
+        if (triBtn) triBtn.style.display = "inline-block";
+
         refreshCollection(collection); // affiche toute la collection
     }
 });
+
+
+
 
 
 
@@ -5051,9 +5314,36 @@ function updateButtons() {
   }
 }
 
+
+
+
 function refreshCollection(cardsToShow) {
+    // --- GESTION DU BOUTON DE TRI ---
+    // On réaffiche le bouton par défaut (il sera caché par le bouton "Manquantes" si besoin)
+    const triBtn = document.getElementById("triRareteBtn");
+    
+    // CORRECTION : On ne réaffiche le bouton que si on n'est PAS en train de voir les cartes manquantes
+    if (triBtn) {
+        if (typeof showingMissing !== "undefined" && showingMissing) {
+            triBtn.style.display = "none";
+        } else {
+            triBtn.style.display = "inline-block";
+        }
+    }
+
     const collectionDiv = document.getElementById("collection");
     collectionDiv.innerHTML = "";
+
+    // --- LOGIQUE D'INVERSION (Dernier obtenu en haut par défaut) ---
+    // On définit quelle liste utiliser
+    let baseCards = cardsToShow || collection;
+
+    // Si on est en mode "defaut" (triEtat défini hors de la fonction) 
+    // et qu'on n'a pas passé de paramètre spécifique (donc vue collection normale), 
+    // on force l'inversion pour avoir les plus récents en haut.
+    if (typeof triEtat !== "undefined" && triEtat === "defaut" && !cardsToShow) {
+        baseCards = [...collection].reverse();
+    }
 
     // --- FILTRE : On ignore les Lucky Blocks pour ne pas fausser la collection ---
     const listLucky = [
@@ -5067,8 +5357,8 @@ function refreshCollection(cardsToShow) {
     const filteredCollection = collection.filter(c => !listLucky.includes(c.rarity));
     const filteredAllCards = ALL_CARDS.filter(c => !listLucky.includes(c.rarity));
     
-    // On filtre les cartes à afficher
-    const cards = (cardsToShow || collection).filter(c => !listLucky.includes(c.rarity));
+    // On filtre les cartes à afficher en utilisant baseCards (qui est peut-être inversé)
+    const cards = baseCards.filter(c => !listLucky.includes(c.rarity));
 
     // --- TABLEAU DE RÉFÉRENCE ---
     const expTable = {
@@ -5201,6 +5491,7 @@ function refreshCollection(cardsToShow) {
         searchWrapper.style.marginBottom = "10px";
     }
 }
+
 
 
 
