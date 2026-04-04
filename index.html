@@ -5499,7 +5499,7 @@ function openPackSequence() {
                         if (existingCard.level === undefined) existingCard.level = 1;
                         if (existingCard.exp === undefined) existingCard.exp = 0;
 
-                        const expTable = { "Commun": 15, "Rare": 12, "Epic": 10, "Legendary": 7, "Mythic": 4, "Brainrot God": 3, "Secret": 2, "OG": 1 };
+                        const expTable = { "Commun": 15, "Rare": 12, "Epic": 10, "Legendary": 7, "Mythic": 4, "Brainrot God": 3, "Secret": 1, "OG": 1 };
                         existingCard.exp = (existingCard.exp || 0) + 1;
                         let needed = expTable[existingCard.rarity] || 10;
 
@@ -5809,7 +5809,7 @@ function refreshCollection(cardsToShow) {
         "Legendary": 7,
         "Mythic": 4, 
         "Brainrot God": 3, 
-        "Secret": 2, 
+        "Secret": 1, 
         "OG": 1
     };
 
