@@ -1,4 +1,4 @@
-const CACHE_NAME = 'brainrot-v46';
+const CACHE_NAME = 'brainrot-v0';
 const ASSETS = [
   'index.html',
   'manifest.json'
@@ -36,41 +36,3 @@ self.addEventListener('fetch', (e) => {
     caches.match(e.request).then((res) => res || fetch(e.request))
   );
 });
-
-// --- 4. GESTION DES NOTIFICATIONS (DÉSACTIVÉ) ---
-/* self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SCHEDULE_NOTIF') {
-    const { delay, title, body } = event.data;
-
-    if (delay && title) {
-      event.waitUntil(
-        new Promise((resolve) => {
-          setTimeout(() => {
-            self.registration.showNotification(title, {
-              body: body || "",
-              icon: "https://i.postimg.cc/fbKwpCBG/LOGO.png",
-              badge: "https://i.postimg.cc/fbKwpCBG/LOGO.png",
-              vibrate: [200, 100, 200]
-            }).then(resolve);
-          }, delay);
-        })
-      );
-    }
-  }
-});
-*/
-
-// --- 5. ACTION AU CLIC SUR NOTIFICATION (DÉSACTIVÉ) ---
-/*
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
-        if ('focus' in client) return client.focus();
-      }
-      if (clients.openWindow) return clients.openWindow('/');
-    })
-  );
-});
-*/
