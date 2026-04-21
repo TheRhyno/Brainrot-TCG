@@ -1731,6 +1731,25 @@ body:has(#lobby-overlay[style*="display: block"]) #subway-hud {
 
 
 
+/* Désactive la sélection bleue sur tout le jeu */
+* {
+    -webkit-tap-highlight-color: transparent; /* Mobile */
+    -webkit-user-select: none;               /* Safari */
+    -ms-user-select: none;                   /* IE/Edge */
+    user-select: none;                       /* Standard */
+}
+
+/* Optionnel : Autorise la sélection seulement dans les inputs si tu en as */
+input, textarea {
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+
+
+
+
+
 
 
 </style>
@@ -2472,7 +2491,7 @@ body:has(#lobby-overlay[style*="display: block"]) #subway-hud {
 <div id="newsOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:100000; justify-content:center; align-items:flex-start; padding:20px; box-sizing:border-box; overflow-y:auto;">
 <div style="background:#162037; padding:30px; border-radius:15px; border:2px solid #7c3aed; max-width:420px; width:100%; text-align:center; box-shadow: 0 0 30px rgba(124, 58, 237, 0.4); margin: auto; max-height: 90vh; overflow-y: auto;">
         
-        <h2 style="color:#7c3aed; margin-top:0; margin-bottom: 25px; font-size: 1.5rem;">✨ Mise à jour 2.3.1</h2>
+        <h2 style="color:#7c3aed; margin-top:0; margin-bottom: 25px; font-size: 1.5rem;">✨ Mise à jour 2.3.2</h2>
         
         <div style="text-align:left; color:#e8eef7;">
             
@@ -3034,7 +3053,7 @@ body:has(#lobby-overlay[style*="display: block"]) #subway-hud {
     <br>
 
     <div style="margin-top: 5px; line-height: 1.5;">
-        <span id="app-version">v2.3.1</span><br>
+        <span id="app-version">v2.3.2</span><br>
         © 2026 BRAINROT TCG
     </div>
 
@@ -6076,6 +6095,10 @@ if (ids.includes("53_prem")) {
 
         const pSpeed = document.getElementById("profileSpeedies");
         if (pSpeed) pSpeed.innerText = speedies;
+
+const pDust = document.getElementById("profileDust");
+if (pDust) pDust.innerText = dust;
+
         updateBattlePassUI();
 
         // Bilan
@@ -9590,7 +9613,7 @@ if (p1Power > p2Power) {
     } else if (p1Power < p2Power) {
         // DÉFAITE
         playLoseSound();
-        dust = Math.max(0, dust - 500);
+        dust = Math.max(0, dust - 200);
         
         if (selectedPlayerCardIndex !== -1) {
             const carteCombat = collection[selectedPlayerCardIndex];
@@ -9604,13 +9627,13 @@ if (p1Power > p2Power) {
 if (typeof refreshCollection === "function") refreshCollection();
                 
                 setTimeout(() => {
-                    alert(`💀 DÉFAITE !\n+${xpGagne} XP | -500 Fragments.\n⚠️ Ta carte ${maCarte.name} est épuisée ! Elle est sauvée mais sera indisponible pendant 7 jours.`);
+                    alert(`💀 DÉFAITE !\n+${xpGagne} XP | -200 Fragments.\n⚠️ Ta carte ${maCarte.name} est épuisée ! Elle est sauvée mais sera indisponible pendant 7 jours.`);
                 }, 100);
             } else {
                 // Logique normale : suppression de la carte
                 collection.splice(selectedPlayerCardIndex, 1);
                 setTimeout(() => {
-                    alert(`💀 DÉFAITE !\n+${xpGagne} XP | -500 Fragments. Ta carte ${maCarte.name} est détruite.`);
+                    alert(`💀 DÉFAITE !\n+${xpGagne} XP | -200 Fragments. Ta carte ${maCarte.name} est détruite.`);
                 }, 100);
             }
 
@@ -10210,7 +10233,7 @@ function handleCardClick(cardElement, cardData) {
 
 
 
-const CURRENT_VERSION = "2.3.1";
+const CURRENT_VERSION = "2.3.2";
 
 function checkUpdateNews() {
     const lastSeenVersion = localStorage.getItem("lastSeenVersion");
@@ -11027,10 +11050,10 @@ function openPackSequence() {
     chooseArea.style.gap = "30px";
     chooseArea.style.marginTop = "40px";
 
-    chooseArea.innerHTML = BOOSTER_IMAGES.map((img, i) =>
-        `<div class="booster" data-id="${i}" style="width:150px;height:220px;border-radius:14px;cursor:pointer;overflow:hidden;box-shadow:0 0 15px rgba(0,0,0,0.4);transition: transform 0.15s;">
-        <img src="${img}" style="width:100%;height:100%;object-fit:cover;">
-     </div>`
+chooseArea.innerHTML = BOOSTER_IMAGES.map((img, i) =>
+     `<div class="booster" data-id="${i}" style="width:150px;height:220px;border-radius:14px;cursor:pointer;overflow:hidden;box-shadow:0 0 15px rgba(0,0,0,0.4);transition: transform 0.15s;">
+  <img src="${img}" style="width:100%;height:100%;object-fit:cover;">
+        </div>`
     ).join("");
 
     document.querySelectorAll(".booster").forEach(b => {
@@ -12479,10 +12502,6 @@ window.addEventListener('appinstalled', (evt) => {
   console.log('Brainrot TCG a été installé avec succès !');
   if (installBox) installBox.style.display = 'none';
 });
-
-
-
-
 
 
 
